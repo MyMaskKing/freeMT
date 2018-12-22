@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取文件的权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="free.android.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +22,8 @@
         </activity>
         <!-- 添加新的Activity[Start] -->
         <activity
-            android:name="free.android.activity.NoteMainActivity"
-            android:label="@string/note_title" >
+            android:name=".activity.NoteMainActivity"
+            android:label="@string/note_title">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteMainActivity" />
 
@@ -32,8 +31,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="free.android.activity.NoteSubActivity"
-            android:label="@string/note_title" >
+            android:name=".activity.NoteSubActivity"
+            android:label="@string/note_title">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteSubActivity" />
 

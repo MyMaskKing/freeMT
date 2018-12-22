@@ -13,4 +13,9 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/del_CN_mes"/>
+    <item
+        android:id="@+id/menu_note_master_download"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/download_CN_mes"/>
 </menu>

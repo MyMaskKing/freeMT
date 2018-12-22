@@ -81,7 +81,7 @@ public class NoteSubActivity extends ActivityCommon{
 		EditText addressEditext = (EditText)findViewById(R.id.v_id_note_sub_address_editext);
 		String address = addressEditext.getText().toString();
 		addContent.put(Constants.NOTE_MASTER_ADDRESS, address);
-		String externalFilesPath = getExternalFiles();
+		String externalFilesPath = getFilePathByApp();
 		// 项目类型
 		RadioGroup typeGroupRadio = (RadioGroup)findViewById(R.id.v_id_note_type_group);
 		String selectedTypeRadio = ComponentUtil.getSelectedRadio(typeGroupRadio);

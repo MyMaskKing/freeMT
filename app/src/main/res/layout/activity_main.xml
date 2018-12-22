@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     tools:context="free.android.MainActivity" >
 
+
+
     <TextView
         android:id="@+id/welcom_tx"
         android:layout_width="100dip"

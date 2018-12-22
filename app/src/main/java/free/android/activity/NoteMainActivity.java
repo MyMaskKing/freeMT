@@ -1,15 +1,11 @@
 package free.android.activity;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +15,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import free.android.R;
 import free.android.common.ActivityCommon;
 import free.android.entity.NoteMainEntity;
@@ -27,6 +32,7 @@ import free.android.utils.Constants;
 import free.android.utils.FileUtil;
 import free.android.utils.LogUtil;
 import free.android.utils.StringUtil;
+import free.android.utils.ToastUtil;
 
 public class NoteMainActivity extends ActivityCommon {
 
@@ -70,7 +76,7 @@ public class NoteMainActivity extends ActivityCommon {
 	 *  获取便签文件内容
 	 */
 	private void getNoteFileContent() {
-		String externalFilesPath = getExternalFiles();
+		String externalFilesPath = getFilePathByApp();
 		try {
 			File noteFile = new File(externalFilesPath, Constants.NOTE_FILE_NAME);
 			// 文件是否存在Check
@@ -102,7 +108,7 @@ public class NoteMainActivity extends ActivityCommon {
 			noteList.add(noteMainEntity);
 			noteMainData = noteList;
 		} catch (Exception e) {
-			Log.e(FILE_ACTIVITY_NAME, Constants.LOG_MES_READY_FILE_ERROR_REASON + e.getMessage());
+			LogUtil.e(FILE_ACTIVITY_NAME, Constants.LOG_MES_READY_FILE_ERROR_REASON + e.getMessage());
 		}
 	}
 
@@ -153,7 +159,7 @@ public class NoteMainActivity extends ActivityCommon {
 				}
 			}
 		}else {
-			Log.i(FILE_ACTIVITY_NAME, "文件未读取到数据");
+			LogUtil.i(FILE_ACTIVITY_NAME, "文件未读取到数据");
 		}
 
 	}
@@ -167,7 +173,7 @@ public class NoteMainActivity extends ActivityCommon {
 
 	/**
 	 * 菜单部的按钮监听
-	 * @param view
+	 * @param item
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -178,6 +184,15 @@ public class NoteMainActivity extends ActivityCommon {
 			Intent noteSubIntent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
 			startActivity(noteSubIntent);
 			return true;
+		case R.id.menu_note_master_download:
+            isGrantExternalRW(NoteMainActivity.this);
+            boolean copyFlag = FileUtil.copy(getFilePathByApp(), Constants.NOTE_FILE_NAME, getFilePathBySDCard(), Constants.NOTE_FILE_NAME);
+            if(copyFlag) {
+                ToastUtil.longShow(this, "下载成功:" + getFilePathBySDCard() + Constants.NOTE_FILE_NAME);
+            } else {
+                ToastUtil.shortShow(this, "下载失败");
+            }
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

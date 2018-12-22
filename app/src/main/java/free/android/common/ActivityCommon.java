@@ -4,7 +4,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -24,7 +28,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 	 *
 	 * @return
 	 */
-	protected String getExternalFiles() {
+	protected String getFilePathByApp() {
 		/**
 		 * Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) //
 		 * 判断是否已装入SD卡
@@ -42,6 +46,14 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 		return externalFilesDir.getParent();
 	}
 
+    /**
+     * 获取SD卡路径
+     * @return
+     */
+	protected  String getFilePathBySDCard() {
+        File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        return externalStorageDirectory.getParent();
+	}
 	/**
 	 * 获取当前时间 精确到毫秒(字符形式)
 	 *
@@ -76,5 +88,24 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 		// TODO Auto-generated method stub
 		return false;
 	}
+    /**
+     * 获取储存权限
+     * @param activity
+     * @return
+     */
 
+    public static boolean isGrantExternalRW(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && activity.checkSelfPermission(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            activity.requestPermissions(new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, 1);
+
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="add_CN_mes">添加(+)</string>
     <string name="modify_CN_mes">修改</string>
+    <string name="download_CN_mes">下载</string>
+    <string name="upload_CN_mes">上传</string>
     <string name="del_CN_mes">删除(-)</string>
     <string name="function_CN_mes">功能</string>
     <string name="hour_CN_mes">时</string>
@@ -19,7 +21,9 @@
     <string name="function_US_mes">function</string>
     <string name="hour_US_mes">Hour</string>
     <string name="minute_US_mes">Minute</string>
-    <string name="second_Usmes">Second</string>
+    <string name="second_Us_mes">Second</string>
+    <string name="download_Us_mes">Download</string>
+    <string name="upload_Us_mes">Upload</string>
     <!-- Common Message US[End] -->
 
     <!-- 便签功能[Start] -->
@@ -38,4 +42,18 @@
     <string name="note_type_food">美食</string>
     <string name="note_type_working">工作</string>
     <!-- 便签功能[End] -->
+
+    <string-array name="array_names">
+        <item>"Anastasia Druzhinina"</item>
+        <item>"Andriy Hristyan"</item>
+        <item>"Dmitriy Dovbnya"</item>
+        <item>"Dmitry Denisenko"</item>
+        <item>"Eduard Baev"</item>
+        <item>"Iliya Bershadskiy"</item>
+        <item>"Kirill Penzykov"</item>
+        <item>"Konstantin Rudenko"</item>
+        <item>"Oleksii Shliama"</item>
+        <item>"Pavel Apisov"</item>
+        <item>"Vadim Ooleynik"</item>
+    </string-array>
 </resources>

@@ -1,8 +1,15 @@
 package free.android.utils;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
@@ -118,4 +125,41 @@ public class FileUtil extends ActivityCommon{
 	public static boolean checkFileExist(File file) {
 		return file.exists();
 	}
+
+	/**
+	 * 复制文件From->To
+	 * @param fromFilePath
+	 * @param fromFileName
+	 * @param toFilePath
+	 * @param toFileName
+	 * @return
+	 */
+	public static boolean copy(String fromFilePath, String fromFileName, String toFilePath, String toFileName) {
+		File fromFile = new File(fromFilePath, fromFileName);
+		if(!checkFileExist(fromFile)){
+			createFile(fromFilePath, fromFileName);
+		}
+		File toFile = new File(toFilePath, toFileName);
+		if(!checkFileExist(toFile)){
+			createFile(toFilePath, toFileName);
+		}
+		try {
+			BufferedReader bReader = new BufferedReader(new FileReader(fromFile));
+			BufferedWriter bWriter = new BufferedWriter(new FileWriter(toFile));
+			String readLine = StringUtil.EMPTY;
+			while (!StringUtil.isEmptyReturnBoolean(readLine = bReader.readLine())){
+				bWriter.write(readLine);
+			}
+			bWriter.flush();
+			bWriter.close();
+			bReader.close();
+			return true;
+		}catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+
 }
