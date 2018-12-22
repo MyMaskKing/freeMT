@@ -188,7 +188,7 @@ public class NoteMainActivity extends ActivityCommon {
             isGrantExternalRW(NoteMainActivity.this);
             boolean copyFlag = FileUtil.copy(getFilePathByApp(), Constants.NOTE_FILE_NAME, getFilePathBySDCard(), Constants.NOTE_FILE_NAME);
             if(copyFlag) {
-                ToastUtil.longShow(this, "下载成功:" + getFilePathBySDCard() + Constants.NOTE_FILE_NAME);
+                ToastUtil.longShow(this, "下载成功(" + "文件路径:" + getFilePathBySDCard() + "文件名" + Constants.NOTE_FILE_NAME);
             } else {
                 ToastUtil.shortShow(this, "下载失败");
             }

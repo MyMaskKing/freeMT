@@ -51,8 +51,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * @return
      */
 	protected  String getFilePathBySDCard() {
-        File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        return externalStorageDirectory.getParent();
+        return Environment.getExternalStorageDirectory().toString() + "/freeMT/Data";
 	}
 	/**
 	 * 获取当前时间 精确到毫秒(字符形式)
@@ -105,7 +104,6 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
             return false;
         }
-
         return true;
     }
 }
