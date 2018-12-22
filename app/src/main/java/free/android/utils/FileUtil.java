@@ -149,6 +149,7 @@ public class FileUtil extends ActivityCommon{
 			String readLine = StringUtil.EMPTY;
 			while (!StringUtil.isEmptyReturnBoolean(readLine = bReader.readLine())){
 				bWriter.write(readLine);
+				bWriter.newLine();
 			}
 			bWriter.flush();
 			bWriter.close();
@@ -158,8 +159,6 @@ public class FileUtil extends ActivityCommon{
 			e.printStackTrace();
 			return false;
 		}
-
 	}
-
 
 }
