@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">free</string>
+    <!-- Common Message CN[Start] -->
+    <string name="welcom_mes">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_CN_mes">添加(+)</string>
+    <string name="modify_CN_mes">修改</string>
+    <string name="del_CN_mes">删除(-)</string>
+    <string name="function_CN_mes">功能</string>
+    <string name="hour_CN_mes">时</string>
+    <string name="minute_CN_mes">分</string>
+    <string name="second_CN_mes">秒</string>
+    <!-- Common Message CN[End] -->
+
+    <!-- Common Message US[Start] -->
+    <string name="add_US_mes">Add(+)</string>
+    <string name="modify_US_mes">Modify</string>
+    <string name="del_US_mes">Delete(-)</string>
+    <string name="function_US_mes">function</string>
+    <string name="hour_US_mes">Hour</string>
+    <string name="minute_US_mes">Minute</string>
+    <string name="second_Usmes">Second</string>
+    <!-- Common Message US[End] -->
+
+    <!-- 便签功能[Start] -->
+    <string name="note_btn_name">便签</string>
+    <string name="note_title">随手记录你的生活■</string>
+    <string name="note_master_id">ID:</string>
+    <string name="note_master_title">打卡:</string>
+    <string name="note_master_item">打卡项目:</string>
+    <string name="note_master_spend_time">路程时间:</string>
+    <string name="note_master_address">打卡目的地:</string>
+    <string name="note_master_over_flag">完成:</string>
+    <string name="note_master_appraisal">评价:</string>
+    <string name="note_master_type">打卡类型:</string>
+    <string name="note_master_city">打卡城市:</string>
+    <string name="note_type_travel">游玩热点</string>
+    <string name="note_type_food">美食</string>
+    <string name="note_type_working">工作</string>
+    <!-- 便签功能[End] -->
+</resources>

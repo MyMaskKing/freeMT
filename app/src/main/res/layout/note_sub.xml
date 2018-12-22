@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    tools:context="free.android.activity.NoteSubActivity" >
+
+    <!-- Item 1 -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="vertical" >
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:columnCount="16"
+            android:rowCount="5"
+            android:useDefaultMargins="true" >
+
+            <TextView
+                android:id="@+id/v_id_note_sub_title"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="5"
+                android:layout_gravity="end|bottom"
+                android:text="@string/note_master_title" />
+
+            <EditText
+                android:id="@+id/v_id_note_sub_title_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="11"
+                android:ems="10"
+                android:imeOptions="actionDone" />
+            <!-- Item 2 -->
+
+            <TextView
+                android:id="@+id/v_id_note_sub_item"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="5"
+                android:layout_gravity="end|bottom"
+                android:text="@string/note_master_item" />
+
+            <EditText
+                android:id="@+id/v_id_note_sub_item_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="11"
+                android:ems="10"
+                android:imeOptions="actionDone" />
+            <!-- Item 3 -->
+
+            <TextView
+                android:id="@+id/v_id_note_sub_address"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="5"
+                android:layout_gravity="end|bottom"
+                android:text="@string/note_master_address" />
+
+            <EditText
+                android:id="@+id/v_id_note_sub_address_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="11"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:labelFor="@+id/v_id_note_sub_address" >
+
+                <requestFocus />
+            </EditText>
+            <!-- Item4 -->
+
+            <TextView
+                android:id="@+id/note_type_group"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="4"
+                android:layout_gravity="end|center"
+                android:layout_rowSpan="2"
+                android:text="@string/note_master_type" />
+
+            <RadioGroup
+                android:id="@+id/v_id_note_type_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="4"
+                android:layout_rowSpan="2" >
+
+                <RadioButton
+                    android:id="@+id/v_id_note_type_travel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note_type_travel" />
+
+                <RadioButton
+                    android:id="@+id/v_id_note_type_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/note_type_food" />
+
+                <RadioButton
+                    android:id="@+id/v_id_note_type_working"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note_type_working" />
+            </RadioGroup>
+            <!-- Item [Start] -->
+
+            <TextView
+                android:id="@+id/note_city"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_rowSpan="1"
+                android:paddingTop="25dp"
+                android:text="@string/note_master_city" />
+
+            <EditText
+                android:id="@+id/v_id_note_sub_city_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="6"
+                android:layout_rowSpan="1"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:labelFor="@+id/note_city"
+                android:paddingTop="25dp"
+                android:width="90dp" >
+            </EditText>
+            <!-- Item [End] -->
+            <!-- Item [Start] -->
+
+            <TextView
+                android:id="@+id/note_master_spend_time"
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_gravity="end|center"
+                android:layout_rowSpan="1"
+                android:text="@string/note_master_spend_time" />
+
+            <EditText
+                android:id="@+id/v_id_note_master_spend_time_hour_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="end|center"
+                android:layout_rowSpan="2"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:labelFor="@+id/note_master_spend_time"
+                android:maxLength="1"
+                android:width="30dp" >
+            </EditText>
+
+            <TextView
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="bottom|start"
+                android:layout_rowSpan="1"
+                android:text="@string/hour_CN_mes" />
+
+            <EditText
+                android:id="@+id/v_id_note_master_spend_time_minute_editext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="end|center"
+                android:layout_rowSpan="2"
+                android:ems="30"
+                android:imeOptions="actionDone"
+                android:maxLength="1"
+                android:width="10dp" >
+            </EditText>
+
+            <TextView
+                style="@style/text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="bottom|start"
+                android:layout_rowSpan="1"
+                android:text="@string/minute_CN_mes" />
+            <!-- Item [End  ] -->
+            <!-- Item 5 -->
+
+        </GridLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/v_id__note_sub_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_rounded"
+        android:onClick="executeAddBtn"
+        android:text="@string/add_CN_mes" />
+
+    <DigitalClock
+        android:id="@+id/digitalClock1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="DigitalClock" />
+
+</RelativeLayout>

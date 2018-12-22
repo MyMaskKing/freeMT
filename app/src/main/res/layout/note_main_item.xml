@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/v_id_note_main_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TableRow android:background="@android:color/holo_orange_light" >
+
+        <!-- Id Hidden -->
+
+        <TextView
+            android:id="@+id/v_id_note_main_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+        <!-- Title -->
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="@string/note_master_title"
+            android:textSize="20sp"
+            android:fontFamily="monospace"/>
+
+        <TextView
+            android:id="@+id/v_id_note_main_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+    </TableRow>
+
+    <TableRow android:background="@android:color/holo_blue_bright" >
+
+        <!-- 花费时间 -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_line"
+            android:text="@string/note_master_spend_time"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/v_id_note_main_spend_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_line"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_line"
+            android:text="@string/note_master_address"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/v_id_note_main_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_line"
+            android:textSize="20sp" />
+        <!-- 地点 -->
+    </TableRow>
+
+</TableLayout>
