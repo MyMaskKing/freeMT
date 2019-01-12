@@ -14,8 +14,8 @@ import android.widget.TextView;
  */
 public class ComponentUtil {
 
-	public TextView textView;
-	public ImageView imageView;
+	public static TextView textView;
+	public static ImageView imageView;
 
 	public ComponentUtil() {
 	}

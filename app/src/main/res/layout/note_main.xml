@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/v_id_note_line"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="free.android.activity.NoteMainActivity"
-    android:id="@+id/v_id_notel_line" >
+    tools:context="free.android.activity.NoteMainActivity">
+    <!-- 便签Header部 -->
+    <ScrollView
+        android:id="@+id/v_id_note_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:fadingEdge="vertical">
+        <LinearLayout
+            android:id="@+id/v_id_note_header_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+    </ScrollView>
 
-    <ListView
-        android:id="@+id/v_id_notel_list"
-        android:layout_width="match_parent"
+    <!-- 便签Body部 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:cacheColorHint="#00000000"
-        android:divider="#015214"
-        android:drawSelectorOnTop="true"
-        android:fadingEdge="vertical"
-        android:scrollbars="horizontal" >
-    </ListView>
+        android:orientation="vertical"
+        android:layout_below="@+id/v_id_note_header">
 
-</LinearLayout>
+        <ListView
+            android:id="@+id/v_id_note_body_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:divider="#015214"
+            android:drawSelectorOnTop="false"
+            android:fadingEdge="vertical"
+            android:scrollbars="horizontal"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:dividerHeight="2px"
+            android:fadeScrollbars="true"
+            android:listSelector="#a0ccbd"
+            android:transcriptMode="alwaysScroll"/>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">free</string>
+    <string name="index_name">首页</string>
     <!-- Common Message CN[Start] -->
     <string name="welcom_mes">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -29,6 +29,7 @@
     <!-- 便签功能[Start] -->
     <string name="note_btn_name">便签</string>
     <string name="note_title">随手记录你的生活■</string>
+    <string name="note_sub_title">点滴记录■</string>
     <string name="note_master_id">ID:</string>
     <string name="note_master_title">打卡:</string>
     <string name="note_master_item">打卡项目:</string>
@@ -41,19 +42,6 @@
     <string name="note_type_travel">游玩热点</string>
     <string name="note_type_food">美食</string>
     <string name="note_type_working">工作</string>
+    <string name="note_master_remark">备注:</string>
     <!-- 便签功能[End] -->
-
-    <string-array name="array_names">
-        <item>"Anastasia Druzhinina"</item>
-        <item>"Andriy Hristyan"</item>
-        <item>"Dmitriy Dovbnya"</item>
-        <item>"Dmitry Denisenko"</item>
-        <item>"Eduard Baev"</item>
-        <item>"Iliya Bershadskiy"</item>
-        <item>"Kirill Penzykov"</item>
-        <item>"Konstantin Rudenko"</item>
-        <item>"Oleksii Shliama"</item>
-        <item>"Pavel Apisov"</item>
-        <item>"Vadim Ooleynik"</item>
-    </string-array>
 </resources>

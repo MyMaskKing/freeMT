@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <TableRow android:background="@android:color/holo_orange_light" >
+    <TableRow android:background="#a8aaf2" >
 
         <!-- Id Hidden -->
 
@@ -15,8 +15,15 @@
             android:textSize="20sp"
             android:visibility="gone" />
 
+        <!-- No -->
+        <Button
+            android:id="@+id/v_id_note_main_no"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:background="@drawable/text_all_rounded"
+            android:textColor="#ffffff"/>
         <!-- Title -->
-
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
@@ -31,7 +38,7 @@
             android:textSize="20sp"/>
     </TableRow>
 
-    <TableRow android:background="@android:color/holo_blue_bright" >
+    <TableRow android:background="#ab835b" >
 
         <!-- 花费时间 -->
 

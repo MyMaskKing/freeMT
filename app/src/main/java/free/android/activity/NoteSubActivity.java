@@ -1,14 +1,16 @@
 package free.android.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import free.android.R;
 import free.android.common.ActivityCommon;
 import free.android.entity.NoteMainEntity;
@@ -59,8 +61,22 @@ public class NoteSubActivity extends ActivityCommon{
 			EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
 			spendTimeMEditext.setText(StringUtil.split(3, noteMainEntity.getNoteMasterSpendTime(), Constants.HOUR_CN, Constants.MINUTE_CN));
 			ComponentUtil.setEditextDisable(spendTimeMEditext);
-
+            EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
+            remarkEditext.setText(noteMainEntity.getNoteSubEntity().getNoteSubRemark());
+            ComponentUtil.setEditextDisable(remarkEditext);
 		}
+	}
+
+	/**
+	 * 便签子画面Menu部
+	 * @param menu
+	 * @return
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.note_sub_menu, menu);
+		return true;
 	}
 
 	/**
@@ -96,6 +112,10 @@ public class NoteSubActivity extends ActivityCommon{
 		EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
 		String spendTimeM = StringUtil.isEmptyReturnZero(spendTimeMEditext.getText().toString());
 		addContent.put(Constants.NOTE_MASTER_SPEND_TIME, spendTimeH + Constants.HOUR_CN + spendTimeM + Constants.MINUTE_CN);
+		// 备注
+		EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
+		String remark = remarkEditext.getText().toString();
+        addContent.put(Constants.NOTE_SUB_REMARK, remark);
 		FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, null, addContent);
 		Intent noteAddIntent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
 		startActivity(noteAddIntent);

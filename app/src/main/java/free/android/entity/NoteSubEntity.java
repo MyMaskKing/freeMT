@@ -24,6 +24,17 @@ public class NoteSubEntity implements Serializable {
 	/** 便签子画面信息的城市 */
 	private String noteSubCity;
 
+	public String getNoteSubRemark() {
+		return noteSubRemark;
+	}
+
+	public void setNoteSubRemark(String noteSubRemark) {
+		this.noteSubRemark = noteSubRemark;
+	}
+
+	/** 便签子画面信息的备注 */
+	private String noteSubRemark;
+
 	public NoteSubEntity() {
 	}
 

@@ -1,9 +1,5 @@
 package free.android.utils;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -107,6 +103,8 @@ public class FileUtil extends ActivityCommon{
 				bw.write(Constants.NOTE_SUB_TYPE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_TYPE));
 				bw.newLine();
 				bw.write(Constants.NOTE_SUB_CITY + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_CITY));
+				bw.newLine();
+				bw.write(Constants.NOTE_SUB_REMARK + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_REMARK));
 				bw.newLine();
 			}
 

@@ -3,4 +3,16 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="buttonBackground1">#D81B60</color>
+    <color name="buttonFont1">#3A5FCD</color>
+    <color name="buttonBackground2">#52893b</color>
+    <color name="buttonFont2">#0D0D0D</color>
+    <color name="buttonBackground3">#ceac63</color>
+    <color name="buttonFont3">#dc06d8</color>
+    <color name="buttonBackground4">#f9f8f8</color>
+    <color name="buttonFont4">#0c0c0d</color>
+    <color name="buttonBackground5">#0800f2</color>
+    <color name="buttonFont5">#0e0e0e</color>
+    <color name="buttonBackground6">#e48dad</color>
+    <color name="buttonFont6">#03edd6</color>
 </resources>

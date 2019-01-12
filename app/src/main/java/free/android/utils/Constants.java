@@ -8,10 +8,23 @@ package free.android.utils;
  */
 public class Constants {
 	/**
+	 * 重要
+	 */
+	/*** 随机数范围 **/
+	public static final int RANDOM_RANGE = 10;
+
+	/**
+	 * 请求Code
+	 */
+	public static final int REQUEST_CODE_UPLOAD = 5;
+
+	/**
 	 * 共通
 	 */
 	public static final String EQUAL_SYMBOL = "=";
 	public static final String ACTION_FALG = "action_flag";
+	public static final String UPLOAD_FILE_PATH = "upload_file_path";
+	public static final String UPLOAD_FILE_NAME = "upload_file_name";
 
 	/**
 	 * 时间格式
@@ -45,4 +58,5 @@ public class Constants {
 	public static final String NOTE_SUB_APPRAISAL = "NOTE_SUB_APPRAISAL";
 	public static final String NOTE_SUB_TYPE = "NOTE_SUB_TYPE";
 	public static final String NOTE_SUB_CITY = "NOTE_SUB_CITY";
+	public static final String NOTE_SUB_REMARK = "NOTE_SUB_REMARK";
 }
