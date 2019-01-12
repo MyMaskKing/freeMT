@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">FreeMT</string>
     <string name="index_name">首页</string>
     <!-- Common Message CN[Start] -->
     <string name="welcom_mes">Hello world!</string>
