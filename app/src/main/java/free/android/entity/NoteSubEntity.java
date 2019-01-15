@@ -24,12 +24,34 @@ public class NoteSubEntity implements Serializable {
 	/** 便签子画面信息的城市 */
 	private String noteSubCity;
 
+	/** 便签删除标记*/
+	private String noteSubDeleteFlag;
+
+	/** 便签更新次数统计 */
+	private String noteSubUpdateCount;
+
 	public String getNoteSubRemark() {
 		return noteSubRemark;
 	}
 
 	public void setNoteSubRemark(String noteSubRemark) {
 		this.noteSubRemark = noteSubRemark;
+	}
+
+	public String getNoteSubDeleteFlag() {
+		return noteSubDeleteFlag;
+	}
+
+	public void setNoteSubDeleteFlag(String noteSubDeleteFlag) {
+		this.noteSubDeleteFlag = noteSubDeleteFlag;
+	}
+
+	public String getNoteSubUpdateCount() {
+		return noteSubUpdateCount;
+	}
+
+	public void setNoteSubUpdateCount(String noteSubUpdateCount) {
+		this.noteSubUpdateCount = noteSubUpdateCount;
 	}
 
 	/** 便签子画面信息的备注 */

@@ -2,8 +2,10 @@ package free.android.common;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -25,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
 import free.android.utils.StringUtil;
 
@@ -278,4 +281,55 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    /**
+     * 对话框Template 1.0
+     * @param params <BR/>
+     *          1.标题(Title)<BR/>
+     *          2.内容(Content)<BR/>
+     *          3.按钮(Yes)<BR/>
+     *          3.按钮(No)<BR/>
+     */
+    protected void showDialogV1(String... params) {
+        /* @setIcon 设置对话框图标
+         * @setTitle 设置对话框标题
+         * @setMessage 设置对话框消息提示
+         * setXXX方法返回Dialog对象，因此可以链式设置属性
+         */
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(ActivityCommon.this);
+        // 设置Dialog的图标
+        //normalDialog.setIcon(R.drawable.icon_dialog);
+        normalDialog.setTitle(CollectionsUtil.isEmptyByStrArray(params,1));
+        normalDialog.setMessage(CollectionsUtil.isEmptyByStrArray(params,2));
+        normalDialog.setPositiveButton(CollectionsUtil.isEmptyByStrArray(params,3),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       clickConfirmBthByDialog();
+                    }
+                });
+        normalDialog.setNegativeButton(CollectionsUtil.isEmptyByStrArray(params,4),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clickCloseBthByDialog();
+                    }
+                });
+        // 显示
+        normalDialog.show();
+    }
+
+    /**
+     * 对话框Template 1.0的确认按钮执行内容
+     * @return
+     */
+    protected void clickConfirmBthByDialog(){
+    }
+
+    /**
+     * 对话框Template 1.0的取消按钮执行内容
+     * @return
+     */
+    protected void clickCloseBthByDialog(){
+    }
 }

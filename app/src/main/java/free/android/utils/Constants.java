@@ -25,6 +25,12 @@ public class Constants {
 	public static final String ACTION_FALG = "action_flag";
 	public static final String UPLOAD_FILE_PATH = "upload_file_path";
 	public static final String UPLOAD_FILE_NAME = "upload_file_name";
+    public static final String UPDATE_DEFAULT_COUNT = "0";
+    public static final String DELETE_ON = "1";
+    public static final String DELETE_OFF = "0";
+    public static final String STR_NULL = "NULL";
+    public static final String CONFIRM_MARK = "1";
+    public static final String CANCEL_MARK = "0";
 
 	/**
 	 * 时间格式
@@ -44,7 +50,7 @@ public class Constants {
 	/**
 	 * 便签功能使用
 	 */
-	public static  final String NOTE_FILE_NAME = "FreePj_Note.txt";
+	public static  final String NOTE_FILE_NAME = "FreeMT_Note.txt";
 	public static final String NOTE_MASTER_ID = "NOTE_MASTER_ID";
 	public static final String NOTE_MASTER_TITLE = "NOTE_MASTER_TITLE";
 	public static final String NOTE_MASTER_SPEND_TIME = "NOTE_MASTER_SPEND_TIME";
@@ -59,4 +65,6 @@ public class Constants {
 	public static final String NOTE_SUB_TYPE = "NOTE_SUB_TYPE";
 	public static final String NOTE_SUB_CITY = "NOTE_SUB_CITY";
 	public static final String NOTE_SUB_REMARK = "NOTE_SUB_REMARK";
+	public static final String NOTE_SUB_UPDATE_COUNT = "NOTE_SUB_UPDATE_COUNT";
+	public static final String NOTE_SUB_DELETE_FLAG = "NOTE_SUB_DELETE_FLAG";
 }

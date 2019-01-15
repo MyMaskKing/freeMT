@@ -5,13 +5,45 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     tools:context="free.android.activity.NoteSubActivity">
+    <TextView
+    android:id="@+id/v_id__note_sub_init_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/text_half_fillet"></TextView>
+
+    <Button
+        android:id="@+id/v_id__note_sub_menu"
+        android:layout_below="@+id/v_id__note_sub_init_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/text_half_fillet"
+        android:focusedByDefault="true"
+        android:gravity="center"
+        android:text="meun"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+    </Button>
+    <!-- Menu Button -->
+
+    <!-- Id Hidden -->
+
+    <TextView
+        android:id="@+id/v_id_note_sub_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <!-- Item 1 -->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fadingEdge="vertical">
+        android:fadingEdge="vertical"
+        android:layout_below="@+id/v_id__note_sub_menu">
 
         <GridLayout
             android:layout_width="wrap_content"
@@ -36,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="11"
                 android:ems="10"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionDone"/>
             <!-- Item 2 -->
 
             <TextView
@@ -65,7 +97,6 @@
                 android:layout_columnSpan="5"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_master_address" />
-
             <EditText
                 android:id="@+id/v_id_note_sub_address_editext"
                 android:layout_width="wrap_content"
@@ -74,8 +105,6 @@
                 android:ems="10"
                 android:imeOptions="actionDone"
                 android:labelFor="@+id/v_id_note_sub_address">
-
-                <requestFocus />
             </EditText>
             <TextView
                 android:id="@+id/v_id_note_sub_remark"

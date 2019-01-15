@@ -22,10 +22,19 @@ public class StringUtil {
 	}
 
 	public static boolean isEmptyReturnBoolean(String str) {
-		if (str == null || EMPTY.equals(str)) {
+		if (str == null || EMPTY.equals(str) || Constants.STR_NULL.toUpperCase().equals(str.toUpperCase())) {
 			return true;
 		}
 		return false;
+
+	}
+
+	public static Integer isEmptyReturnInteger(String str) {
+		Integer result = new Integer(0);
+		if(!isEmptyReturnBoolean(str)){
+			result = Integer.parseInt(str);
+		}
+		return result;
 
 	}
 

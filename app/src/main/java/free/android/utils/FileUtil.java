@@ -80,7 +80,9 @@ public class FileUtil extends ActivityCommon{
 					new FileOutputStream(file, true)));
 			if (listData == null || listData.isEmpty()) {
 				// Master 1
-				bw.write(Constants.NOTE_MASTER_ID + Constants.EQUAL_SYMBOL + getIdByTime());
+				bw.write(Constants.NOTE_MASTER_ID + Constants.EQUAL_SYMBOL +
+                        (StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_MASTER_ID)))
+                                ?getIdByTime() : String.valueOf(singleData.get(Constants.NOTE_MASTER_ID))));
 				bw.newLine();
 				// Master 2
 				bw.write(Constants.NOTE_MASTER_TITLE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_TITLE));
@@ -105,6 +107,12 @@ public class FileUtil extends ActivityCommon{
 				bw.write(Constants.NOTE_SUB_CITY + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_CITY));
 				bw.newLine();
 				bw.write(Constants.NOTE_SUB_REMARK + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_REMARK));
+				bw.newLine();
+				// 数据删除标记
+				bw.write(Constants.NOTE_SUB_DELETE_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_DELETE_FLAG));
+				bw.newLine();
+				// 数据更新回数标记
+				bw.write(Constants.NOTE_SUB_UPDATE_COUNT + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_UPDATE_COUNT));
 				bw.newLine();
 			}
 
