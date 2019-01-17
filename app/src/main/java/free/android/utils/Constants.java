@@ -12,6 +12,11 @@ public class Constants {
 	 */
 	/*** 随机数范围 **/
 	public static final int RANDOM_RANGE = 10;
+	/*** 一行显示数量 **/
+	public static final int ROW_NUMBBERS = 6;
+
+	/*** 字符串All **/
+	public static final String STR_ALL = "ALL";
 
 	/**
 	 * 请求Code

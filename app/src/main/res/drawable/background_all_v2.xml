@@ -7,7 +7,7 @@
     <solid android:color="#d40dd7f2"/>
     <!-- 边框线背景及边框线(虚线控制:dashGap虚线间距/dashWidth宽度) -->
     <stroke
-        android:width="7dp"
+        android:width="3dp"
         android:color="#f2b83a"
         android:dashGap="5dp"
         android:dashWidth="10dp"
@@ -19,8 +19,8 @@
         android:angle="-45"
         android:centerX="0.5"
         android:centerY="0.4"
-        android:startColor="#144ea6"
-        android:centerColor="#539cbe"
-        android:endColor="#ed0cbaf2"
+        android:startColor="#eea39e"
+        android:centerColor="#e0d4be"
+        android:endColor="#cee6d6"
         android:type="linear" />
 </shape>

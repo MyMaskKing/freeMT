@@ -2,9 +2,10 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/v_id_note_main_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="#d0e7ea">
 
-    <TableRow android:background="#a8aaf2" >
+    <TableRow android:background="@drawable/background_all_v2" >
 
         <!-- Id Hidden -->
 
@@ -18,16 +19,18 @@
         <!-- No -->
         <Button
             android:id="@+id/v_id_note_main_no"
-            android:layout_width="50dp"
+            android:layout_width="47dp"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:background="@drawable/text_all_rounded"
-            android:textColor="#ffffff"/>
+            android:background="@drawable/button_all_v1"
+            android:textColor="#ffffff"
+            android:textStyle="bold"/>
         <!-- Title -->
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/note_master_title"
+            android:textStyle="bold"
             android:textSize="20sp"
             android:fontFamily="monospace"/>
 
@@ -38,7 +41,7 @@
             android:textSize="20sp"/>
     </TableRow>
 
-    <TableRow android:background="#ab835b" >
+    <TableRow android:background="@drawable/background_all_v3" >
 
         <!-- 花费时间 -->
 
@@ -47,6 +50,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/table_line"
             android:text="@string/note_master_spend_time"
+            android:textStyle="bold"
             android:textSize="20sp" />
 
         <TextView
@@ -60,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/table_line"
+            android:textStyle="bold"
             android:text="@string/note_master_address"
             android:textSize="20sp" />
 

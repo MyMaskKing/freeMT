@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+
 import free.android.activity.NoteMainActivity;
 import free.android.common.ActivityCommon;
 import free.android.utils.Constants;
@@ -15,6 +17,8 @@ public class MainActivity extends ActivityCommon {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 无标题栏(系统自带不删除)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }

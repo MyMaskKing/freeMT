@@ -37,7 +37,7 @@ public class NoteSubActivity extends ActivityCommon{
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// 无标题栏(不包括系统自带)
+		// 无标题栏(系统自带不删除)
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// 全屏效果
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

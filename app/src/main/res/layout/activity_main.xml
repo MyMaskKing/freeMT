@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.android.MainActivity" >
+    tools:context="free.android.MainActivity"
+    android:background="@drawable/img_background_all_v2">
 
 
 
@@ -15,7 +16,7 @@
         android:focusableInTouchMode="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
-        android:text="走马灯xml布局实现，哈哈。。。。" />
+        android:text="欢迎来到FreeMT" />
 
     <Button
         android:id="@+id/note_btn"
@@ -25,6 +26,8 @@
         android:layout_below="@+id/welcom_tx"
         android:layout_marginTop="14dp"
         android:background="@drawable/button_rounded"
+        android:textColor="#efe1a42a"
+        android:textStyle="bold"
         android:text="@string/note_btn_name"
         android:onClick="transitionNote"/>
 

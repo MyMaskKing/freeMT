@@ -4,19 +4,21 @@
     android:id="@+id/v_id_note_line"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.android.activity.NoteMainActivity">
+    tools:context="free.android.activity.NoteMainActivity"
+    android:background="@drawable/img_background_all_v4">
     <!-- 便签Header部 -->
     <ScrollView
         android:id="@+id/v_id_note_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadingEdge="vertical">
         <LinearLayout
             android:id="@+id/v_id_note_header_list"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/background_all_v4"></LinearLayout>
     </ScrollView>
 
     <!-- 便签Body部 -->

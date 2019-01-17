@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,12 +42,15 @@ public class NoteMainActivity extends ActivityCommon {
 
 	private List<NoteMainEntity> noteMainBodyData = new ArrayList<NoteMainEntity>();
     private List<String> noteMainHeaderData = new ArrayList<String>();
+    private List<String> noteMainHeaderHiddenData = new ArrayList<String>();
     // 便签画面Body部
     private ListView noteBodyListView;
     private Set<String> cityList = new HashSet<String>();
     private Set<String> typeList = new HashSet<String>();
     private Set<String> idOfDeleteData = new HashSet<String>();
     private Set<String> idOfUpdateData = new HashSet<String>();
+    private List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
+    private List<String> checkBoxHidden = new ArrayList<String>();
 
     /**
      * 初始化方法
@@ -66,17 +70,8 @@ public class NoteMainActivity extends ActivityCommon {
 		getNoteFileContent();
 		againSetNoteBodyData(noteMainBodyData);
         // 便签Body部List
-		noteBodyListView = (ListView) findViewById(R.id.v_id_note_body_list);
-        // 便签Header部List
-		/**
-		 * 静态打印数据 SimpleAdapter simpleAdapter = new SimpleAdapter(context, data,
-		 * resource, from, to) context 上下文 this代替 data 打印数据List resource
-		 * 画面Layout的ListView的ID from 打印数据Bean中的数学 ID Name等 to 画面Layout中要放置Bean的数据的组件Id
-		 */
-		// 自定义打印Body部数据
-		noteBodyListView.setAdapter(new NoteMainBodyItem());
-        // 自定义点击Body部数据事件
-        noteBodyListView.setOnItemLongClickListener(this);
+		printNoteMainBodyPage();
+
 		// 通过便签文件内容获取便签Header部数据
 		setNoteMainHeaderData();
 
@@ -126,6 +121,10 @@ public class NoteMainActivity extends ActivityCommon {
             }
             val.setNoteMasterNo(String.valueOf(noCount));
             againNoteBodyData.add(val);
+            // 统计便签城市使用
+            cityList.add(val.getNoteSubEntity().getNoteSubCity());
+            // 统计便签类型使用
+            typeList.add(val.getNoteSubEntity().getNoteSubType());
             noCount++;
         }
         noteMainBodyData = againNoteBodyData;
@@ -266,13 +265,9 @@ public class NoteMainActivity extends ActivityCommon {
 						entity.getNoteSubEntity().setNoteSubItem(entityAttribueData);
 					}else if (Constants.NOTE_SUB_CITY.equals(entityAttribueName)) {
                         citySet.add(entityAttribueData);
-                        // 统计便签城市使用
-                        cityList.add(entityAttribueData);
 						entity.getNoteSubEntity().setNoteSubCity(entityAttribueData);
 					}else if (Constants.NOTE_SUB_TYPE.equals(entityAttribueName)) {
                         typeSet.add(entityAttribueData);
-						// 统计便签类型使用
-                        typeList.add(entityAttribueData);
 						entity.getNoteSubEntity().setNoteSubType(entityAttribueData);
 					}else if (Constants.NOTE_SUB_REMARK.equals(entityAttribueName)) {
 						entity.getNoteSubEntity().setNoteSubRemark(entityAttribueData);
@@ -425,16 +420,18 @@ public class NoteMainActivity extends ActivityCommon {
      * 获取数据By便签Header部
      */
     private void setNoteMainHeaderData(){
-		// 便签Header集合
+        // 便签Header集合
         Iterator<String> cityIterator = cityList.iterator();
         while (cityIterator.hasNext()) {
             String cityVal = cityIterator.next();
             noteMainHeaderData.add(cityVal);
+            noteMainHeaderHiddenData.add("0");
         }
         Iterator<String> typeIterator = typeList.iterator();
         while (typeIterator.hasNext()) {
             String typeVal = typeIterator.next();
             noteMainHeaderData.add(typeVal);
+            noteMainHeaderHiddenData.add("1");
         }
         // 获取页面Header线性布局
 		LinearLayout noteHeaderLinearLayout = (LinearLayout)findViewById(R.id.v_id_note_header_list);
@@ -442,31 +439,106 @@ public class NoteMainActivity extends ActivityCommon {
 		LinearLayout noteHeaderSubLineLayout = new LinearLayout(this);
 		// Header部子线性布局控件属性(线性、Java构成)
 		LinearLayout.LayoutParams noteHeaderSubLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1f);
-		// 设置Header部数据
-		if(!CollectionsUtil.isEmptyByCollection(noteMainHeaderData)) {
-			int noteMainHeaderDataSize = noteMainHeaderData.size();
-			Button[] btn = new Button[noteMainHeaderDataSize];
-			Iterator<String> noteMainHeaderDataIterator = noteMainHeaderData.iterator();
-			int position = 0;
-			while(noteMainHeaderDataIterator.hasNext()) {
-				// 设置Header部子线性布局控件横向属性(线性、Java构成)
-				noteHeaderSubLineLayout.setOrientation(LinearLayout.HORIZONTAL);
-				btn[position] = new Button(this);
-				btn[position].setText(noteMainHeaderDataIterator.next());
-				// 设置按钮形状
-                btn[position].setBackground(getResources().getDrawable(R.drawable.button_rounded));
-                noteHeaderSubLineLayout.addView(btn[position], noteHeaderSubLineLayoutAttribute);
-				// 页面一行放置10个按钮
-				if ((position + 1)%10 == 0) {
-					noteHeaderLinearLayout.addView(noteHeaderSubLineLayout);
-					noteHeaderSubLineLayout = new LinearLayout(this);
-				}else if (position == noteMainHeaderData.size() - 1) {
-					noteHeaderLinearLayout.addView(noteHeaderSubLineLayout);
-				}
-				position++;
-			}
-		}
+        // 设置Header部数据
+        if(!CollectionsUtil.isEmptyByCollection(noteMainHeaderData)) {
+            int noteMainHeaderDataSize = noteMainHeaderData.size();
+            CheckBox[] checkBoxs = new CheckBox[noteMainHeaderDataSize];
+            Iterator<String> noteMainHeaderDataIterator = noteMainHeaderData.iterator();
+            int position = 0;
+            while(noteMainHeaderDataIterator.hasNext()) {
+                // 设置Header部子线性布局控件横向属性(线性、Java构成)
+                noteHeaderSubLineLayout.setOrientation(LinearLayout.HORIZONTAL);
+                checkBoxs[position] = new CheckBox(this);
+                checkBoxs[position].setText(noteMainHeaderDataIterator.next());
+                checkBoxs[position].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        List<NoteMainEntity> matchingData = new ArrayList<NoteMainEntity>();
+                        boolean matchingFlg = false;
+                        int checkBoxPosition = 0;
+                        for(CheckBox val : checkBoxList) {
+                            if(val.isChecked()) {
+                                matchingFlg = true;
+                                matchingResult(noteMainHeaderHiddenData.get(checkBoxPosition), val.getText().toString(), matchingData);
+                            }
+                            checkBoxPosition++;
+                        }
+                        if (matchingFlg) {
+                            noteMainBodyData = matchingData;
+                            printNoteMainBodyPage();
+                        } else {
+                            int noCheckedBoxPosition = 0;
+                            boolean noCheckedFlag = true;
+                            for(CheckBox val : checkBoxList) {
+                                if (!StringUtil.isEmptyReturnBoolean(val.getText().toString())) {
+                                    noCheckedFlag = false;
+                                    matchingResult(noteMainHeaderHiddenData.get(noCheckedBoxPosition), val.getText().toString(), matchingData);
+                                }
+                                noCheckedBoxPosition++;
+                            }
+                            if (!noCheckedFlag) {
+                                matchingResult(Constants.STR_ALL, StringUtil.EMPTY, matchingData);
+                            } else {
+                                noteMainBodyData = matchingData;
+                            }
+                            printNoteMainBodyPage();
+                        }
+                    }
+                });
+                checkBoxList.add(checkBoxs[position]);
+                // 设置按钮形状
+                noteHeaderSubLineLayout.addView(checkBoxs[position], noteHeaderSubLineLayoutAttribute);
+                // 页面一行放置N个按钮
+                if ((position + 1)%Constants.ROW_NUMBBERS == 0) {
+                    noteHeaderLinearLayout.addView(noteHeaderSubLineLayout);
+                    noteHeaderSubLineLayout = new LinearLayout(this);
+                }else if (position == noteMainHeaderData.size() - 1) {
+                    noteHeaderLinearLayout.addView(noteHeaderSubLineLayout);
+                }
+                position++;
+            }
+        }
     }
 
+    private void printNoteMainBodyPage() {
+        // 便签Body部List
+        noteBodyListView = (ListView) findViewById(R.id.v_id_note_body_list);
+        // 便签Header部List
+        /**
+         * 静态打印数据 SimpleAdapter simpleAdapter = new SimpleAdapter(context, data,
+         * resource, from, to) context 上下文 this代替 data 打印数据List resource
+         * 画面Layout的ListView的ID from 打印数据Bean中的数学 ID Name等 to 画面Layout中要放置Bean的数据的组件Id
+         */
+        // 自定义打印Body部数据
+        noteBodyListView.setAdapter(new NoteMainBodyItem());
+        // 自定义点击Body部数据事件
+        noteBodyListView.setOnItemLongClickListener(this);
+    }
+
+    /**
+     * 筛选数据
+     * @param mark
+     * @param followVal
+     */
+    private void matchingResult(String mark, String followVal, List<NoteMainEntity> matchingData) {
+        // 获取最新数据
+        getNoteFileContent();
+        againSetNoteBodyData(noteMainBodyData);
+        if (!StringUtil.equaleReturnBoolean(Constants.STR_ALL, mark)) {
+            Iterator<NoteMainEntity> valIterator = noteMainBodyData.iterator();
+            while (valIterator.hasNext()) {
+                NoteMainEntity val = valIterator.next();
+                if (StringUtil.equaleReturnBoolean(mark, "0")
+                        && StringUtil.equaleReturnBoolean(val.getNoteSubEntity().getNoteSubCity(), followVal)) {
+                    val.setNoteMasterNo(String.valueOf(matchingData.size() + 1));
+                    matchingData.add(val);
+                } else if (StringUtil.equaleReturnBoolean(mark, "1")
+                        && StringUtil.equaleReturnBoolean(val.getNoteSubEntity().getNoteSubType(), followVal)) {
+                    val.setNoteMasterNo(String.valueOf(matchingData.size() + 1));
+                    matchingData.add(val);
+                }
+            }
+        }
+    }
 
 }
