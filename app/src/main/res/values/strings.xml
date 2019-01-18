@@ -55,6 +55,7 @@
     <string name="note_type_travel">游玩热点</string>
     <string name="note_type_food">美食</string>
     <string name="note_type_working">工作</string>
+    <string name="note_type_else">其他</string>
     <string name="note_master_remark">备注:</string>
     <!-- 便签功能[End] -->
 </resources>

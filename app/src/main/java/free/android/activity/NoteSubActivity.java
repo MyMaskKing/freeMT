@@ -225,7 +225,7 @@ public class NoteSubActivity extends ActivityCommon{
 		}
 		if (!checkErrorList.isEmpty()) {
 			setError();
-			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"请安装错误提示进行修改输入内容", "确定", "取消");
+			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"请按照错误提示进行修改输入内容", "确定", "取消");
 		}else {
 			showDialogV1_1(submitContentList, Constants.CONFIRM_MARK,"请确认添加内容", "确认", "取消");
 		}

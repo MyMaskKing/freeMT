@@ -123,9 +123,13 @@ public class NoteMainActivity extends ActivityCommon {
             val.setNoteMasterNo(String.valueOf(noCount));
             againNoteBodyData.add(val);
             // 统计便签城市使用
-            cityList.add(val.getNoteSubEntity().getNoteSubCity());
+            if (!StringUtil.isEmptyReturnBoolean(val.getNoteSubEntity().getNoteSubCity())) {
+                cityList.add(val.getNoteSubEntity().getNoteSubCity());
+            }
             // 统计便签类型使用
-            typeList.add(val.getNoteSubEntity().getNoteSubType());
+            if (!StringUtil.isEmptyReturnBoolean(val.getNoteSubEntity().getNoteSubType())) {
+                typeList.add(val.getNoteSubEntity().getNoteSubType());
+            }
             noCount++;
         }
         noteMainBodyData = againNoteBodyData;
@@ -237,8 +241,6 @@ public class NoteMainActivity extends ActivityCommon {
 	 * 			判断是否要重建实体类
 	 */
 	private void setEntity(NoteMainEntity entity, String readLine, Set<String> repeatSet, List<String> idRecod) {
-        Set<String> citySet = new HashSet<String>();
-        Set<String> typeSet = new HashSet<String>();
 		if (readLine != null && !readLine.isEmpty()) {
 			String[] split = readLine.split(Constants.EQUAL_SYMBOL);
 			String entityAttribueName;
@@ -270,10 +272,8 @@ public class NoteMainActivity extends ActivityCommon {
 					}else if (Constants.NOTE_SUB_ITEM.equals(entityAttribueName)) {
 						entity.getNoteSubEntity().setNoteSubItem(entityAttribueData);
 					}else if (Constants.NOTE_SUB_CITY.equals(entityAttribueName)) {
-                        citySet.add(entityAttribueData);
 						entity.getNoteSubEntity().setNoteSubCity(entityAttribueData);
 					}else if (Constants.NOTE_SUB_TYPE.equals(entityAttribueName)) {
-                        typeSet.add(entityAttribueData);
 						entity.getNoteSubEntity().setNoteSubType(entityAttribueData);
 					}else if (Constants.NOTE_SUB_REMARK.equals(entityAttribueName)) {
 						entity.getNoteSubEntity().setNoteSubRemark(entityAttribueData);

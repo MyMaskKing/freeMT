@@ -212,7 +212,7 @@
                 android:id="@+id/v_id_note_type_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="3"
+                android:layout_rowSpan="4"
                 android:layout_columnSpan="5">
 
                 <RadioButton
@@ -233,6 +233,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/note_type_working" />
+
+                <RadioButton
+                    android:id="@+id/v_id_note_type_else"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note_type_else" />
             </RadioGroup>
             <!-- Item [Start] -->
 
@@ -320,6 +326,7 @@
                 android:layout_gravity="bottom"
                 android:text="@string/minute_CN_mes" />
             <!-- Item [End  ] -->
+            <!-- TODO 缺少一行TR -->
             <!-- Item 5 -->
         </GridLayout>
     </ScrollView>
