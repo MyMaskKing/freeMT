@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.NoteSubActivity" >
+    tools:context=".activity.NoteSubActivity"
+    >
 
     <item
         android:id="@+id/menu_note_sub_modify"
@@ -12,4 +13,16 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:title="@string/del_CN_mes"/>
+
+    <item
+        android:id="@+id/menu_note_sub_previous"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/previous_CN_mes"/>
+
+    <item
+        android:id="@+id/menu_note_sub_return_index"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/index_CN_mes"/>
 </menu>

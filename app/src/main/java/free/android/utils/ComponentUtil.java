@@ -24,7 +24,6 @@ public class ComponentUtil {
 		editext.setEnabled(false);
 		editext.setFocusable(false);
 		editext.setFocusableInTouchMode(false);
-		editext.setKeyListener(null);
 	}
 
 	public static void setEditextEnable(EditText editext) {

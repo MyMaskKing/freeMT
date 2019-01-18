@@ -3,30 +3,45 @@ package free.android.common;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import free.android.R;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
 import free.android.utils.StringUtil;
@@ -34,6 +49,12 @@ import free.android.utils.StringUtil;
 ;
 
 public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
+
+    /*** Check项目方式Error时标记 **/
+    private boolean checkErrorFlag = false;
+
+    /*** 对话框Template 1.1 **/
+    private  Dialog dialogV1_1 = null;
 
 	/**
 	 * <pre>
@@ -298,7 +319,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         final AlertDialog.Builder normalDialog =
                 new AlertDialog.Builder(ActivityCommon.this);
         // 设置Dialog的图标
-        //normalDialog.setIcon(R.drawable.icon_dialog);
+        normalDialog.setIcon(R.drawable.img_background_delete_v1);
         normalDialog.setTitle(CollectionsUtil.isEmptyByStrArray(params,1));
         normalDialog.setMessage(CollectionsUtil.isEmptyByStrArray(params,2));
         normalDialog.setPositiveButton(CollectionsUtil.isEmptyByStrArray(params,3),
@@ -320,6 +341,138 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
     }
 
     /**
+     * <PRE>
+     * 对话框Template 1.1
+     * 使用页面(common_dialog_v1.xml)
+     * <PRE/>
+     * @param contentList <BR/>
+     *          Dialog显示内容集合<BR/>
+     * @param params <BR/>
+     *          1.Dialog类型
+     *          2.标题(Title)<BR/>
+     *          3.Dialog类型(Content)<BR/>
+     *          4.按钮(Yes)<BR/>
+     *          5.按钮(No)<BR/>
+     */
+    protected void showDialogV1_1(List<String> contentList,  String... params) {
+        /* @setIcon 设置对话框图标
+         * @setTitle 设置对话框标题
+         * @setMessage 设置对话框消息提示
+         * setXXX方法返回Dialog对象，因此可以链式设置属性
+         */
+        if (contentList.isEmpty()) {
+            return;
+        }
+        dialogV1_1  = new Dialog(this);
+        //去除标题栏
+        dialogV1_1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //2.填充布局
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView     = inflater.inflate(R.layout.common_dialog_v1, null);
+        //将自定义布局设置进去
+        dialogV1_1.setContentView(dialogView);
+        //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
+        WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
+        Window window = dialogV1_1.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        // 显示
+        dialogV1_1.show();
+        window.setAttributes(lp);
+        //设置点击其它地方不让消失弹窗
+        dialogV1_1.setCancelable(false);
+        // 设置Title
+        TextView title = dialogView.findViewById(R.id.id_common_dialog_v1_title);
+        title.setText(CollectionsUtil.isEmptyByStrArray(params, 2));
+        // 设置按钮1
+        TextView btn1 = dialogView.findViewById(R.id.id_common_dialog_v1_btn1);
+        btn1.setText(CollectionsUtil.isEmptyByStrArray(params, 3));
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickBtn1V1_1();
+            }
+        });
+        // 设置按钮2
+        TextView btn2 = dialogView.findViewById(R.id.id_common_dialog_v1_btn2);
+        btn2.setText(CollectionsUtil.isEmptyByStrArray(params, 4));
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickBtn1V1_2();
+            }
+        });
+        // 判断Dialog类型
+        initDilogContentV1_1(contentList, dialogView, CollectionsUtil.isEmptyByStrArray(params, 1));
+        
+    }
+    /**
+     * <PRE>
+     * 对话框Template 1.1(按钮Btn2的点击事件)
+     * 使用页面(common_dialog_v1.xml)
+     * <PRE/>
+     */
+    protected void onClickBtn1V1_2() {
+        dialogV1_1.dismiss();
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 1.1(按钮Btn1的点击事件)
+     * 使用页面(common_dialog_v1.xml)
+     * <PRE/>
+     */
+    protected void onClickBtn1V1_1() {
+        dialogV1_1.dismiss();
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 1.1(初始化内容区域)
+     * 使用页面(common_dialog_v1.xml)
+     * <PRE/>
+     */
+    private void initDilogContentV1_1(List<String> contentList, View dialogView, String dialogType) {
+        LinearLayout contentLayout = (LinearLayout)dialogView.findViewById(R.id.id_common_dialog_v1_content);
+        // Line子布局(线性、Java构成)
+        LinearLayout subLineLayout = new LinearLayout(this);
+        // Header部子线性布局控件属性(线性、Java构成)
+        LinearLayout.LayoutParams subLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1f);
+        Iterator<String> valIterator = contentList.iterator();
+        while (valIterator.hasNext()) {
+            subLineLayout.setBackground(getResources().getDrawable(R.drawable.border_line_v3));
+            // 设置Header部子线性布局控件横向属性(线性、Java构成)
+            subLineLayout.setOrientation(LinearLayout.HORIZONTAL);
+            String val = valIterator.next();
+            TextView textView = new TextView(this);
+            SpannableStringBuilder msp = new SpannableStringBuilder (val);
+            if (StringUtil.equaleReturnBoolean(Constants.ERROR_MARK, dialogType)) {
+                //设置字体样式正常，粗体，斜体，粗斜体
+                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
+                msp.setSpan(new ForegroundColorSpan(Color.RED),val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                //设置上下标
+                //msp.setSpan(new SubscriptSpan(), val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //下标
+                //设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍
+                //msp.setSpan(new ScaleXSpan(2.0f), 0, val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //2.0f表示默认字体宽度的两倍，即X轴方向放大为默认字体的两倍，而高度不变
+            }else {
+                //设置字体样式正常，粗体，斜体，粗斜体
+                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
+                msp.setSpan(new ForegroundColorSpan(Color.BLUE),0,val.split(Constants.COLON_SYMBOL)[0].length()+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                //设置上下标
+                //msp.setSpan(new SuperscriptSpan(), val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //上标
+                //设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍
+                //msp.setSpan(new ScaleXSpan(2.0f), 0, val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //2.0f表示默认字体宽度的两倍，即X轴方向放大为默认字体的两倍，而高度不变
+            }
+
+            textView.setText(msp);
+            subLineLayout.addView(textView, subLineLayoutAttribute);
+            contentLayout.addView(subLineLayout);
+            subLineLayout = new LinearLayout(this);
+        }
+    }
+
+    /**
      * 对话框Template 1.0的确认按钮执行内容
      * @return
      */
@@ -332,4 +485,28 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      */
     protected void clickCloseBthByDialog(){
     }
+
+
+    /**
+     *
+     * 共通:返回首页
+     */
+    protected void commonReturnIndex() {
+        Intent intent = new Intent(ActivityCommon.this, Activity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 设置CheckError标记
+     */
+    protected void setError() {
+        checkErrorFlag = true;
+    }
+    /**
+     * 返回CheckError标记
+     */
+    protected boolean isError() {
+        return checkErrorFlag;
+    }
+
 }

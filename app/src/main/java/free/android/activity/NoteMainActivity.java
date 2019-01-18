@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -145,8 +146,9 @@ public class NoteMainActivity extends ActivityCommon {
             String updateVal = updateValIterator.next();
             Iterator<NoteMainEntity> noteMainEntityIterator = noteMainBodyData.iterator();
             while (noteMainEntityIterator.hasNext()) {
-                if(StringUtil.equaleReturnBoolean(updateVal, noteMainEntityIterator.next().getNoteMasterId())) {
-                    updateData.add(noteMainEntityIterator.next());
+                NoteMainEntity val = noteMainEntityIterator.next();
+                if(StringUtil.equaleReturnBoolean(updateVal, val.getNoteMasterId())) {
+                    updateData.add(val);
                 };
             }
             NoteMainEntity maxUpdateCountData = getMaxUpdateCountData(updateData);
@@ -164,9 +166,10 @@ public class NoteMainActivity extends ActivityCommon {
         int updateCountCache = 0;
         Iterator<NoteMainEntity> entityIterator = updateData.iterator();
         while (entityIterator.hasNext()){
-            if (updateCountCache < StringUtil.isEmptyReturnInteger(entityIterator.next().getNoteSubEntity().getNoteSubUpdateCount())) {
-                updateCountCache = StringUtil.isEmptyReturnInteger(entityIterator.next().getNoteSubEntity().getNoteSubUpdateCount());
-                entity = entityIterator.next();
+            NoteMainEntity noteMainEntity = entityIterator.next();
+            if (updateCountCache < StringUtil.isEmptyReturnInteger(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount())) {
+                updateCountCache = StringUtil.isEmptyReturnInteger(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount());
+                entity = noteMainEntity;
             }
         }
         return entity;
@@ -195,6 +198,9 @@ public class NoteMainActivity extends ActivityCommon {
 			int repaetMark = 1;
 			int count = 1;
 			while((readLine = fr.readLine()) != null) {
+			    if (readLine.contains("#COMENT#")) {
+			        continue;
+                }
 			    if(count <= 12) {
                     setEntity(noteMainEntity, readLine, repeatSet, idRecod);
                     if(count == 12) {
@@ -326,7 +332,46 @@ public class NoteMainActivity extends ActivityCommon {
             uploadIntent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(uploadIntent, Constants.REQUEST_CODE_UPLOAD);
             return true;
-		default:
+        case R.id.menu_note_master_download_template:
+            String filePath = getFilePathBySDCard();
+            List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+            for (int i = 0; i < 10; i++) {
+                // 放置添加的内容
+                Map<String, Object> map = new HashMap<String, Object>();
+                // 打卡
+                map.put(Constants.NOTE_MASTER_TITLE, StringUtil.EMPTY);
+                // 打卡项目
+                map.put(Constants.NOTE_SUB_ITEM, StringUtil.EMPTY);
+                // 打卡目的地
+                map.put(Constants.NOTE_MASTER_ADDRESS, StringUtil.EMPTY);
+                // 项目类型
+                map.put(Constants.NOTE_SUB_TYPE, StringUtil.EMPTY);
+                // 打卡城市
+                map.put(Constants.NOTE_SUB_CITY, StringUtil.EMPTY);
+                // 花费时长
+                map.put(Constants.NOTE_MASTER_SPEND_TIME, StringUtil.EMPTY);
+                // 备注
+                map.put(Constants.NOTE_SUB_REMARK, StringUtil.EMPTY);
+                // 更新标记
+                map.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.UPDATE_DEFAULT_COUNT);
+                // 删除标记
+                map.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.DELETE_OFF);
+                listMap.add(map);
+            }
+
+            if(FileUtil.write(filePath, Constants.NOTE_FILE_NAME_DOWNLOAD_TEMPLATE, listMap, null)) {
+                ToastUtil.longShow(this, "下载成功(" + "文件路径:" + getFilePathBySDCard() + "文件名" + Constants.NOTE_FILE_NAME_DOWNLOAD_TEMPLATE);
+            } else {
+                ToastUtil.shortShow(this, "下载失败");
+            }
+            return true;
+        case R.id.menu_note_master_previous:
+            commonReturnIndex();
+            return true;
+        case R.id.menu_note_master_index:
+            commonReturnIndex();
+            return true;
+            default:
 			return super.onOptionsItemSelected(item);
 		}
 	}

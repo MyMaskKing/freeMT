@@ -1,5 +1,6 @@
 package free.android.utils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class StringUtil {
 	}
 
 	public static boolean isEmptyReturnBoolean(String str) {
-		if (str == null || EMPTY.equals(str) || Constants.STR_NULL.toUpperCase().equals(str.toUpperCase())) {
+		if (str == null || EMPTY.equals(str.trim()) || Constants.STR_NULL.toUpperCase().equals(str.trim().toUpperCase())) {
 			return true;
 		}
 		return false;
@@ -33,6 +34,19 @@ public class StringUtil {
 		Integer result = new Integer(0);
 		if(!isEmptyReturnBoolean(str)){
 			result = Integer.parseInt(str);
+		}
+		return result;
+
+	}
+
+	public static BigDecimal isEmptyReturnBigDecimal(String str) {
+		BigDecimal result = new BigDecimal(0);
+		if(!isEmptyReturnBoolean(str)){
+			try{
+				result = new BigDecimal(str);
+			}catch (Exception e){
+				return result;
+			}
 		}
 		return result;
 

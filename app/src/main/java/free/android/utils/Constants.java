@@ -27,6 +27,7 @@ public class Constants {
 	 * 共通
 	 */
 	public static final String EQUAL_SYMBOL = "=";
+	public static final String COLON_SYMBOL = ":  ";
 	public static final String ACTION_FALG = "action_flag";
 	public static final String UPLOAD_FILE_PATH = "upload_file_path";
 	public static final String UPLOAD_FILE_NAME = "upload_file_name";
@@ -35,7 +36,11 @@ public class Constants {
     public static final String DELETE_OFF = "0";
     public static final String STR_NULL = "NULL";
     public static final String CONFIRM_MARK = "1";
-    public static final String CANCEL_MARK = "0";
+	public static final String UPDATE_MARK = "2";
+	public static final String CANCEL_MARK = "0";
+	public static final String WARNING_MARK = "warn";
+	public static final String ERROR_MARK = "error";
+	public static final String INFO_MARK = "info";
 
 	/**
 	 * 时间格式
@@ -56,10 +61,14 @@ public class Constants {
 	 * 便签功能使用
 	 */
 	public static  final String NOTE_FILE_NAME = "FreeMT_Note.txt";
+	public static  final String NOTE_FILE_NAME_DOWNLOAD_TEMPLATE = "FreeMT_Note_Template.txt";
 	public static final String NOTE_MASTER_ID = "NOTE_MASTER_ID";
 	public static final String NOTE_MASTER_TITLE = "NOTE_MASTER_TITLE";
 	public static final String NOTE_MASTER_SPEND_TIME = "NOTE_MASTER_SPEND_TIME";
 	public static final String NOTE_MASTER_ADDRESS = "NOTE_MASTER_ADDRESS";
+	public static final String NM_NOTE_MASTER_TITLE = "打卡";
+	public static final String NM_NOTE_MASTER_SPEND_TIME = "路程时间";
+	public static final String NM_NOTE_MASTER_ADDRESS = "打卡目的地";
 
 	/**
 	 * 便签功能子画面使用
@@ -72,4 +81,10 @@ public class Constants {
 	public static final String NOTE_SUB_REMARK = "NOTE_SUB_REMARK";
 	public static final String NOTE_SUB_UPDATE_COUNT = "NOTE_SUB_UPDATE_COUNT";
 	public static final String NOTE_SUB_DELETE_FLAG = "NOTE_SUB_DELETE_FLAG";
+	public static final String NM_NOTE_SUB_ITEM = "打卡项目";
+	public static final String NM_NOTE_SUB_OVER_FLAG = "完成度";
+	public static final String NM_NOTE_SUB_APPRAISAL = "NOTE_SUB_APPRAISAL";
+	public static final String NM_NOTE_SUB_TYPE = "打卡类型";
+	public static final String NM_NOTE_SUB_CITY = "打卡城市";
+	public static final String NM_NOTE_SUB_REMARK = "备注";
 }

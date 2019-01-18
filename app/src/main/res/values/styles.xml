@@ -11,6 +11,26 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="required_style">
+        <item name="android:textColor">#ff0d00</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="info_style">
+        <item name="android:textColor">#1089ec</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="warning_style">
+        <item name="android:textColor">#ffd904</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="advice_style">
+        <item name="android:textColor">#1cd654</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="textview_allgrade_content">
         <item name="android:layout_height">30dp</item>
         <item name="android:gravity">center</item>
@@ -19,5 +39,24 @@
         <item name="android:background">#0000ff</item>
         <item name="android:textSize">20sp</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="dialog_style_v1" parent="@android:style/Theme.Holo.Light.Dialog">
+        <!-- 窗口背景色 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 浮于Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- Dialog以外的区域模糊效果 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--进出动画-->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
 </resources>

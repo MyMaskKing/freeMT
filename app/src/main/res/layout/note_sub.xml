@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    tools:context="free.android.activity.NoteSubActivity">
+    android:gravity="start|center_horizontal"
+    tools:context="free.android.activity.NoteSubActivity"
+    android:background="@drawable/img_background_all_v5">
     <TextView
     android:id="@+id/v_id__note_sub_init_title"
     android:layout_width="match_parent"
@@ -22,7 +23,7 @@
         android:background="@drawable/text_half_fillet"
         android:focusedByDefault="true"
         android:gravity="center"
-        android:text="meun"
+        android:text="@string/menu_US_mes"
         android:focusable="true"
         android:focusableInTouchMode="true" >
     </Button>
@@ -37,6 +38,13 @@
         android:textSize="20sp"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/v_id_note_sub_update_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
     <!-- Item 1 -->
 
     <ScrollView
@@ -46,19 +54,29 @@
         android:layout_below="@+id/v_id__note_sub_menu">
 
         <GridLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:columnCount="16"
+            android:columnCount="20"
             android:rowCount="20"
             android:useDefaultMargins="true">
+
+            <!-- Warning Area[Start] -->
+            <TextView
+                style="@style/required_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_gravity="end|bottom"
+                android:text="@string/required_CN_mes" />
+            <!-- Warning Area[End] -->
 
             <TextView
                 android:id="@+id/v_id_note_sub_title"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="5"
+                android:layout_columnSpan="1"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_master_title" />
 
@@ -66,17 +84,31 @@
                 android:id="@+id/v_id_note_sub_title_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="11"
+                android:layout_columnSpan="17"
                 android:ems="10"
-                android:imeOptions="actionDone"/>
+                android:imeOptions="actionDone"
+
+                android:hint="请输入行程大致计划"
+                android:inputType="text"
+                android:background="@drawable/border_line_v2"/>
             <!-- Item 2 -->
+
+            <!-- Warning Area[Start] -->
+            <TextView
+                style="@style/advice_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="end|bottom"
+                android:text="@string/advice_CN_mes" />
+            <!-- Warning Area[End] -->
 
             <TextView
                 android:id="@+id/v_id_note_sub_item"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="5"
+                android:layout_columnSpan="2"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_master_item" />
 
@@ -84,34 +116,61 @@
                 android:id="@+id/v_id_note_sub_item_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="11"
+                android:layout_columnSpan="17"
+                android:hint="请输入行程详细计划"
                 android:ems="10"
-                android:imeOptions="actionDone" />
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:background="@drawable/border_line_v2"/>
             <!-- Item 3 -->
+            <!-- Warning Area[Start] -->
+            <TextView
+                style="@style/advice_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_gravity="end|bottom"
+                android:text="@string/advice_CN_mes" />
+            <!-- Warning Area[End] -->
 
             <TextView
                 android:id="@+id/v_id_note_sub_address"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="5"
+                android:layout_columnSpan="2"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_master_address" />
             <EditText
                 android:id="@+id/v_id_note_sub_address_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="11"
+                android:layout_columnSpan="17"
                 android:ems="10"
+                android:inputType="text"
+                android:maxLength="50"
+                android:hint="请输入行程目的地"
                 android:imeOptions="actionDone"
-                android:labelFor="@+id/v_id_note_sub_address">
+                android:labelFor="@+id/v_id_note_sub_address"
+                android:background="@drawable/border_line_v2">
             </EditText>
+
+            <!-- Warning Area[Start] -->
+            <TextView
+                style="@style/info_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_gravity="end|bottom"
+                android:text="@string/info_CN_mes" />
+            <!-- Warning Area[End] -->
+
             <TextView
                 android:id="@+id/v_id_note_sub_remark"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="5"
+                android:layout_columnSpan="1"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_master_remark" />
 
@@ -119,21 +178,33 @@
                 android:id="@+id/v_id_note_sub_remark_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="10"
+                android:layout_columnSpan="17"
                 android:ems="10"
                 android:enabled="true"
                 android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="5"/>
+                android:minLines="5"
+                android:background="@drawable/border_line_v1"/>
             <!-- Item4 -->
+
+            <!-- Warning Area[Start] -->
+            <TextView
+                style="@style/required_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="1"
+                android:layout_rowSpan="3"
+                android:layout_gravity="end|center"
+                android:text="@string/info_CN_mes" />
+            <!-- Warning Area[End] -->
 
             <TextView
                 android:id="@+id/note_type_group"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_columnSpan="4"
+                android:layout_rowSpan="3"
+                android:layout_columnSpan="2"
                 android:layout_gravity="end|center"
                 android:text="@string/note_master_type" />
 
@@ -141,8 +212,8 @@
                 android:id="@+id/v_id_note_type_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_columnSpan="4">
+                android:layout_rowSpan="3"
+                android:layout_columnSpan="5">
 
                 <RadioButton
                     android:id="@+id/v_id_note_type_travel"
@@ -170,8 +241,8 @@
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="2"
+                android:layout_rowSpan="2"
+                android:layout_columnSpan="4"
                 android:paddingTop="25dp"
                 android:text="@string/note_master_city" />
 
@@ -179,13 +250,16 @@
                 android:id="@+id/v_id_note_sub_city_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
+                android:layout_rowSpan="2"
                 android:layout_columnSpan="6"
                 android:width="90dp"
                 android:ems="10"
                 android:imeOptions="actionDone"
                 android:labelFor="@+id/note_city"
-                android:paddingTop="25dp"></EditText>
+                android:paddingTop="25dp"
+                android:maxLength="5"
+                android:inputType="text"
+                android:background="@drawable/border_line_v2"></EditText>
             <!-- Item [End] -->
             <!-- Item [Start] -->
 
@@ -195,22 +269,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
-                android:layout_columnSpan="2"
-                android:layout_gravity="end|center"
+                android:layout_columnSpan="4"
+                android:layout_gravity="bottom"
                 android:text="@string/note_master_spend_time" />
 
             <EditText
                 android:id="@+id/v_id_note_master_spend_time_hour_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_columnSpan="1"
-                android:layout_gravity="end|center"
+                android:layout_rowSpan="1"
+                android:layout_columnSpan="2"
                 android:width="30dp"
                 android:ems="10"
                 android:imeOptions="actionDone"
                 android:labelFor="@+id/note_master_spend_time"
-                android:maxLength="1"></EditText>
+                android:maxLength="2"
+                android:inputType="number"
+                android:layout_gravity="bottom"
+                android:background="@drawable/border_line_v2"></EditText>
 
             <TextView
                 style="@style/text_style"
@@ -218,20 +294,22 @@
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
                 android:layout_columnSpan="1"
-                android:layout_gravity="bottom|start"
+                android:layout_gravity="bottom"
                 android:text="@string/hour_CN_mes" />
 
             <EditText
                 android:id="@+id/v_id_note_master_spend_time_minute_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_columnSpan="1"
-                android:layout_gravity="end|center"
-                android:width="10dp"
+                android:layout_rowSpan="1"
+                android:layout_columnSpan="2"
+                android:width="30dp"
                 android:ems="30"
                 android:imeOptions="actionDone"
-                android:maxLength="1"></EditText>
+                android:layout_gravity="bottom"
+                android:inputType="number"
+                android:maxLength="2"
+                android:background="@drawable/border_line_v2"></EditText>
 
             <TextView
                 style="@style/text_style"
@@ -239,7 +317,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
                 android:layout_columnSpan="1"
-                android:layout_gravity="bottom|start"
+                android:layout_gravity="bottom"
                 android:text="@string/minute_CN_mes" />
             <!-- Item [End  ] -->
             <!-- Item 5 -->
@@ -252,7 +330,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/button_rounded"
+        android:background="@drawable/button_all_v2"
+        android:textStyle="bold"
+        android:textColor="#d2e2b214"
         android:onClick="executeAddBtn"
         android:text="@string/add_CN_mes" />
 

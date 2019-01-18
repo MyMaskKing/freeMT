@@ -5,22 +5,22 @@
     android:useLevel="true">
     <!-- 背景实色 -->
     <solid android:color="#d40dd7f2"/>
-    <!-- 边框线背景及边框线(虚线控制:dashGap/dashWidth) -->
+    <!-- 边框线背景及边框线(虚线控制:dashGap虚线间距/dashWidth宽度) -->
     <stroke
-        android:width="2dp"
-        android:color="#f2b83a"
+        android:width="1dp"
+        android:color="#d4140e"
         android:dashGap="5dp"
         android:dashWidth="10dp"
         />
     <!-- 圆角(四个角) -->
-    <corners android:radius="20dp" />
+    <corners android:radius="180dp" />
     <!-- 背景渐变色 -->
     <gradient
         android:angle="-45"
         android:centerX="0.5"
         android:centerY="0.4"
-        android:startColor="#144ea6"
-        android:centerColor="#539cbe"
-        android:endColor="#ed0cbaf2"
+        android:startColor="#000518"
+        android:centerColor="#1a3dbb"
+        android:endColor="#030a13"
         android:type="linear" />
 </shape>

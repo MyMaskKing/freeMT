@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="free.android.activity.NoteMainActivity"
-    android:background="@drawable/img_background_all_v4">
+    android:background="@drawable/img_background_all_v3">
     <!-- 便签Header部 -->
     <ScrollView
         android:id="@+id/v_id_note_header"

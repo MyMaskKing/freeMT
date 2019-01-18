@@ -12,7 +12,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import free.android.R;
@@ -23,7 +26,6 @@ import free.android.utils.Constants;
 import free.android.utils.FileUtil;
 import free.android.utils.LogUtil;
 import free.android.utils.StringUtil;
-import free.android.utils.ToastUtil;
 
 /**
  *  便签子画面
@@ -48,14 +50,12 @@ public class NoteSubActivity extends ActivityCommon{
 		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_sub);
-		Intent intent = getIntent();
-		// 不同功能判断标识
-		String actionFlag = intent.getStringExtra(Constants.ACTION_FALG);
-		// 便签主画面的每个项目点击事件
-		if (StringUtil.equaleReturnBoolean("clickItem", actionFlag)) {
-			NoteMainEntity noteMainEntity = (NoteMainEntity)intent.getSerializableExtra("noteEntity");
+		if(fromNoteMainActivityFlag()) {
+			NoteMainEntity noteMainEntity = (NoteMainEntity)getIntent().getSerializableExtra("noteEntity");
 			TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
-			idHidden.setText(noteMainEntity.getNoteMasterId());
+            idHidden.setText(noteMainEntity.getNoteMasterId());
+            TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
+            updateCountHidden.setText(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount());
 			EditText titleEditext = (EditText)findViewById(R.id.v_id_note_sub_title_editext);
 			titleEditext.setText(noteMainEntity.getNoteMasterTitle());
 			ComponentUtil.setEditextDisable(titleEditext);
@@ -83,7 +83,6 @@ public class NoteSubActivity extends ActivityCommon{
             remarkEditext.setText(noteMainEntity.getNoteSubEntity().getNoteSubRemark());
             ComponentUtil.setEditextDisable(remarkEditext);
 		}
-
 		Button menuBtn= (Button) findViewById(R.id.v_id__note_sub_menu);
 		registerForContextMenu(menuBtn);
 		menuBtn.setOnCreateContextMenuListener(this);//给组件注册Context菜单
@@ -94,9 +93,26 @@ public class NoteSubActivity extends ActivityCommon{
 			}
 		});
 
+
 	}
 
-	/**
+    /**
+     * 判断是否由便签主画面迁移
+     * @return
+     */
+    private boolean fromNoteMainActivityFlag() {
+        boolean result = false;
+        Intent intent = getIntent();
+        // 不同功能判断标识
+        String actionFlag = intent.getStringExtra(Constants.ACTION_FALG);
+        // 便签主画面的每个项目点击事件
+        if (StringUtil.equaleReturnBoolean("clickItem", actionFlag)) {
+            result = true;
+        }
+        return result;
+    }
+
+    /**
 	 * 便签子画面Menu部
 	 * @param menu
 	 * @return
@@ -106,6 +122,11 @@ public class NoteSubActivity extends ActivityCommon{
 		// 选择菜单 一样 进行打气使用
 		getMenuInflater().inflate(R.menu.note_sub_menu, menu);
 		super.onCreateContextMenu(menu, v, menuInfo);
+		if (!fromNoteMainActivityFlag()) {
+			// 新规场合禁止修改删除
+			menu.findItem(R.id.menu_note_sub_modify).setVisible(false);
+			menu.findItem(R.id.menu_note_sub_del).setVisible(false);
+		}
 	}
 
 	/**
@@ -125,12 +146,33 @@ public class NoteSubActivity extends ActivityCommon{
 				return false;
 			// 便签子画面的修改按钮
 			case R.id.menu_note_sub_modify:
-				boolean copyFlag = FileUtil.copy(getFilePathByApp(), Constants.NOTE_FILE_NAME, getFilePathBySDCard(), Constants.NOTE_FILE_NAME);
-				if(copyFlag) {
-					ToastUtil.longShow(this, "下载成功(" + "文件路径:" + getFilePathBySDCard() + "文件名" + Constants.NOTE_FILE_NAME);
-				} else {
-					ToastUtil.shortShow(this, "下载失败");
-				}
+				EditText titleEditext = (EditText)findViewById(R.id.v_id_note_sub_title_editext);
+				ComponentUtil.setEditextEnable(titleEditext);
+				EditText itemEditext = (EditText)findViewById(R.id.v_id_note_sub_item_editext);
+				ComponentUtil.setEditextEnable(itemEditext);
+				EditText addressEditext = (EditText)findViewById(R.id.v_id_note_sub_address_editext);
+				ComponentUtil.setEditextEnable(addressEditext);
+				Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
+				ComponentUtil.setButtonEnable(addBtn);
+				RadioGroup typeGroupRadio = (RadioGroup)findViewById(R.id.v_id_note_type_group);
+				ComponentUtil.setRadioEnable(typeGroupRadio);
+				EditText cityEditext = (EditText)findViewById(R.id.v_id_note_sub_city_editext);
+				ComponentUtil.setEditextEnable(cityEditext);
+				EditText spendTimeHEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_hour_editext);
+				ComponentUtil.setEditextEnable(spendTimeHEditext);
+				EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
+				ComponentUtil.setEditextEnable(spendTimeMEditext);
+				EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
+				ComponentUtil.setEditextEnable(remarkEditext);
+				return true;
+			// 便签子画面的返回上一级
+			case R.id.menu_note_sub_previous:
+				Intent intent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
+				startActivity(intent);
+				return true;
+			// 便签子画面的返回首页
+			case R.id.menu_note_sub_return_index:
+				commonReturnIndex();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -156,9 +198,70 @@ public class NoteSubActivity extends ActivityCommon{
 	 * 执行添加便签内容操作
 	 */
 	public void executeAddBtn(View view) {
-        Map<String, Object> addContent = commonSetWriteContent();
-        commonTransitionPage(addContent);
+		Map<String, Object> submitContent = commonSetWriteContent();
+		List<String> submitContentList = new ArrayList<>();
+		List<String> checkErrorList = new ArrayList<>();
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_TITLE).toString())) {
+			submitContentList.add(Constants.NM_NOTE_MASTER_TITLE + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_TITLE).toString());
+		}else{
+			checkErrorList.add(Constants.NM_NOTE_MASTER_TITLE + Constants.COLON_SYMBOL + "请必须输入此项目");
+		}
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_ITEM).toString())) {
+			submitContentList.add(Constants.NM_NOTE_SUB_ITEM + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_ITEM).toString());
+		}
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_ADDRESS).toString())) {
+			submitContentList.add(Constants.NM_NOTE_MASTER_ADDRESS + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_ADDRESS).toString());
+		}
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_CITY).toString())) {
+			submitContentList.add(Constants.NM_NOTE_SUB_CITY + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_CITY).toString());
+		}
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString())
+				&& !(submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString().split(Constants.HOUR_CN)[0].trim().equals("0"))
+				&& !submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString().split(Constants.MINUTE_CN)[0].trim().equals("0")) {
+			submitContentList.add(Constants.NM_NOTE_MASTER_SPEND_TIME + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString());
+		}
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_REMARK).toString())) {
+			submitContentList.add(Constants.NM_NOTE_SUB_REMARK + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_REMARK).toString());
+		}
+		if (!checkErrorList.isEmpty()) {
+			setError();
+			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"请安装错误提示进行修改输入内容", "确定", "取消");
+		}else {
+			showDialogV1_1(submitContentList, Constants.CONFIRM_MARK,"请确认添加内容", "确认", "取消");
+		}
+	}
 
+	/**
+	 * <PRE>
+	 * 对话框Template 1.1(按钮Btn1的点击事件)
+	 * 使用页面(common_dialog_v1.xml)
+	 * <PRE/>
+	 */
+	protected void onClickBtn1V1_1() {
+        Map<String, Object> addContent = commonSetWriteContent();
+        // 判断页面Check结果
+        if(isError()) {
+            onClickBtn1V1_2();
+            // 执行添加操作
+        }else if (!isError() && !fromNoteMainActivityFlag()){
+            commonSetWriteContent();
+            // 默认新标记
+            addContent.put(Constants.NOTE_SUB_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
+			commonTransitionPage(addContent);
+            // 执行修改操作
+		} else {
+            commonSetWriteContent();
+            // 获取修改Id
+            TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+            String id = idHidden.getText().toString();
+            addContent.put(Constants.NOTE_MASTER_ID, id);
+            TextView updateCountStr = (TextView) findViewById(R.id.v_id_note_sub_update_count);
+            BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(String.valueOf(updateCountStr.getText()));
+            updateCount = updateCount.add(new BigDecimal(1));
+            // 更新标记
+            addContent.put(Constants.NOTE_SUB_UPDATE_COUNT, updateCount.toString());
+            commonTransitionPage(addContent);
+        }
 	}
 
     /**
@@ -200,8 +303,6 @@ public class NoteSubActivity extends ActivityCommon{
         addContent.put(Constants.NOTE_SUB_REMARK, remark);
         // 删除标记
         addContent.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.DELETE_OFF);
-        // 更新标记
-        addContent.put(Constants.NOTE_SUB_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
         return addContent;
     }
 

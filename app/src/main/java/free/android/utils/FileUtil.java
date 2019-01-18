@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,54 +73,95 @@ public class FileUtil extends ActivityCommon{
 	 * @param singleData
 	 *             追加单个数据
 	 */
-	public static void write(String filePath, String fileName, List<Map<String,Object>> listData, Map<String, Object> singleData) {
+	public static boolean write(String filePath, String fileName, List<Map<String,Object>> listData, Map<String, Object> singleData) {
+        boolean result = true;
 		File file = createFile(filePath, fileName);
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(file, true)));
 			if (listData == null || listData.isEmpty()) {
-				// Master 1
-				bw.write(Constants.NOTE_MASTER_ID + Constants.EQUAL_SYMBOL +
-                        (StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_MASTER_ID)))
-                                ?getIdByTime() : String.valueOf(singleData.get(Constants.NOTE_MASTER_ID))));
-				bw.newLine();
-				// Master 2
-				bw.write(Constants.NOTE_MASTER_TITLE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_TITLE));
-				bw.newLine();
-				// Master 3
-				bw.write(Constants.NOTE_MASTER_SPEND_TIME + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_SPEND_TIME));
-				bw.newLine();
-				// Master 4
-				bw.write(Constants.NOTE_MASTER_ADDRESS + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_ADDRESS));
-				bw.newLine();
-				// Sub 1
-				bw.write(Constants.NOTE_SUB_ITEM + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_ITEM));
-				bw.newLine();
-				// Sub 2
-				bw.write(Constants.NOTE_SUB_OVER_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_OVER_FLAG));
-				bw.newLine();
-				// Sub 3
-				bw.write(Constants.NOTE_SUB_APPRAISAL + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_APPRAISAL));
-				bw.newLine();
-				bw.write(Constants.NOTE_SUB_TYPE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_TYPE));
-				bw.newLine();
-				bw.write(Constants.NOTE_SUB_CITY + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_CITY));
-				bw.newLine();
-				bw.write(Constants.NOTE_SUB_REMARK + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_REMARK));
-				bw.newLine();
-				// 数据删除标记
-				bw.write(Constants.NOTE_SUB_DELETE_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_DELETE_FLAG));
-				bw.newLine();
-				// 数据更新回数标记
-				bw.write(Constants.NOTE_SUB_UPDATE_COUNT + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_UPDATE_COUNT));
-				bw.newLine();
+				writeNote(bw, singleData);
+			}else if (listData != null && !listData.isEmpty()) {
+				Iterator<Map<String, Object>> valsIterator = listData.iterator();
+				while (valsIterator.hasNext()) {
+					Map<String, Object> val = valsIterator.next();
+					writeNote(bw, val);
+				}
 			}
 
 			bw.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+            result = false;
 		}
+		return result;
+	}
+
+    /**
+     * 写入指定文件(便签功能专用)
+     * @param bw
+     * @param singleData
+     * @throws Exception
+     */
+	private static void writeNote(BufferedWriter bw, Map<String, Object> singleData) throws Exception{
+		// Master 1
+		bw.write("#COMENT#:信息ID(*ID不重复,请勿更改)");
+		bw.newLine();
+		bw.write(Constants.NOTE_MASTER_ID + Constants.EQUAL_SYMBOL +
+				(StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_MASTER_ID)))
+						?getIdByTime() : String.valueOf(singleData.get(Constants.NOTE_MASTER_ID))));
+		bw.newLine();
+		// Master 2
+		bw.write("#COMENT#:信息标题");
+		bw.newLine();
+		bw.write(Constants.NOTE_MASTER_TITLE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_TITLE));
+		bw.newLine();
+		// Master 3
+		bw.write("#COMENT#:所到目的地花费时间");
+		bw.newLine();
+		bw.write(Constants.NOTE_MASTER_SPEND_TIME + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_SPEND_TIME));
+		bw.newLine();
+		// Master 4
+		bw.write("#COMENT#:目的地");
+		bw.newLine();
+		bw.write(Constants.NOTE_MASTER_ADDRESS + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_ADDRESS));
+		bw.newLine();
+		// Sub 1
+		bw.write("#COMENT#:信息详细(子信息)");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_ITEM + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_ITEM));
+		bw.newLine();
+		// Sub 2
+		bw.write("#COMENT#:信息完成标志");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_OVER_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_OVER_FLAG));
+		bw.newLine();
+		// Sub 3
+		bw.write("#COMENT#:信息详细(子信息完成后评价)");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_APPRAISAL + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_APPRAISAL));
+		bw.newLine();
+		bw.write("#COMENT#:信息详细(类型)");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_TYPE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_TYPE));
+		bw.newLine();
+		bw.write("#COMENT#:信息详细(城市)");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_CITY + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_CITY));
+		bw.newLine();
+		bw.write("#COMENT#:信息详细(备注)");
+		bw.newLine();
+		bw.write(Constants.NOTE_SUB_REMARK + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_REMARK));
+		bw.newLine();
+        bw.write("#COMENT#:信息删除标识(*修改将会导致数据查询不正确,默认为0)");
+        bw.newLine();
+		// 数据删除标记
+		bw.write(Constants.NOTE_SUB_DELETE_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_DELETE_FLAG));
+		bw.newLine();
+        bw.write("#COMENT#:信息更新次数标识(*修改将会导致数据查询不正确,默认为0)");
+        bw.newLine();
+		// 数据更新回数标记
+		bw.write(Constants.NOTE_SUB_UPDATE_COUNT + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_UPDATE_COUNT));
+		bw.newLine();
 	}
 
 	/**

@@ -5,22 +5,32 @@
     <item
         android:id="@+id/menu_note_master_add"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="withText"
         android:title="@string/add_CN_mes"/>
-    
     <item
-        android:id="@+id/menu_note_master_del"
+        android:id="@+id/menu_note_master_previous"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/del_CN_mes"/>
+        android:showAsAction="always"
+        android:title="@string/previous_CN_mes"/>
+    
     <item
         android:id="@+id/menu_note_master_download"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/download_CN_mes"/>
     <item
+        android:id="@+id/menu_note_master_download_template"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/download_template_CN_mes"/>
+    <item
         android:id="@+id/menu_note_master_upload"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/upload_CN_mes"/>
+    <item
+        android:id="@+id/menu_note_master_index"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/index_CN_mes"/>
 </menu>
