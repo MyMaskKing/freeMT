@@ -52,7 +52,7 @@
     <string name="note_master_appraisal">评价:</string>
     <string name="note_master_type">打卡类型:</string>
     <string name="note_master_city">打卡城市:</string>
-    <string name="note_type_travel">游玩热点</string>
+    <string name="note_type_travel">旅游</string>
     <string name="note_type_food">美食</string>
     <string name="note_type_working">工作</string>
     <string name="note_type_else">其他</string>

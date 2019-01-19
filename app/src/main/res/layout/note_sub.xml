@@ -193,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnSpan="1"
-                android:layout_rowSpan="3"
+                android:layout_rowSpan="4"
                 android:layout_gravity="end|center"
                 android:text="@string/info_CN_mes" />
             <!-- Warning Area[End] -->
@@ -203,7 +203,7 @@
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="3"
+                android:layout_rowSpan="4"
                 android:layout_columnSpan="2"
                 android:layout_gravity="end|center"
                 android:text="@string/note_master_type" />
@@ -247,17 +247,19 @@
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
+                android:layout_rowSpan="3"
                 android:layout_columnSpan="4"
                 android:paddingTop="25dp"
+                android:layout_gravity="end|bottom"
                 android:text="@string/note_master_city" />
 
             <EditText
                 android:id="@+id/v_id_note_sub_city_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="2"
-                android:layout_columnSpan="6"
+                android:layout_rowSpan="3"
+                android:layout_columnSpan="8"
+                android:layout_gravity="bottom"
                 android:width="90dp"
                 android:ems="10"
                 android:imeOptions="actionDone"
@@ -276,7 +278,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
                 android:layout_columnSpan="4"
-                android:layout_gravity="bottom"
+                android:layout_gravity="top|bottom"
                 android:text="@string/note_master_spend_time" />
 
             <EditText
@@ -291,7 +293,7 @@
                 android:labelFor="@+id/note_master_spend_time"
                 android:maxLength="2"
                 android:inputType="number"
-                android:layout_gravity="bottom"
+                android:layout_gravity="top"
                 android:background="@drawable/border_line_v2"></EditText>
 
             <TextView
@@ -300,7 +302,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
                 android:layout_columnSpan="1"
-                android:layout_gravity="bottom"
+                android:layout_gravity="top"
                 android:text="@string/hour_CN_mes" />
 
             <EditText
@@ -312,7 +314,7 @@
                 android:width="30dp"
                 android:ems="30"
                 android:imeOptions="actionDone"
-                android:layout_gravity="bottom"
+                android:layout_gravity="top"
                 android:inputType="number"
                 android:maxLength="2"
                 android:background="@drawable/border_line_v2"></EditText>
@@ -323,7 +325,7 @@
                 android:layout_height="wrap_content"
                 android:layout_rowSpan="1"
                 android:layout_columnSpan="1"
-                android:layout_gravity="bottom"
+                android:layout_gravity="top"
                 android:text="@string/minute_CN_mes" />
             <!-- Item [End  ] -->
             <!-- TODO 缺少一行TR -->
