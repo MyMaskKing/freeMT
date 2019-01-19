@@ -41,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import free.android.MainActivity;
 import free.android.R;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
@@ -492,7 +493,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * 共通:返回首页
      */
     protected void commonReturnIndex() {
-        Intent intent = new Intent(ActivityCommon.this, Activity.class);
+        Intent intent = new Intent(ActivityCommon.this, MainActivity.class);
         startActivity(intent);
     }
 
