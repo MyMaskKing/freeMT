@@ -1,11 +1,19 @@
 package free.android;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.SuperscriptSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import free.android.activity.NoteMainActivity;
 import free.android.common.ActivityCommon;
@@ -21,6 +29,14 @@ public class MainActivity extends ActivityCommon {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 设置欢迎致辞
+        TextView welcomeTV = (TextView)findViewById(R.id.id_activity_main_welcom_tx);
+        SpannableStringBuilder msp = new SpannableStringBuilder (Constants.WELCOME_WORD);
+        //设置字体样式正常，粗体，斜体，粗斜体
+        msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 4, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
+        msp.setSpan(new ForegroundColorSpan(Color.RED),4, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new SuperscriptSpan(), 10,32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //下标
+        welcomeTV.setText(msp);
     }
 
     @Override

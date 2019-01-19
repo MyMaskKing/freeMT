@@ -14,6 +14,8 @@ public class Constants {
 	public static final int RANDOM_RANGE = 10;
 	/*** 一行显示数量 **/
 	public static final int ROW_NUMBBERS = 6;
+	/*** 首页欢迎致词 **/
+	public static final String WELCOME_WORD = "欢迎来到\"自由领域\"(Free Mobile Terminal),这里将会是新世界的起点.";
 
 	/*** 字符串All **/
 	public static final String STR_ALL = "ALL";
@@ -28,6 +30,7 @@ public class Constants {
 	 */
 	public static final String EQUAL_SYMBOL = "=";
 	public static final String COLON_SYMBOL = ":  ";
+	public static final String QUOTATION_MARKS_SYMBOL = "\"";
 	public static final String ACTION_FALG = "action_flag";
 	public static final String UPLOAD_FILE_PATH = "upload_file_path";
 	public static final String UPLOAD_FILE_NAME = "upload_file_name";

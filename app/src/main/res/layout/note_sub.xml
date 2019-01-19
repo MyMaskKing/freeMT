@@ -7,12 +7,14 @@
     tools:context="free.android.activity.NoteSubActivity"
     android:background="@drawable/img_background_all_v5">
     <TextView
-    android:id="@+id/v_id__note_sub_init_title"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentTop="true"
-    android:background="@drawable/text_half_fillet"></TextView>
+        android:id="@+id/v_id__note_sub_init_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/text_half_fillet"></TextView>
 
     <Button
         android:id="@+id/v_id__note_sub_menu"
@@ -23,9 +25,7 @@
         android:background="@drawable/text_half_fillet"
         android:focusedByDefault="true"
         android:gravity="center"
-        android:text="@string/menu_US_mes"
-        android:focusable="true"
-        android:focusableInTouchMode="true" >
+        android:text="@string/menu_US_mes">
     </Button>
     <!-- Menu Button -->
 
