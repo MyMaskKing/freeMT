@@ -6,10 +6,9 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
@@ -20,7 +19,8 @@ import java.util.Map;
 
 import free.android.R;
 import free.android.common.ActivityCommon;
-import free.android.entity.NoteMainEntity;
+import free.android.entity.NoteEntity;
+import free.android.enums.FormatEnum;
 import free.android.utils.ComponentUtil;
 import free.android.utils.Constants;
 import free.android.utils.FileUtil;
@@ -42,47 +42,71 @@ public class NoteSubActivity extends ActivityCommon{
 		// 无标题栏(系统自带不删除)
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// 全屏效果
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		/*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 		//隐藏状态栏
 		//getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		//显示状态栏
 		// getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		super.onCreate(savedInstanceState);
+		String currentMode = fromNoteMainActivityMode();
 		setContentView(R.layout.note_sub);
 		if(fromNoteMainActivityFlag()) {
-			NoteMainEntity noteMainEntity = (NoteMainEntity)getIntent().getSerializableExtra("noteEntity");
+			NoteEntity noteEntity = (NoteEntity)getIntent().getSerializableExtra("noteEntity");
+
+			/** [1](From主)便签:便签内容 */
+			TextView contentByNoteMainTv = (TextView)findViewById(R.id.v_id_note_sub_content_by_main);
+			contentByNoteMainTv.setText(noteEntity.getNoteContent());
+			ComponentUtil.setMarquee(contentByNoteMainTv);
+			/** [2](From主)便签:数据ID */
 			TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
-            idHidden.setText(noteMainEntity.getNoteMasterId());
-            TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
-            updateCountHidden.setText(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount());
-			EditText titleEditext = (EditText)findViewById(R.id.v_id_note_sub_title_editext);
-			titleEditext.setText(noteMainEntity.getNoteMasterTitle());
-			ComponentUtil.setEditextDisable(titleEditext);
-			EditText itemEditext = (EditText)findViewById(R.id.v_id_note_sub_item_editext);
-			itemEditext.setText(noteMainEntity.getNoteSubEntity().getNoteSubItem());
-			ComponentUtil.setEditextDisable(itemEditext);
-			EditText addressEditext = (EditText)findViewById(R.id.v_id_note_sub_address_editext);
-			addressEditext.setText(noteMainEntity.getNoteMasterAddress());
-			ComponentUtil.setEditextDisable(addressEditext);
-			Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
-			ComponentUtil.setButtonDisable(addBtn);
-			RadioGroup typeGroupRadio = (RadioGroup)findViewById(R.id.v_id_note_type_group);
-			ComponentUtil.setRadioSelected(typeGroupRadio, noteMainEntity.getNoteSubEntity().getNoteSubCity());
-			ComponentUtil.setRadioDisable(typeGroupRadio);
-			EditText cityEditext = (EditText)findViewById(R.id.v_id_note_sub_city_editext);
-			cityEditext.setText(noteMainEntity.getNoteSubEntity().getNoteSubCity());
-			ComponentUtil.setEditextDisable(cityEditext);
-			EditText spendTimeHEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_hour_editext);
-			spendTimeHEditext.setText(StringUtil.split(1, noteMainEntity.getNoteMasterSpendTime(), Constants.HOUR_CN));
-			ComponentUtil.setEditextDisable(spendTimeHEditext);
-			EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
-			spendTimeMEditext.setText(StringUtil.split(3, noteMainEntity.getNoteMasterSpendTime(), Constants.HOUR_CN, Constants.MINUTE_CN));
-			ComponentUtil.setEditextDisable(spendTimeMEditext);
-            EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
-            remarkEditext.setText(noteMainEntity.getNoteSubEntity().getNoteSubRemark());
-            ComponentUtil.setEditextDisable(remarkEditext);
+			idHidden.setText(noteEntity.getNoteId());
+			// 便签修改/副便签新规场合使用
+			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)) {
+				/** [3](From主)便签:数据子ID(Hidden) */
+				TextView idSubHidden = (TextView)findViewById(R.id.v_id_note_sub_sub_id);
+				idSubHidden.setText(noteEntity.getNoteSubId());
+				/** [4](From主)便签:数据父类ID(Hidden) */
+				TextView idParentHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+				idParentHidden.setText(noteEntity.getNoteParentId());
+				/** [5](From主)便签:便签内容 */
+				EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+				contentEditext.setText(noteEntity.getNoteContent());
+				ComponentUtil.setEditextDisable(contentEditext);
+				/** [6](From主)便签:标签内容 */
+				EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+				tagEditext.setText(noteEntity.getNoteTag());
+				ComponentUtil.setEditextDisable(tagEditext);
+				/** [7](From主)便签:录入时间 */
+				TextView itemEditext = (TextView)findViewById(R.id.v_id_note_sub_insert_time_editext);
+				itemEditext.setText(!StringUtil.isEmptyReturnBoolean(noteEntity.getNoteUpdateTime()) ? noteEntity.getNoteUpdateTime() : noteEntity.getNoteInsertTime());
+				/** [8](From主)便签:更新次数(Hidden) */
+				TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
+				updateCountHidden.setText(noteEntity.getNoteUpdateCount());
+				/** [9](From主)便签:当前页面级别(Hidden) */
+				TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+				currentPageLevelHidden.setText(noteEntity.getNoteCurrentPageLevel());
+				/** [10](From主)便签:更新次数(Hidden) */
+				TextView subNoteInsertTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_subnote_insert_time);
+				subNoteInsertTimeHidden.setText(noteEntity.getSubNoteInsertTime());
+			}else{
+				/** 便签标题:便签内容 */
+				TextView noteSubContentTv = (TextView)findViewById(R.id.v_id_note_sub_content);
+				noteSubContentTv.setText("(副)" + getResources().getString(R.string.note_content));
+				/** 便签标题:标签内容 */
+				TextView noteSubTagTv = (TextView)findViewById(R.id.v_id_note_sub_tag);
+				noteSubTagTv.setText("(副)"  + getResources().getString(R.string.note_tag));
+				/** 便签标题:录入时间 */
+				TextView insertTimeTv = (TextView)findViewById(R.id.v_id_note_sub_insert_time);
+				insertTimeTv.setVisibility(View.GONE);
+			}
+		}else {
+			LinearLayout idLL = (LinearLayout)findViewById(R.id.v_id_note_sub_current_id_ll);
+			idLL.setVisibility(View.GONE);
 		}
+		/** 便签:当前模式 */
+		TextView currentModl = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+		currentModl.setText(StringUtil.isEmptyReturnString(currentMode));
 		Button menuBtn= (Button) findViewById(R.id.v_id__note_sub_menu);
 		registerForContextMenu(menuBtn);
 		menuBtn.setOnCreateContextMenuListener(this);//给组件注册Context菜单
@@ -111,6 +135,16 @@ public class NoteSubActivity extends ActivityCommon{
         }
         return result;
     }
+
+	/**
+	 * 判断是否由便签主画面迁移模式
+	 * @return
+	 */
+	private String fromNoteMainActivityMode() {
+		Intent intent = getIntent();
+		// 不同功能判断标识
+		return intent.getStringExtra(Constants.ACTION_MODE);
+	}
 
     /**
 	 * 便签子画面Menu部
@@ -146,24 +180,12 @@ public class NoteSubActivity extends ActivityCommon{
 				return false;
 			// 便签子画面的修改按钮
 			case R.id.menu_note_sub_modify:
-				EditText titleEditext = (EditText)findViewById(R.id.v_id_note_sub_title_editext);
-				ComponentUtil.setEditextEnable(titleEditext);
-				EditText itemEditext = (EditText)findViewById(R.id.v_id_note_sub_item_editext);
-				ComponentUtil.setEditextEnable(itemEditext);
-				EditText addressEditext = (EditText)findViewById(R.id.v_id_note_sub_address_editext);
-				ComponentUtil.setEditextEnable(addressEditext);
-				Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
-				ComponentUtil.setButtonEnable(addBtn);
-				RadioGroup typeGroupRadio = (RadioGroup)findViewById(R.id.v_id_note_type_group);
-				ComponentUtil.setRadioEnable(typeGroupRadio);
-				EditText cityEditext = (EditText)findViewById(R.id.v_id_note_sub_city_editext);
-				ComponentUtil.setEditextEnable(cityEditext);
-				EditText spendTimeHEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_hour_editext);
-				ComponentUtil.setEditextEnable(spendTimeHEditext);
-				EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
-				ComponentUtil.setEditextEnable(spendTimeMEditext);
-				EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
-				ComponentUtil.setEditextEnable(remarkEditext);
+				/** 便签:便签内容部 */
+				EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+				ComponentUtil.setEditextEnable(contentEditext);
+				/** 便签:标签部 */
+				EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+				ComponentUtil.setEditextEnable(tagEditext);
 				return true;
 			// 便签子画面的返回上一级
 			case R.id.menu_note_sub_previous:
@@ -188,7 +210,7 @@ public class NoteSubActivity extends ActivityCommon{
 		// 获取删除Id
         TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
 		String id = idHidden.getText().toString();
-		addContent.put(Constants.NOTE_MASTER_ID, id);
+		addContent.put(Constants.NOTE_ID, id);
         // 删除标记ON
         addContent.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.DELETE_ON);
         commonTransitionPage(addContent);
@@ -201,31 +223,19 @@ public class NoteSubActivity extends ActivityCommon{
 		Map<String, Object> submitContent = commonSetWriteContent();
 		List<String> submitContentList = new ArrayList<>();
 		List<String> checkErrorList = new ArrayList<>();
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_TITLE).toString())) {
-			submitContentList.add(Constants.NM_NOTE_MASTER_TITLE + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_TITLE).toString());
+		/** 便签确认:便签内容 */
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_CONTENT).toString())) {
+			submitContentList.add(Constants.NM_NOTE_CONTENT + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_CONTENT).toString());
 		}else{
-			checkErrorList.add(Constants.NM_NOTE_MASTER_TITLE + Constants.COLON_SYMBOL + "请必须输入此项目");
+			checkErrorList.add(Constants.NM_NOTE_CONTENT + Constants.COLON_SYMBOL + "请必须输入此项目");
 		}
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_ITEM).toString())) {
-			submitContentList.add(Constants.NM_NOTE_SUB_ITEM + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_ITEM).toString());
-		}
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_ADDRESS).toString())) {
-			submitContentList.add(Constants.NM_NOTE_MASTER_ADDRESS + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_ADDRESS).toString());
-		}
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_CITY).toString())) {
-			submitContentList.add(Constants.NM_NOTE_SUB_CITY + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_CITY).toString());
-		}
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString())
-				&& !(submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString().split(Constants.HOUR_CN)[0].trim().equals("0"))
-				&& !submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString().split(Constants.MINUTE_CN)[0].trim().equals("0")) {
-			submitContentList.add(Constants.NM_NOTE_MASTER_SPEND_TIME + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_MASTER_SPEND_TIME).toString());
-		}
-		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_SUB_REMARK).toString())) {
-			submitContentList.add(Constants.NM_NOTE_SUB_REMARK + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_SUB_REMARK).toString());
+		/** 便签确认:标签内容 */
+		if (!StringUtil.isEmptyReturnBoolean(submitContent.get(Constants.NOTE_TAG).toString())) {
+			submitContentList.add(Constants.NM_NOTE_TAG + Constants.COLON_SYMBOL + submitContent.get(Constants.NOTE_TAG).toString());
 		}
 		if (!checkErrorList.isEmpty()) {
 			setError();
-			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"请按照错误提示进行修改输入内容", "确定", "取消");
+			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"错误", "订正", "取消");
 		}else {
 			showDialogV1_1(submitContentList, Constants.CONFIRM_MARK,"请确认添加内容", "确认", "取消");
 		}
@@ -242,25 +252,75 @@ public class NoteSubActivity extends ActivityCommon{
         // 判断页面Check结果
         if(isError()) {
             onClickBtn1V1_2();
-            // 执行添加操作
-        }else if (!isError() && !fromNoteMainActivityFlag()){
+            /** 执行(主)便签添加操作 */
+        }else if (!isError() && !fromNoteMainActivityFlag() && StringUtil.isEmptyReturnBoolean(fromNoteMainActivityMode())){
             commonSetWriteContent();
-            // 默认新标记
-            addContent.put(Constants.NOTE_SUB_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
+            // 添加默认页面级别
+			addContent.put(Constants.NOTE_CURRENT_PAGE_LEVEL, Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE);
+            // 添加默认更新次数
+            addContent.put(Constants.NOTE_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
 			commonTransitionPage(addContent);
-            // 执行修改操作
 		} else {
-            commonSetWriteContent();
-            // 获取修改Id
-            TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
-            String id = idHidden.getText().toString();
-            addContent.put(Constants.NOTE_MASTER_ID, id);
-            TextView updateCountStr = (TextView) findViewById(R.id.v_id_note_sub_update_count);
-            BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(String.valueOf(updateCountStr.getText()));
-            updateCount = updateCount.add(new BigDecimal(1));
-            // 更新标记
-            addContent.put(Constants.NOTE_SUB_UPDATE_COUNT, updateCount.toString());
-            commonTransitionPage(addContent);
+			/** 执行(副)便签添加操作 */
+			commonSetWriteContent();
+			// 操作:赋予主便签子ID
+			if(fromNoteMainActivityFlag() && StringUtil.equaleReturnBoolean(Constants.STR_ADD, fromNoteMainActivityMode())) {
+				List<Map<String, Object>> listWriteData = new ArrayList<>();
+				NoteEntity noteEntity = (NoteEntity)getIntent().getSerializableExtra("noteEntity");
+				// (副)便签ID
+				String subId = "NOTE" + getSystemTime(FormatEnum.TIME_FORMAT_ID.getVal());
+				addContent.put(Constants.NOTE_ID, subId);
+				// (副)便签:主便签ID
+				addContent.put(Constants.NOTE_PARENT_ID, noteEntity.getNoteId());
+				// (副)便签页面级别
+				BigDecimal subCurrentPageLevel = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteCurrentPageLevel()).add(new BigDecimal(1));
+				addContent.put(Constants.NOTE_CURRENT_PAGE_LEVEL, subCurrentPageLevel.toString());
+				listWriteData.add(addContent);
+				if(StringUtil.isEmptyReturnBoolean(noteEntity.getNoteSubId())) {
+					Map<String, Object> mainNoteData = commonSetWriteContent();
+					// ([1]主)便签:便签Id
+					mainNoteData.put(Constants.NOTE_ID, noteEntity.getNoteId());
+					// ([2]主)便签:便签子Id
+					mainNoteData.put(Constants.NOTE_SUB_ID, subId);
+					// ([3]主)便签:便签内容
+					mainNoteData.put(Constants.NOTE_CONTENT, noteEntity.getNoteContent());
+					// ([4]主)便签:标签内容
+					mainNoteData.put(Constants.NOTE_TAG, noteEntity.getNoteTag());
+					// ([5]主)便签:录入时间
+					mainNoteData.put(Constants.NOTE_INSERT_TIME, noteEntity.getNoteInsertTime());
+					// ([6]主)便签:副便签录入时间
+					mainNoteData.put(Constants.SUB_NOTE_INSERT_TIME, getSystemTime(FormatEnum.TIME_FORMAT_V1.getVal()));
+					// ([7]主)便签:更新时间
+					mainNoteData.put(Constants.NOTE_UPDATE_TIME, noteEntity.getNoteUpdateTime());
+					// ([8]主)便签:删除时间
+					mainNoteData.put(Constants.NOTE_DELETE_TIME, noteEntity.getNoteDeleteTime());
+					// ([9]主)便签:更新次数
+					BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount());
+					updateCount = updateCount.add(new BigDecimal(1));
+					mainNoteData.put(Constants.NOTE_UPDATE_COUNT, updateCount.toString());
+					// ([10]主)便签:删除Flag
+					mainNoteData.put(Constants.NOTE_DELETE_FLAG, noteEntity.getNoteDeleteFlag());
+					// ([11]主)便签:当前页面级别
+					mainNoteData.put(Constants.NOTE_CURRENT_PAGE_LEVEL, noteEntity.getNoteCurrentPageLevel());
+					// ([12]主)便签:父类便签ID
+					mainNoteData.put(Constants.NOTE_PARENT_ID, noteEntity.getNoteParentId());
+					listWriteData.add(mainNoteData);
+				}
+				String externalFilesPath = getFilePathByApp();
+				FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, listWriteData, null);
+				Intent noteSubIntent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
+				startActivity(noteSubIntent);
+			// 执行修改操作
+			} else {
+				TextView updateCountStr = (TextView) findViewById(R.id.v_id_note_sub_update_count);
+				BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(String.valueOf(updateCountStr.getText()));
+				updateCount = updateCount.add(new BigDecimal(1));
+				// 更新标记
+				addContent.put(Constants.NOTE_UPDATE_COUNT, updateCount.toString());
+				// 更新时间
+				addContent.put(Constants.NOTE_UPDATE_TIME, getSystemTime(FormatEnum.TIME_FORMAT_V1.getVal()));
+				commonTransitionPage(addContent);
+			}
         }
 	}
 
@@ -271,38 +331,47 @@ public class NoteSubActivity extends ActivityCommon{
 	private Map<String, Object> commonSetWriteContent(){
         // 放置添加的内容
         Map<String, Object> addContent = new HashMap<String, Object>();
-        EditText titleEditext = (EditText)findViewById(R.id.v_id_note_sub_title_editext);
-        // 打卡
-        String title = titleEditext.getText().toString();
-        addContent.put(Constants.NOTE_MASTER_TITLE, title);
-        // 打卡项目
-        EditText itemEditext = (EditText)findViewById(R.id.v_id_note_sub_item_editext);
-        String item = itemEditext.getText().toString();
-        addContent.put(Constants.NOTE_SUB_ITEM, item);
-        // 打卡目的地
-        EditText addressEditext = (EditText)findViewById(R.id.v_id_note_sub_address_editext);
-        String address = addressEditext.getText().toString();
-        addContent.put(Constants.NOTE_MASTER_ADDRESS, address);
-        // 项目类型
-        RadioGroup typeGroupRadio = (RadioGroup)findViewById(R.id.v_id_note_type_group);
-        String selectedTypeRadio = ComponentUtil.getSelectedRadio(typeGroupRadio);
-        addContent.put(Constants.NOTE_SUB_TYPE, selectedTypeRadio);
-        // 打卡城市
-        EditText cityEditext = (EditText)findViewById(R.id.v_id_note_sub_city_editext);
-        String city = cityEditext.getText().toString();
-        addContent.put(Constants.NOTE_SUB_CITY, city);
-        // 花费时长
-        EditText spendTimeHEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_hour_editext);
-        String spendTimeH = StringUtil.isEmptyReturnZero(spendTimeHEditext.getText().toString());
-        EditText spendTimeMEditext = (EditText)findViewById(R.id.v_id_note_master_spend_time_minute_editext);
-        String spendTimeM = StringUtil.isEmptyReturnZero(spendTimeMEditext.getText().toString());
-        addContent.put(Constants.NOTE_MASTER_SPEND_TIME, spendTimeH + Constants.HOUR_CN + spendTimeM + Constants.MINUTE_CN);
-        // 备注
-        EditText remarkEditext = (EditText)findViewById(R.id.v_id_note_sub_remark_editext);
-        String remark = remarkEditext.getText().toString();
-        addContent.put(Constants.NOTE_SUB_REMARK, remark);
-        // 删除标记
-        addContent.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.DELETE_OFF);
+		// [1]便签:便签Id
+		TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+		String id = idHidden.getText().toString();
+		addContent.put(Constants.NOTE_ID, id);
+		// [2]便签:便签子Id
+		TextView idSubHidden = (TextView)findViewById(R.id.v_id_note_sub_sub_id);
+		String subId = idSubHidden.getText().toString();
+		addContent.put(Constants.NOTE_SUB_ID, subId);
+		// [3]便签:便签内容
+        EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+        String contentStr = contentEditext.getText().toString();
+        addContent.put(Constants.NOTE_CONTENT, contentStr);
+		// [4]便签:标签内容
+		EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+		String tagStr = tagEditext.getText().toString();
+		addContent.put(Constants.NOTE_TAG, tagStr);
+		// [5]便签:更新时间
+		TextView updateTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_update_time);
+		String updateTime = updateTimeHidden.getText().toString();
+		addContent.put(Constants.NOTE_UPDATE_TIME, updateTime);
+		// [6]便签:更新次数
+		TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
+		String updateCount = updateCountHidden.getText().toString();
+		addContent.put(Constants.NOTE_UPDATE_COUNT, updateCount);
+        // [7]删除标记
+        addContent.put(Constants.NOTE_DELETE_FLAG, Constants.DELETE_OFF);
+		// [8]便签:当前页面级别
+		TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+		String currentPageLevelSrt = currentPageLevelHidden.getText().toString();
+		addContent.put(Constants.NOTE_CURRENT_PAGE_LEVEL, currentPageLevelSrt);
+		// [9]便签:副便签插入时间
+		TextView subNoteInsertTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_subnote_insert_time);
+		String subNoteInsertTimeSrt = subNoteInsertTimeHidden.getText().toString();
+		addContent.put(Constants.SUB_NOTE_INSERT_TIME, subNoteInsertTimeSrt);
+		// [10]删除时间
+		addContent.put(Constants.NOTE_DELETE_TIME, StringUtil.EMPTY);
+		// [11]便签:父类便签ID
+		TextView noteParentIdHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+		String noteParentIdStr = noteParentIdHidden.getText().toString();
+		addContent.put(Constants.NOTE_PARENT_ID, noteParentIdStr);
+
         return addContent;
     }
 

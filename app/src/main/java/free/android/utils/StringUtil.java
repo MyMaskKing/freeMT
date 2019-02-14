@@ -9,10 +9,17 @@ public class StringUtil {
 	public static final String EMPTY = "";
 
 	public static String isEmptyReturnString(String str) {
-		if (str == null || EMPTY.equals(str)) {
+		if (str == null || EMPTY.equals(str) || Constants.STR_NULL.toUpperCase().equals(str.trim().toUpperCase())) {
 			return EMPTY;
 		}
 		return str;
+	}
+
+	public static String isEmptyReturnString(Object str) {
+		if (str == null || EMPTY.equals(str) || Constants.STR_NULL.toUpperCase().equals(String.valueOf(str).trim().toUpperCase())) {
+			return EMPTY;
+		}
+		return String.valueOf(str);
 	}
 
 	public static String isEmptyReturnZero(String str) {

@@ -42,10 +42,15 @@
     <!-- 便签功能[Start] -->
     <string name="note_btn_name">便签</string>
     <string name="note_title">随手记录你的生活■</string>
-    <string name="note_sub_title">点滴记录■</string>
-    <string name="note_master_id">ID:</string>
-    <string name="note_master_title">打卡:</string>
-    <string name="note_master_item">打卡项目:</string>
+    <string name="note_content">便签内容:</string>
+    <string name="note_sub_content">便签内容(副):</string>
+    <string name="note_tag">标签:</string>
+    <string name="note_id">ID:</string>
+    <string name="note_insert_time">录入时间:</string>
+    <string name="note_current_id">(主)便签ID:</string>
+    <string name="note_current_content">(主)便签内容:</string>
+    <string name="note_current_mode">当前模式:</string>
+    <!-- *** Wait Use *** -->
     <string name="note_master_spend_time">路程时间:</string>
     <string name="note_master_address">打卡目的地:</string>
     <string name="note_master_over_flag">完成:</string>
@@ -57,5 +62,7 @@
     <string name="note_type_working">工作</string>
     <string name="note_type_else">其他</string>
     <string name="note_master_remark">备注:</string>
+    <!-- *** Wait Use *** -->
+
     <!-- 便签功能[End] -->
 </resources>

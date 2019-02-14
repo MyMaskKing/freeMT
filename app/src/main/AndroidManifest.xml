@@ -33,8 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NoteSubActivity"
-            android:label="@string/note_sub_title">
+            android:name=".activity.NoteSubActivity">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteSubActivity" />
 

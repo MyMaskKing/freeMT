@@ -7,8 +7,32 @@
     tools:context="free.android.activity.NoteMainActivity"
     android:background="@drawable/img_background_all_v3">
     <!-- 便签Header部 -->
+    <!-- 便签Header部:导航栏[Start] -->
+    <LinearLayout
+        android:id="@+id/v_id_note_header_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:background="@drawable/background_all_v4">
+        <TextView
+            android:paddingEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Menu"/>
+        <TextView
+            android:id="@+id/v_id_note_main_menu_tv"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/text_half_fillet"
+            android:text="@string/menu_CN_mes"
+            android:gravity="center"/>
+    </LinearLayout>
+    <!-- 便签Header部:导航栏[Start] -->
     <ScrollView
         android:id="@+id/v_id_note_header"
+        android:layout_below="@+id/v_id_note_header_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
@@ -26,7 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/v_id_note_header">
+        android:layout_below="@+id/v_id_note_header"
+        android:paddingTop="5dp">
 
         <ListView
             android:id="@+id/v_id_note_body_list"
@@ -41,7 +66,7 @@
             android:layout_marginTop="0dp"
             android:dividerHeight="2px"
             android:fadeScrollbars="true"
-            android:listSelector="#a0ccbd"
+            android:listSelector="#bac9c4"
             android:transcriptMode="alwaysScroll"/>
     </LinearLayout>
 

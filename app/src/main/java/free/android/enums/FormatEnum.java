@@ -2,22 +2,26 @@ package free.android.enums;
 
 import free.android.utils.Constants;
 
-public enum ColorEnum {
-    BTN_1(1, "#1"),
+public enum FormatEnum {
+    TIME_FORMAT_V1("yyyy/MM/dd HH:mm:ss"),
+    TIME_FORMAT_ID("yyyyMMddHHmmssSSS"),
     BTN_2(2, "#2"),
     ;
 
-    ColorEnum() {
+    FormatEnum() {
     }
 
     private int id;
     private String value;
 
-    ColorEnum(int id, String value) {
+    FormatEnum(int id, String value) {
         this.id = id;
         this.value = value;
     }
 
+    FormatEnum(String value) {
+        this.value = value;
+    }
     public String getVal() {
         return value;
     }
@@ -30,7 +34,7 @@ public enum ColorEnum {
         String result = "";
         // 10之内的随机数(四舍五入)
         int random = Integer.parseInt(new java.text.DecimalFormat("0").format(Math.random() * Constants.RANDOM_RANGE + 1));
-        for (ColorEnum val : ColorEnum.values()) {
+        for (FormatEnum val : FormatEnum.values()) {
             System.out.println(random);
             if (val.getId() == random) {
                 result = "SUCCESS";

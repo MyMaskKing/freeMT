@@ -2,13 +2,14 @@ package free.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -27,7 +28,7 @@ import java.util.Set;
 
 import free.android.R;
 import free.android.common.ActivityCommon;
-import free.android.entity.NoteMainEntity;
+import free.android.entity.NoteEntity;
 import free.android.holder.NoteMainBodyHolder;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.ComponentUtil;
@@ -41,23 +42,28 @@ public class NoteMainActivity extends ActivityCommon {
 
 	private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
 
-	private List<NoteMainEntity> noteMainBodyData = new ArrayList<NoteMainEntity>();
+	private List<NoteEntity> noteMainBodyData = new ArrayList<NoteEntity>();
     private List<String> noteMainHeaderData = new ArrayList<String>();
     private List<String> noteMainHeaderHiddenData = new ArrayList<String>();
     // 便签画面Body部
     private ListView noteBodyListView;
     private Set<String> cityList = new HashSet<String>();
     private Set<String> typeList = new HashSet<String>();
+    // 便签:标签集合
+    private Set<String> tagDataSet = new HashSet<String>();
     private Set<String> idOfDeleteData = new HashSet<String>();
     private Set<String> idOfUpdateData = new HashSet<String>();
     private List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
     private List<String> checkBoxHidden = new ArrayList<String>();
-
+    private NoteEntity commonNoteEntity;
     /**
      * 初始化方法
      */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        // 无标题栏(系统自带不删除)
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_main);
 
@@ -67,36 +73,70 @@ public class NoteMainActivity extends ActivityCommon {
 		LogUtil.i(Constants.LOG_MES_TRANSITION_DATA, String.valueOf(extra));
 		// 获取从其他画面的数据[End]
 
-		// 获取便签文件内容
-		getNoteFileContent();
-		againSetNoteBodyData(noteMainBodyData);
+        Map<String, String> matchingCondition = new HashMap<>();
+        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+		initNotePage(matchingCondition);
+
+		// 自定义Menu
+        TextView menuTv = (TextView) findViewById(R.id.v_id_note_main_menu_tv);
+        registerForContextMenu(menuTv);
+        menuTv.setOnCreateContextMenuListener(this);//给组件注册Context菜单
+        menuTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.showContextMenu();//单击直接显示Context菜单
+            }
+        });
+
+    }
+
+    /**
+     * 便签子画面Menu部
+     * @param menu
+     * @return
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        // 选择菜单 一样 进行打气使用
+        getMenuInflater().inflate(R.menu.note_main_menu, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    /**
+     * 初始化便签页面
+     * @param matchingCondition
+     *              筛选条件
+     */
+    private void initNotePage(Map<String, String> matchingCondition) {
+        // 获取便签文件内容
+        getNoteFileContent();
+        againSetNoteBodyData(noteMainBodyData);
+        /** 便签:Body部 */
         // 便签Body部List
-		printNoteMainBodyPage();
-
-		// 通过便签文件内容获取便签Header部数据
-		setNoteMainHeaderData();
-
-	}
+        printNoteMainBodyPage();
+        matchingResult(matchingCondition);
+        /** 便签:Header部 */
+        // 通过便签文件内容获取便签Header部数据
+        setNoteMainHeaderData();
+    }
 
     /**
      * 检索结果筛选
      * @param datas
      */
-	private void againSetNoteBodyData(List<NoteMainEntity> datas) {
-	    // 编号
-        int noCount = 1;
+	private void againSetNoteBodyData(List<NoteEntity> datas) {
 	    // 新的便签Body部数据集合
-        List<NoteMainEntity> againNoteBodyData = new ArrayList<NoteMainEntity>();
+        List<NoteEntity> againNoteBodyData = new ArrayList<NoteEntity>();
         // 获取更新次数最大的更新数据集合
-        List<NoteMainEntity> mxaUpdateData = getLastNewUpdateData();
-        Iterator<NoteMainEntity> valIterator = noteMainBodyData.iterator();
+        List<NoteEntity> mxaUpdateData = getLastNewUpdateData();
+        Iterator<NoteEntity> valIterator = noteMainBodyData.iterator();
         while (valIterator.hasNext()) {
-            NoteMainEntity val = valIterator.next();
+            NoteEntity val = valIterator.next();
             Iterator<String> delDataIterator = idOfDeleteData.iterator();
             String currentDataDelFlag = Constants.DELETE_OFF;
             while (delDataIterator.hasNext()) {
                 String delDataId = delDataIterator.next();
-                if (StringUtil.equaleReturnBoolean(delDataId, val.getNoteMasterId())) {
+                if (StringUtil.equaleReturnBoolean(delDataId, val.getNoteId())) {
                     currentDataDelFlag = Constants.DELETE_ON;
                     break;
                 }
@@ -106,12 +146,12 @@ public class NoteMainActivity extends ActivityCommon {
                 continue;
             }
             // 非最大更新次数数据排除
-            Iterator<NoteMainEntity> updDataIterator = mxaUpdateData.iterator();
+            Iterator<NoteEntity> updDataIterator = mxaUpdateData.iterator();
             String lastNewUpdateFlag = StringUtil.EMPTY;
             while (updDataIterator.hasNext()) {
-                NoteMainEntity updateData = updDataIterator.next();
-                if (StringUtil.equaleReturnBoolean(val.getNoteMasterId(), updateData.getNoteMasterId())
-                        && !StringUtil.equaleReturnBoolean(val.getNoteSubEntity().getNoteSubUpdateCount(), updateData.getNoteSubEntity().getNoteSubUpdateCount())) {
+                NoteEntity updateData = updDataIterator.next();
+                if (StringUtil.equaleReturnBoolean(val.getNoteId(), updateData.getNoteId())
+                        && !StringUtil.equaleReturnBoolean(val.getNoteUpdateCount(), updateData.getNoteUpdateCount())) {
                     lastNewUpdateFlag = Constants.CANCEL_MARK;
                     break;
                 }
@@ -120,17 +160,11 @@ public class NoteMainActivity extends ActivityCommon {
             if (StringUtil.equaleReturnBoolean(Constants.CANCEL_MARK, lastNewUpdateFlag)) {
                 continue;
             }
-            val.setNoteMasterNo(String.valueOf(noCount));
             againNoteBodyData.add(val);
-            // 统计便签城市使用
-            if (!StringUtil.isEmptyReturnBoolean(val.getNoteSubEntity().getNoteSubCity())) {
-                cityList.add(val.getNoteSubEntity().getNoteSubCity());
+            // 便签:标记集合
+            if (!StringUtil.isEmptyReturnBoolean(val.getNoteTag())) {
+                cityList.add(val.getNoteTag());
             }
-            // 统计便签类型使用
-            if (!StringUtil.isEmptyReturnBoolean(val.getNoteSubEntity().getNoteSubType())) {
-                typeList.add(val.getNoteSubEntity().getNoteSubType());
-            }
-            noCount++;
         }
         noteMainBodyData = againNoteBodyData;
     }
@@ -138,24 +172,24 @@ public class NoteMainActivity extends ActivityCommon {
     /**
      * 获取最新的更新数据集
      */
-    private List<NoteMainEntity> getLastNewUpdateData() {
+    private List<NoteEntity> getLastNewUpdateData() {
         // 最终更新数据集合
-        List<NoteMainEntity> updateEndData = new ArrayList<NoteMainEntity>();
+        List<NoteEntity> updateEndData = new ArrayList<NoteEntity>();
         // 更新数据集合临时保存
-        List<NoteMainEntity> updateData = new ArrayList<NoteMainEntity>();
+        List<NoteEntity> updateData = new ArrayList<NoteEntity>();
         Iterator<String> updateValIterator = idOfUpdateData.iterator();
         // 更新数据的Id遍历
         while(updateValIterator.hasNext()) {
             updateData.clear();
             String updateVal = updateValIterator.next();
-            Iterator<NoteMainEntity> noteMainEntityIterator = noteMainBodyData.iterator();
+            Iterator<NoteEntity> noteMainEntityIterator = noteMainBodyData.iterator();
             while (noteMainEntityIterator.hasNext()) {
-                NoteMainEntity val = noteMainEntityIterator.next();
-                if(StringUtil.equaleReturnBoolean(updateVal, val.getNoteMasterId())) {
+                NoteEntity val = noteMainEntityIterator.next();
+                if(StringUtil.equaleReturnBoolean(updateVal, val.getNoteId())) {
                     updateData.add(val);
                 };
             }
-            NoteMainEntity maxUpdateCountData = getMaxUpdateCountData(updateData);
+            NoteEntity maxUpdateCountData = getMaxUpdateCountData(updateData);
             updateEndData.add(maxUpdateCountData);
         }
         return updateEndData;
@@ -165,15 +199,15 @@ public class NoteMainActivity extends ActivityCommon {
      * 获取更新数最大的List
      * @param updateData
      */
-    private NoteMainEntity getMaxUpdateCountData(List<NoteMainEntity> updateData) {
-        NoteMainEntity entity = new NoteMainEntity();
+    private NoteEntity getMaxUpdateCountData(List<NoteEntity> updateData) {
+        NoteEntity entity = new NoteEntity();
         int updateCountCache = 0;
-        Iterator<NoteMainEntity> entityIterator = updateData.iterator();
+        Iterator<NoteEntity> entityIterator = updateData.iterator();
         while (entityIterator.hasNext()){
-            NoteMainEntity noteMainEntity = entityIterator.next();
-            if (updateCountCache < StringUtil.isEmptyReturnInteger(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount())) {
-                updateCountCache = StringUtil.isEmptyReturnInteger(noteMainEntity.getNoteSubEntity().getNoteSubUpdateCount());
-                entity = noteMainEntity;
+            NoteEntity noteEntity = entityIterator.next();
+            if (updateCountCache < StringUtil.isEmptyReturnInteger(noteEntity.getNoteUpdateCount())) {
+                updateCountCache = StringUtil.isEmptyReturnInteger(noteEntity.getNoteUpdateCount());
+                entity = noteEntity;
             }
         }
         return entity;
@@ -197,20 +231,20 @@ public class NoteMainActivity extends ActivityCommon {
 			 */
 			Set<String> repeatSet = new HashSet<String>();// By 创建新的实体类标识
 			List<String> idRecod = new ArrayList<String>();// By 创建新的实体类之前将上一个实体类的Id记录
-			List<NoteMainEntity> noteList = new ArrayList<NoteMainEntity>();
-			NoteMainEntity noteMainEntity = new NoteMainEntity();
+			List<NoteEntity> noteList = new ArrayList<NoteEntity>();
+			NoteEntity noteEntity = new NoteEntity();
 			int repaetMark = 1;
 			int count = 1;
 			while((readLine = fr.readLine()) != null) {
 			    if (readLine.contains("#COMENT#")) {
 			        continue;
                 }
-			    if(count <= 12) {
-                    setEntity(noteMainEntity, readLine, repeatSet, idRecod);
-                    if(count == 12) {
+			    if(count <= Constants.NOTE_FILE_DATA_COUNT) {
+                    setEntity(noteEntity, readLine, repeatSet, idRecod);
+                    if(count == Constants.NOTE_FILE_DATA_COUNT) {
                         count =  1;
-                        noteList.add(noteMainEntity);
-                        noteMainEntity = new NoteMainEntity();
+                        noteList.add(noteEntity);
+                        noteEntity = new NoteEntity();
                     } else{
                         count++;
                     }
@@ -240,7 +274,7 @@ public class NoteMainActivity extends ActivityCommon {
 	 * @param repeatSet
 	 * 			判断是否要重建实体类
 	 */
-	private void setEntity(NoteMainEntity entity, String readLine, Set<String> repeatSet, List<String> idRecod) {
+	private void setEntity(NoteEntity entity, String readLine, Set<String> repeatSet, List<String> idRecod) {
 		if (readLine != null && !readLine.isEmpty()) {
 			String[] split = readLine.split(Constants.EQUAL_SYMBOL);
 			String entityAttribueName;
@@ -250,42 +284,54 @@ public class NoteMainActivity extends ActivityCommon {
 				if (split.length > 1) {
 					entityAttribueData = split[1];
 					// 手动设置Entity的数据
-					if(Constants.NOTE_MASTER_ID.equals(entityAttribueName.trim())) {
-						entity.setNoteMasterId(entityAttribueData);
+					if(Constants.NOTE_ID.equals(entityAttribueName.trim())) {
+						entity.setNoteId(entityAttribueData);
 						/**
 						 *  重复标识及Id记录
 						 */
 						repeatSet.add(entityAttribueData);
 						idRecod.add(entityAttribueData);
-						/** 主画面信息 */
-					}else if (Constants.NOTE_MASTER_TITLE.equals(entityAttribueName)) {
-                        entity.setNoteMasterTitle(entityAttribueData);
-					}else if (Constants.NOTE_MASTER_SPEND_TIME.equals(entityAttribueName)) {
-						entity.setNoteMasterSpendTime(entityAttribueData);
-					}else if (Constants.NOTE_MASTER_ADDRESS.equals(entityAttribueName)) {
-						entity.setNoteMasterAddress(entityAttribueData);
-						/** 子画面信息 */
-					}else if (Constants.NOTE_SUB_OVER_FLAG.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubOverFlag(entityAttribueData);
-					}else if (Constants.NOTE_SUB_APPRAISAL.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubAppraisal(entityAttribueData);
-					}else if (Constants.NOTE_SUB_ITEM.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubItem(entityAttribueData);
-					}else if (Constants.NOTE_SUB_CITY.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubCity(entityAttribueData);
-					}else if (Constants.NOTE_SUB_TYPE.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubType(entityAttribueData);
-					}else if (Constants.NOTE_SUB_REMARK.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubRemark(entityAttribueData);
-					}else if (Constants.NOTE_SUB_DELETE_FLAG.equals(entityAttribueName)) {
-                        entity.getNoteSubEntity().setNoteSubDeleteFlag(entityAttribueData);
+                        /** 便签画面信息:副便子ID */
+                    }else if (Constants.NOTE_SUB_ID.equals(entityAttribueName)) {
+                        entity.setNoteSubId(entityAttribueData);
+                        /** 便签画面信息:副父签ID */
+                    }else if (Constants.NOTE_PARENT_ID.equals(entityAttribueName)) {
+                        entity.setNoteParentId(entityAttribueData);
+						/** 便签画面信息:便签内容 */
+					}else if (Constants.NOTE_CONTENT.equals(entityAttribueName)) {
+                        entity.setNoteContent(entityAttribueData);
+                        /** 便签画面信息:标签内容 */
+					}else if (Constants.NOTE_TAG.equals(entityAttribueName)) {
+						entity.setNoteTag(entityAttribueData);
+                        // 便签画面信息:Header检索部生成标签集合使用[Start]
+                        tagDataSet.add(entityAttribueData);
+                        // 便签画面信息:Header检索部生成标签集合使用[End]
+                        /** 便签画面信息:录入时间 */
+					}else if (Constants.NOTE_INSERT_TIME.equals(entityAttribueName)) {
+						entity.setNoteInsertTime(entityAttribueData);
+                        /** 便签画面信息:更新时间 */
+					}else if (Constants.NOTE_UPDATE_TIME.equals(entityAttribueName)) {
+                        entity.setNoteUpdateTime(entityAttribueData);
+                        /** 便签画面信息:删除时间 */
+					}else if (Constants.NOTE_DELETE_TIME.equals(entityAttribueName)) {
+                        entity.setNoteDeleteTime(entityAttribueData);
+                        /** 便签画面信息:当前页面级别 */
+                    }else if (Constants.NOTE_CURRENT_PAGE_LEVEL.equals(entityAttribueName)) {
+                        entity.setNoteCurrentPageLevel(entityAttribueData);
+                        /** 便签画面信息:自便签录入时间 */
+                    }else if (Constants.SUB_NOTE_INSERT_TIME.equals(entityAttribueName)) {
+                        entity.setSubNoteInsertTime(entityAttribueData);
+                        /** 便签画面信息:删除标记 */
+					}else if (Constants.NOTE_DELETE_FLAG.equals(entityAttribueName)) {
+                        entity.setNoteDeleteFlag(entityAttribueData);
                         if (Constants.DELETE_ON.equals(entityAttribueData)) {
-                            idOfDeleteData.add(entity.getNoteMasterId());
+                            idOfDeleteData.add(entity.getNoteId());
                         }
-                    }else if (Constants.NOTE_SUB_UPDATE_COUNT.equals(entityAttribueName)) {
-						entity.getNoteSubEntity().setNoteSubUpdateCount(entityAttribueData);
+                        /** 便签画面信息:更新次数 */
+                    }else if (Constants.NOTE_UPDATE_COUNT.equals(entityAttribueName)) {
+                        entity.setNoteUpdateCount(entityAttribueData);
                         if (!Constants.UPDATE_DEFAULT_COUNT.equals(entityAttribueData)) {
-                            idOfUpdateData.add(entity.getNoteMasterId());
+                            idOfUpdateData.add(entity.getNoteId());
                         }
 					}
 				}
@@ -308,7 +354,7 @@ public class NoteMainActivity extends ActivityCommon {
 	 * @param item
 	 */
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onContextItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.menu_note_master_add:
@@ -338,24 +384,24 @@ public class NoteMainActivity extends ActivityCommon {
             for (int i = 0; i < 10; i++) {
                 // 放置添加的内容
                 Map<String, Object> map = new HashMap<String, Object>();
-                // 打卡
-                map.put(Constants.NOTE_MASTER_TITLE, StringUtil.EMPTY);
-                // 打卡项目
-                map.put(Constants.NOTE_SUB_ITEM, StringUtil.EMPTY);
-                // 打卡目的地
-                map.put(Constants.NOTE_MASTER_ADDRESS, StringUtil.EMPTY);
-                // 项目类型
-                map.put(Constants.NOTE_SUB_TYPE, StringUtil.EMPTY);
-                // 打卡城市
-                map.put(Constants.NOTE_SUB_CITY, StringUtil.EMPTY);
-                // 花费时长
-                map.put(Constants.NOTE_MASTER_SPEND_TIME, StringUtil.EMPTY);
-                // 备注
-                map.put(Constants.NOTE_SUB_REMARK, StringUtil.EMPTY);
-                // 更新标记
-                map.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.UPDATE_DEFAULT_COUNT);
-                // 删除标记
-                map.put(Constants.NOTE_SUB_DELETE_FLAG, Constants.DELETE_OFF);
+                // 便签:便签ID
+                map.put(Constants.NOTE_ID, StringUtil.EMPTY);
+                // 便签:便签子ID
+                map.put(Constants.NOTE_SUB_ID, StringUtil.EMPTY);
+                // 便签:便签内容
+                map.put(Constants.NOTE_CONTENT, StringUtil.EMPTY);
+                // 便签:便签标签
+                map.put(Constants.NOTE_TAG, StringUtil.EMPTY);
+                // 便签:录入时间
+                map.put(Constants.NOTE_INSERT_TIME, StringUtil.EMPTY);
+                // 便签:更新时间
+                map.put(Constants.NOTE_UPDATE_TIME, StringUtil.EMPTY);
+                // 便签:删除时间
+                map.put(Constants.NOTE_DELETE_TIME, StringUtil.EMPTY);
+                // 便签:更新次数
+                map.put(Constants.NOTE_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
+                // 便签:删除标记
+                map.put(Constants.NOTE_DELETE_FLAG, Constants.DELETE_OFF);
                 listMap.add(map);
             }
 
@@ -425,24 +471,47 @@ public class NoteMainActivity extends ActivityCommon {
 			// 通过下面的条件判断语句，来循环利用。如果convertView = null ，表示屏幕上没有可以被重复利用的对象。
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.note_main_body_item, null);
+                holder.noTv = (TextView) convertView.findViewById(R.id.v_id_note_main_no);
                 holder.idTv = (TextView) convertView.findViewById(R.id.v_id_note_main_id);
-                holder.titleTv = (TextView) convertView.findViewById(R.id.v_id_note_main_title);
-                holder.addressTv = (TextView) convertView.findViewById(R.id.v_id_note_main_address);
-                holder.spendTimeTv = (TextView) convertView.findViewById(R.id.v_id_note_main_spend_time);
-                holder.noBtn = (Button) convertView.findViewById(R.id.v_id_note_main_no);
+                holder.subIdTv = (TextView) convertView.findViewById(R.id.v_id_note_main_sub_id);
+                holder.contentTv = (TextView) convertView.findViewById(R.id.v_id_note_main_content);
+                holder.tagTv = (TextView) convertView.findViewById(R.id.v_id_note_main_tag);
+                holder.tagTitleTv = (TextView) convertView.findViewById(R.id.v_id_note_main_tag_title);
                 convertView.setTag(holder);
 			} else {
                 holder = (NoteMainBodyHolder) convertView.getTag();
 			}
-            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteMasterId()));
-            holder.titleTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteMasterTitle()));
-			ComponentUtil.setMarquee(holder.titleTv);
-            holder.addressTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteMasterAddress()));
-			ComponentUtil.setMarquee(holder.addressTv);
-            holder.spendTimeTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteMasterSpendTime()));
-            holder.noBtn.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteMasterNo()));
-            holder.noBtn.setClickable(false);
-            holder.noBtn.setBackground(getResources().getDrawable(R.drawable.text_all_rounded));
+            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteId()));
+            holder.subIdTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteSubId()));
+            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteContent()));
+            ComponentUtil.setMarquee(holder.contentTv);
+            /**
+             * 便签:标签无内容时不显示
+             */
+            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteTag())) {
+                holder.tagTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteTag()));
+                ComponentUtil.setMarquee(holder.tagTv);
+            }else {
+                holder.tagTitleTv.setText(StringUtil.EMPTY);
+            }
+            holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteNo()));
+            /**
+             * 便签:每隔一行变换颜色,当前数据有子数据时更换其他颜色
+             */
+            if((position + 1) % 2 == 0
+                    && StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())) {
+                convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v1));
+            } else if ((position + 1) % 2 == 0 &&
+                    !StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())){
+                convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v1));
+            } else if ((position + 1) % 2 != 0 &&
+                    !StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())){
+                convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v2));
+            }else {
+                convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
+            }
+
+
 			LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE, "便签主画面");
 			return convertView;
 		}
@@ -453,30 +522,32 @@ public class NoteMainActivity extends ActivityCommon {
 	 */
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		NoteMainEntity entity = (NoteMainEntity)noteBodyListView.getItemAtPosition(position);
-		Intent intent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
-		intent.putExtra(Constants.ACTION_FALG, "clickItem");
-		intent.putExtra("noteEntity", entity);
-		startActivity(intent);
+        showDialogV2();
+        commonNoteEntity = (NoteEntity)noteBodyListView.getItemAtPosition(position);
 		return true;
 	}
+
+    /**
+     * 点击事件:添加副便签
+     */
+    protected void addClickByCommonDialogV2() {
+		Intent intent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
+		intent.putExtra(Constants.ACTION_FALG, "clickItem");
+		intent.putExtra("noteEntity", commonNoteEntity);
+        intent.putExtra(Constants.ACTION_MODE, Constants.STR_ADD);
+		startActivity(intent);
+    }
 
     /**
      * 获取数据By便签Header部
      */
     private void setNoteMainHeaderData(){
         // 便签Header集合
-        Iterator<String> cityIterator = cityList.iterator();
-        while (cityIterator.hasNext()) {
-            String cityVal = cityIterator.next();
-            noteMainHeaderData.add(cityVal);
-            noteMainHeaderHiddenData.add("0");
-        }
-        Iterator<String> typeIterator = typeList.iterator();
-        while (typeIterator.hasNext()) {
-            String typeVal = typeIterator.next();
-            noteMainHeaderData.add(typeVal);
-            noteMainHeaderHiddenData.add("1");
+        Iterator<String> tagDataIterator = tagDataSet.iterator();
+        while (tagDataIterator.hasNext()) {
+            String tagData = tagDataIterator.next();
+            noteMainHeaderData.add(tagData);
+            noteMainHeaderHiddenData.add(Constants.STR_NONE);
         }
         // 获取页面Header线性布局
 		LinearLayout noteHeaderLinearLayout = (LinearLayout)findViewById(R.id.v_id_note_header_list);
@@ -498,7 +569,7 @@ public class NoteMainActivity extends ActivityCommon {
                 checkBoxs[position].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        List<NoteMainEntity> matchingData = new ArrayList<NoteMainEntity>();
+                        List<NoteEntity> matchingData = new ArrayList<NoteEntity>();
                         boolean matchingFlg = false;
                         int checkBoxPosition = 0;
                         for(CheckBox val : checkBoxList) {
@@ -558,32 +629,67 @@ public class NoteMainActivity extends ActivityCommon {
         noteBodyListView.setAdapter(new NoteMainBodyItem());
         // 自定义点击Body部数据事件
         noteBodyListView.setOnItemLongClickListener(this);
+        noteBodyListView.setOnItemClickListener(this);
     }
+
+    protected void onItemDoubleClick(AdapterView<?> parent, View view, int position, long id) {
+        commonNoteEntity = (NoteEntity)noteBodyListView.getItemAtPosition(position);
+        if (StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteSubId())) {
+            return;
+        }
+        Map<String, String> matchingCondition = new HashMap<>();
+        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID, commonNoteEntity.getNoteId());
+        initNotePage(matchingCondition);
+
+    }
+
+
 
     /**
      * 筛选数据
      * @param mark
      * @param followVal
      */
-    private void matchingResult(String mark, String followVal, List<NoteMainEntity> matchingData) {
+    private void matchingResult(String mark, String followVal, List<NoteEntity> matchingData) {
         // 获取最新数据
         getNoteFileContent();
         againSetNoteBodyData(noteMainBodyData);
         if (!StringUtil.equaleReturnBoolean(Constants.STR_ALL, mark)) {
-            Iterator<NoteMainEntity> valIterator = noteMainBodyData.iterator();
+            Iterator<NoteEntity> valIterator = noteMainBodyData.iterator();
             while (valIterator.hasNext()) {
-                NoteMainEntity val = valIterator.next();
-                if (StringUtil.equaleReturnBoolean(mark, "0")
-                        && StringUtil.equaleReturnBoolean(val.getNoteSubEntity().getNoteSubCity(), followVal)) {
-                    val.setNoteMasterNo(String.valueOf(matchingData.size() + 1));
-                    matchingData.add(val);
-                } else if (StringUtil.equaleReturnBoolean(mark, "1")
-                        && StringUtil.equaleReturnBoolean(val.getNoteSubEntity().getNoteSubType(), followVal)) {
-                    val.setNoteMasterNo(String.valueOf(matchingData.size() + 1));
+                NoteEntity val = valIterator.next();
+                if (StringUtil.equaleReturnBoolean(mark, Constants.STR_NONE)
+                        && StringUtil.equaleReturnBoolean(val.getNoteTag(), followVal)) {
+                    val.setNoteNo(String.valueOf(matchingData.size() + 1));
                     matchingData.add(val);
                 }
             }
         }
     }
 
+    /**
+     * 匹配数据(页面初始化时使用)
+     * @param matchingCondition
+     */
+    private void matchingResult(Map<String,String> matchingCondition) {
+        int noCount = 1;
+        List<NoteEntity> newNoteMainBodyData = new ArrayList<NoteEntity>();
+        Iterator<NoteEntity> noteMainBodyIterator = noteMainBodyData.iterator();
+        while (noteMainBodyIterator.hasNext()){
+            NoteEntity entity = noteMainBodyIterator.next();
+            entity.setNoteNo(String.valueOf(noCount));
+            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID))
+                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID), entity.getNoteParentId())) {
+                newNoteMainBodyData.add(entity);
+                noCount++;
+            }
+            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))
+                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL), entity.getNoteCurrentPageLevel())) {
+                newNoteMainBodyData.add(entity);
+                noCount++;
+            }
+        }
+        noteMainBodyData = newNoteMainBodyData;
+
+    }
 }

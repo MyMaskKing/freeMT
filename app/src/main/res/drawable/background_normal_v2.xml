@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- android:shape:line(线)/rectangle(矩形)/oval(椭圆)/ring(圆)   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval"
+    android:shape="rectangle"
     android:useLevel="true">
+    <!-- 背景实色 -->
     <!-- 边框线背景及边框线(虚线控制:dashGap虚线间距/dashWidth宽度) -->
     <stroke
         android:width="1dp"
         android:color="#ffffff"
+        android:dashGap="5dp"
+        android:dashWidth="10dp"
         />
     <!-- 圆角(四个角) -->
-    <corners android:radius="20dp" />
+    <corners android:radius="13dp" />
     <!-- 背景渐变色 -->
-    <gradient
-        android:angle="-45"
-        android:centerX="0.5"
-        android:centerY="0.4"
-        android:startColor="#382d2d"
-        android:centerColor="#000000"
-        android:endColor="#ed393434"
-        android:type="linear" />
 </shape>

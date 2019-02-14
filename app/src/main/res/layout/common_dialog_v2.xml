@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/id_common_dialog_v2"
+    android:gravity="center">
+   <TextView
+       android:id="@+id/id_common_dialog_v2_add"
+       android:layout_width="match_parent"
+       android:layout_height="50dp"
+       android:text="@string/add_CN_mes"
+       android:gravity="center"
+       android:onClick="addByCommonDialogV2"/>
+    <TextView
+        android:id="@+id/id_common_dialog_v2_del"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/del_CN_mes"
+        android:gravity="center"
+        android:onClick="delCommonDialogV2"/>
+    <TextView
+        android:id="@+id/id_common_dialog_v2_modify"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/modify_CN_mes"
+        android:gravity="center"
+        android:onClick="modifyByCommonDialogV2"/>
+</LinearLayout>

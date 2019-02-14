@@ -13,7 +13,7 @@
         android:dashWidth="10dp"
         />
     <!-- 圆角(四个角) -->
-    <corners android:radius="20dp" />
+    <corners android:radius="10dp" />
     <!-- 背景渐变色 -->
     <gradient
         android:angle="-45"

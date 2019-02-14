@@ -50,6 +50,9 @@ import free.android.utils.StringUtil;
 ;
 
 public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
+    /** 双击时间使用 */
+    private static final long DOUBLE_TIME = 1000;
+    private static long lastClickTime = 0;
 
     /*** Check项目方式Error时标记 **/
     private boolean checkErrorFlag = false;
@@ -91,16 +94,21 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 	protected  String getFilePathBySDCard() {
         return Environment.getExternalStorageDirectory().toString() + "/freeMT/Data";
 	}
-	/**
-	 * 获取当前时间 精确到毫秒(字符形式)
-	 *
-	 * @return
-	 */
-	protected static String getIdByTime() {
-		String StrCurrentTime = new SimpleDateFormat(Constants.TIME_YYYY_MM_DD_HH_MM_SS_SSS_NO_SYMBOL)
-				.format(new Date());
-		return StrCurrentTime;
-	}
+
+    /**
+     * 获取当前时间
+     *
+     * @param timeFormat
+     *  <BR>
+     *          自定义时间格式
+     *
+     * @return
+     */
+    protected static String getSystemTime(String timeFormat) {
+        String StrCurrentTime = new SimpleDateFormat(timeFormat)
+                .format(new Date());
+        return StrCurrentTime;
+    }
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -116,9 +124,23 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
+        long currentTimeMillis = System.currentTimeMillis();
+        if (currentTimeMillis - lastClickTime < DOUBLE_TIME) {
+            onItemDoubleClick(parent, view, position, id);
+        }
+        lastClickTime = currentTimeMillis;
 
 	}
+
+    /**
+     * 双击事件(ListView:item)
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
+    protected void onItemDoubleClick(AdapterView<?> parent, View view, int position, long id) {
+    }
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -408,6 +430,97 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         initDilogContentV1_1(contentList, dialogView, CollectionsUtil.isEmptyByStrArray(params, 1));
         
     }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     */
+    protected void showDialogV2() {
+        dialogV1_1  = new Dialog(this);
+        //去除标题栏
+        dialogV1_1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //2.填充布局
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView     = inflater.inflate(R.layout.common_dialog_v2, null);
+        //将自定义布局设置进去
+        dialogV1_1.setContentView(dialogView);
+        //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
+        WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
+        Window window = dialogV1_1.getWindow();
+        lp.copyFrom(window.getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        // 显示
+        dialogV1_1.show();
+        window.setAttributes(lp);
+        //设置点击其它地方不让消失弹窗
+        dialogV1_1.setCancelable(true);
+
+        /** 设置按钮事件:添加 */
+        TextView addByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_add);
+        addByCommonDialogV2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addClickByCommonDialogV2();
+            }
+        });
+        /** 设置按钮事件:删除 */
+        TextView delByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_del);
+        delByCommonDialogV2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                delClickByCommonDialogV2();
+            }
+        });
+        /** 设置按钮事件:修改 */
+        TextView modifyByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_modify);
+        modifyByCommonDialogV2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modifyClickByCommonDialogV2();
+            }
+        });
+    }
+
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:添加
+     */
+    protected void addClickByCommonDialogV2() {
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:删除
+     */
+    protected void delClickByCommonDialogV2() {
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:修改
+     */
+    protected void modifyClickByCommonDialogV2() {
+    }
+
     /**
      * <PRE>
      * 对话框Template 1.1(按钮Btn2的点击事件)

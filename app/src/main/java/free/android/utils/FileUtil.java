@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import free.android.common.ActivityCommon;
+import free.android.enums.FormatEnum;
 
 /**
  * 文件 帮助类
@@ -104,63 +105,68 @@ public class FileUtil extends ActivityCommon{
      */
 	private static void writeNote(BufferedWriter bw, Map<String, Object> singleData) throws Exception{
 		// Master 1
-		bw.write("#COMENT#:信息ID(*ID不重复,请勿更改)");
+		bw.write("#COMENT#:便签ID(*ID不重复,请勿更改)");
 		bw.newLine();
-		bw.write(Constants.NOTE_MASTER_ID + Constants.EQUAL_SYMBOL +
-				(StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_MASTER_ID)))
-						?getIdByTime() : String.valueOf(singleData.get(Constants.NOTE_MASTER_ID))));
+		bw.write(Constants.NOTE_ID + Constants.EQUAL_SYMBOL +
+				StringUtil.isEmptyReturnString((StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_ID)))
+                        ?("NOTE" + getSystemTime(FormatEnum.TIME_FORMAT_ID.getVal())) : String.valueOf(singleData.get(Constants.NOTE_ID)))));
 		bw.newLine();
 		// Master 2
-		bw.write("#COMENT#:信息标题");
+		bw.write("#COMENT#:便签子ID");
 		bw.newLine();
-		bw.write(Constants.NOTE_MASTER_TITLE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_TITLE));
+		bw.write(Constants.NOTE_SUB_ID + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_SUB_ID)));
 		bw.newLine();
 		// Master 3
-		bw.write("#COMENT#:所到目的地花费时间");
+		bw.write("#COMENT#:便签父ID");
 		bw.newLine();
-		bw.write(Constants.NOTE_MASTER_SPEND_TIME + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_SPEND_TIME));
+		bw.write(Constants.NOTE_PARENT_ID + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_PARENT_ID)));
 		bw.newLine();
 		// Master 4
-		bw.write("#COMENT#:目的地");
+		bw.write("#COMENT#:便签内容");
 		bw.newLine();
-		bw.write(Constants.NOTE_MASTER_ADDRESS + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_MASTER_ADDRESS));
+		bw.write(Constants.NOTE_CONTENT + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_CONTENT)));
 		bw.newLine();
-		// Sub 1
-		bw.write("#COMENT#:信息详细(子信息)");
+		// Master 5
+		bw.write("#COMENT#:便签标签内容");
 		bw.newLine();
-		bw.write(Constants.NOTE_SUB_ITEM + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_ITEM));
+		bw.write(Constants.NOTE_TAG + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_TAG)));
 		bw.newLine();
-		// Sub 2
-		bw.write("#COMENT#:信息完成标志");
+		// Master 6
+		bw.write("#COMENT#:便签录入时间");
 		bw.newLine();
-		bw.write(Constants.NOTE_SUB_OVER_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_OVER_FLAG));
+		bw.write(Constants.NOTE_INSERT_TIME + Constants.EQUAL_SYMBOL
+				+ StringUtil.isEmptyReturnString((StringUtil.isEmptyReturnBoolean(String.valueOf(singleData.get(Constants.NOTE_INSERT_TIME))) ?
+                getSystemTime(FormatEnum.TIME_FORMAT_V1.getVal()) : singleData.get(Constants.NOTE_INSERT_TIME))));
 		bw.newLine();
-		// Sub 3
-		bw.write("#COMENT#:信息详细(子信息完成后评价)");
+		// Master 7
+		bw.write("#COMENT#:便签更新时间");
 		bw.newLine();
-		bw.write(Constants.NOTE_SUB_APPRAISAL + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_APPRAISAL));
+		bw.write(Constants.NOTE_UPDATE_TIME + StringUtil.isEmptyReturnString(Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_UPDATE_TIME)));
 		bw.newLine();
-		bw.write("#COMENT#:信息详细(类型)");
+		// Master 8
+		bw.write("#COMENT#:便签删除时间");
 		bw.newLine();
-		bw.write(Constants.NOTE_SUB_TYPE + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_TYPE));
+		bw.write(Constants.NOTE_DELETE_TIME + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_DELETE_TIME)));
 		bw.newLine();
-		bw.write("#COMENT#:信息详细(城市)");
-		bw.newLine();
-		bw.write(Constants.NOTE_SUB_CITY + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_CITY));
-		bw.newLine();
-		bw.write("#COMENT#:信息详细(备注)");
-		bw.newLine();
-		bw.write(Constants.NOTE_SUB_REMARK + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_REMARK));
-		bw.newLine();
-        bw.write("#COMENT#:信息删除标识(*修改将会导致数据查询不正确,默认为0)");
+        bw.write("#COMENT#:便签删除标识(*修改将会导致数据查询不正确,默认为0)");
         bw.newLine();
-		// 数据删除标记
-		bw.write(Constants.NOTE_SUB_DELETE_FLAG + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_DELETE_FLAG));
+		// Master 9 ：数据删除标记
+		bw.write(Constants.NOTE_DELETE_FLAG + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_DELETE_FLAG)));
 		bw.newLine();
-        bw.write("#COMENT#:信息更新次数标识(*修改将会导致数据查询不正确,默认为0)");
+        bw.write("#COMENT#:便签更新次数标识(*修改将会导致数据查询不正确,默认为0)");
         bw.newLine();
-		// 数据更新回数标记
-		bw.write(Constants.NOTE_SUB_UPDATE_COUNT + Constants.EQUAL_SYMBOL + singleData.get(Constants.NOTE_SUB_UPDATE_COUNT));
+		// Master 10 : 数据更新回数标记
+		bw.write(Constants.NOTE_UPDATE_COUNT + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_UPDATE_COUNT)));
+		bw.newLine();
+		bw.write("#COMENT#:当前页面级别");
+		bw.newLine();
+		// Master 11 : 便签:当前页面级别
+		bw.write(Constants.NOTE_CURRENT_PAGE_LEVEL + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_CURRENT_PAGE_LEVEL)));
+		bw.newLine();
+		bw.write("#COMENT#:副便签插入时间");
+		bw.newLine();
+		// Master 12 : 便签:副便签插入时间
+		bw.write(Constants.SUB_NOTE_INSERT_TIME + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.SUB_NOTE_INSERT_TIME)));
 		bw.newLine();
 	}
 

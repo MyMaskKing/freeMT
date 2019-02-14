@@ -32,6 +32,7 @@ public class Constants {
 	public static final String COLON_SYMBOL = ":  ";
 	public static final String QUOTATION_MARKS_SYMBOL = "\"";
 	public static final String ACTION_FALG = "action_flag";
+	public static final String ACTION_MODE = "action_mode";
 	public static final String UPLOAD_FILE_PATH = "upload_file_path";
 	public static final String UPLOAD_FILE_NAME = "upload_file_name";
     public static final String UPDATE_DEFAULT_COUNT = "0";
@@ -44,11 +45,14 @@ public class Constants {
 	public static final String WARNING_MARK = "warn";
 	public static final String ERROR_MARK = "error";
 	public static final String INFO_MARK = "info";
+	public static final String STR_NONE = "NONE";
+	public static final String STR_DEL = "删除";
+	public static final String STR_ADD = "添加";
+	public static final String STR_MODIFY = "修改";
 
 	/**
 	 * 时间格式
 	 */
-	public static final String TIME_YYYY_MM_DD_HH_MM_SS_SSS_NO_SYMBOL = "yyyyMMddHHmmssSSS";
 	public static final String HOUR_CN = "时";
 	public static final String MINUTE_CN = "分";
 	/**
@@ -65,8 +69,27 @@ public class Constants {
 	 */
 	public static  final String NOTE_FILE_NAME = "FreeMT_Note.txt";
 	public static  final String NOTE_FILE_NAME_DOWNLOAD_TEMPLATE = "FreeMT_Note_Template.txt";
-	public static final String NOTE_MASTER_ID = "NOTE_MASTER_ID";
-	public static final String NOTE_MASTER_TITLE = "NOTE_MASTER_TITLE";
+	/** 便签文件字段个数(重要) */
+	public static  final int NOTE_FILE_DATA_COUNT = 12;
+	public static  final int NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE = 1;
+	public static  final String NOTE_MATCH_CONDITION_ID = "NOTE_ID";
+	public static  final String NOTE_MATCH_CONDITION_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
+	public static final String NOTE_ID = "NOTE_ID";
+	public static final String NOTE_PARENT_ID = "NOTE_PARENT_ID";
+	public static final String NOTE_SUB_ID = "NOTE_SUB_ID";
+	public static final String NOTE_CONTENT = "NOTE_CONTENT";
+	public static final String NM_NOTE_CONTENT = "便签内容";
+	public static final String NOTE_TAG = "NOTE_TAG";
+	public static final String NM_NOTE_TAG = "标签";
+	public static final String NOTE_INSERT_TIME = "NOTE_INSERT_TIME";
+    public static final String SUB_NOTE_INSERT_TIME = "SUB_NOTE_INSERT_TIME";
+	public static final String NOTE_UPDATE_TIME = "NOTE_UPDATE_TIME";
+	public static final String NOTE_DELETE_TIME = "NOTE_DELETE_TIME";
+	public static final String NOTE_UPDATE_COUNT = "NOTE_UPDATE_COUNT";
+	public static final String NOTE_DELETE_FLAG = "NOTE_DELETE_FLAG";
+    public static final String NOTE_CURRENT_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
+
+	/** Wait Use [Start] */
 	public static final String NOTE_MASTER_SPEND_TIME = "NOTE_MASTER_SPEND_TIME";
 	public static final String NOTE_MASTER_ADDRESS = "NOTE_MASTER_ADDRESS";
 	public static final String NM_NOTE_MASTER_TITLE = "打卡";
@@ -90,4 +113,5 @@ public class Constants {
 	public static final String NM_NOTE_SUB_TYPE = "打卡类型";
 	public static final String NM_NOTE_SUB_CITY = "打卡城市";
 	public static final String NM_NOTE_SUB_REMARK = "备注";
+	/** Wait Use [End] */
 }

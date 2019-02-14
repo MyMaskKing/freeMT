@@ -2,79 +2,96 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/v_id_note_main_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#d0e7ea">
+    android:layout_height="wrap_content">
 
-    <TableRow android:background="@drawable/background_all_v2" >
+    <TableRow >
 
         <!-- Id Hidden -->
 
         <TextView
-            android:id="@+id/v_id_note_main_id"
+            android:id="@+id/v_id_note_main_sub_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:visibility="gone" />
 
         <!-- No -->
-        <Button
-            android:id="@+id/v_id_note_main_no"
-            android:layout_width="47dp"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:background="@drawable/button_all_v1"
-            android:textColor="#ffffff"
-            android:textStyle="bold"/>
-        <!-- Title -->
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:text="@string/note_master_title"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:fontFamily="monospace"/>
-
-        <TextView
-            android:id="@+id/v_id_note_main_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"/>
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:id="@+id/v_id_note_main_no"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/button_all_v1"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:textStyle="bold"/>
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_height="wrap_content"
+                android:text="@string/note_content"
+                style="@style/text_style"
+                android:fontFamily="monospace"/>
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:id="@+id/v_id_note_main_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                style="@style/text_content_style"/>
+        </LinearLayout>
+
     </TableRow>
 
-    <TableRow android:background="@drawable/background_all_v3" >
+    <TableRow android:id="@+id/id_note_main_trow_second">
 
-        <!-- 花费时间 -->
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/table_line"
-            android:text="@string/note_master_spend_time"
-            android:textStyle="bold"
-            android:textSize="20sp" />
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/background_disabled_v1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/note_id"
+                style="@style/text_disabled_style"/>
+            <TextView
+                android:id="@+id/v_id_note_main_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/text_disabled_style"/>
 
-        <TextView
-            android:id="@+id/v_id_note_main_spend_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/table_line"
-            android:textSize="20sp" />
+        </LinearLayout>
 
-        <TextView
+        <!-- 标签 -->
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/table_line"
-            android:textStyle="bold"
-            android:text="@string/note_master_address"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/v_id_note_main_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/table_line"
-            android:textSize="20sp" />
-        <!-- 地点 -->
+            <TextView
+                android:id="@+id/v_id_note_main_tag_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end|bottom"
+                android:text="@string/note_tag"
+                style="@style/text_style"/>
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:id="@+id/v_id_note_main_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/text_content_style" />
+        </LinearLayout>
+
     </TableRow>
 
 </TableLayout>

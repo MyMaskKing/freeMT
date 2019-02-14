@@ -6,6 +6,7 @@
     android:gravity="start|center_horizontal"
     tools:context="free.android.activity.NoteSubActivity"
     android:background="@drawable/img_background_all_v5">
+
     <TextView
         android:id="@+id/v_id__note_sub_init_title"
         android:layout_width="match_parent"
@@ -15,6 +16,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:background="@drawable/text_half_fillet"></TextView>
+
 
     <Button
         android:id="@+id/v_id__note_sub_menu"
@@ -29,17 +31,106 @@
     </Button>
     <!-- Menu Button -->
 
+    <!-- Current Id -->
+    <LinearLayout
+        android:id="@+id/v_id_note_sub_current_id_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/v_id__note_sub_init_title"
+        android:background="@drawable/background_disabled_v1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/note_current_content"
+            android:layout_gravity="bottom|end"
+            style="@style/text_disabled_style"/>
+
+        <TextView
+            android:paddingLeft="5dp"
+            android:id="@+id/v_id_note_sub_content_by_main"
+            android:layout_gravity="bottom"
+            style="@style/text_disabled_style"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusableInTouchMode="true"
+            />
+
+
+
+    </LinearLayout>
+    <!-- Current Mode -->
+    <LinearLayout
+        android:layout_marginTop="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/v_id_note_sub_current_id_ll"
+        android:background="@drawable/background_info_v3">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/note_current_mode"
+            android:layout_gravity="bottom|end"
+            style="@style/text_disabled_style"/>
+
+        <TextView
+            android:id="@+id/v_id_note_sub_current_mode_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textColor="#f9ba1d"
+            style="@style/text_disabled_style"/>
+
+    </LinearLayout>
+
+
     <!-- Id Hidden -->
 
     <TextView
         android:id="@+id/v_id_note_sub_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/v_id_note_sub_sub_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/v_id_note_sub_update_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/v_id_note_sub_update_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/v_id_note_sub_update_count"
+        android:id="@+id/v_id_note_sub_parent_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/v_id_note_sub_current_page_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/v_id_note_sub_subnote_insert_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
@@ -48,17 +139,19 @@
     <!-- Item 1 -->
 
     <ScrollView
+        android:paddingTop="180dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fadingEdge="vertical"
-        android:layout_below="@+id/v_id__note_sub_menu">
+        android:layout_below="@+id/v_id__note_sub_menu"
+        android:foregroundGravity="center">
 
         <GridLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:columnCount="20"
-            android:rowCount="20"
+            android:columnCount="3"
+            android:rowCount="3"
             android:useDefaultMargins="true">
 
             <!-- Warning Area[Start] -->
@@ -66,270 +159,77 @@
                 style="@style/required_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
                 android:layout_gravity="end|bottom"
                 android:text="@string/required_CN_mes" />
             <!-- Warning Area[End] -->
 
             <TextView
-                android:id="@+id/v_id_note_sub_title"
+                android:id="@+id/v_id_note_sub_content"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
                 android:layout_gravity="end|bottom"
-                android:text="@string/note_master_title" />
+                android:text="@string/note_content" />
 
             <EditText
-                android:id="@+id/v_id_note_sub_title_editext"
+                android:id="@+id/v_id_note_sub_content_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="17"
                 android:ems="10"
+                android:layout_gravity="bottom"
                 android:imeOptions="actionDone"
-
-                android:hint="请输入行程大致计划"
-                android:inputType="text"
+                android:hint="请输入计划内容"
+                android:inputType="textMultiLine"
                 android:background="@drawable/border_line_v2"/>
             <!-- Item 2 -->
 
             <!-- Warning Area[Start] -->
             <TextView
-                style="@style/advice_style"
+                style="@style/warning_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
                 android:layout_gravity="end|bottom"
                 android:text="@string/advice_CN_mes" />
             <!-- Warning Area[End] -->
 
             <TextView
-                android:id="@+id/v_id_note_sub_item"
+                android:id="@+id/v_id_note_sub_tag"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
                 android:layout_gravity="end|bottom"
-                android:text="@string/note_master_item" />
+                android:text="@string/note_tag" />
 
             <EditText
-                android:id="@+id/v_id_note_sub_item_editext"
+                android:id="@+id/v_id_note_sub_tag_editext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="17"
-                android:hint="请输入行程详细计划"
+                android:hint="请输入标签"
+                android:layout_gravity="bottom"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
                 android:background="@drawable/border_line_v2"/>
             <!-- Item 3 -->
-            <!-- Warning Area[Start] -->
-            <TextView
-                style="@style/advice_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:layout_gravity="end|bottom"
-                android:text="@string/advice_CN_mes" />
-            <!-- Warning Area[End] -->
+
 
             <TextView
-                android:id="@+id/v_id_note_sub_address"
-                style="@style/text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/v_id_note_sub_insert_time"
                 android:layout_columnSpan="2"
-                android:layout_gravity="end|bottom"
-                android:text="@string/note_master_address" />
-            <EditText
-                android:id="@+id/v_id_note_sub_address_editext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="17"
-                android:ems="10"
-                android:inputType="text"
-                android:maxLength="50"
-                android:hint="请输入行程目的地"
-                android:imeOptions="actionDone"
-                android:labelFor="@+id/v_id_note_sub_address"
-                android:background="@drawable/border_line_v2">
-            </EditText>
-
-            <!-- Warning Area[Start] -->
-            <TextView
-                style="@style/info_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:layout_gravity="end|bottom"
-                android:text="@string/info_CN_mes" />
-            <!-- Warning Area[End] -->
-
-            <TextView
-                android:id="@+id/v_id_note_sub_remark"
                 style="@style/text_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
                 android:layout_gravity="end|bottom"
-                android:text="@string/note_master_remark" />
-
-            <EditText
-                android:id="@+id/v_id_note_sub_remark_editext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="17"
-                android:ems="10"
-                android:enabled="true"
-                android:gravity="top"
-                android:inputType="textMultiLine"
-                android:minLines="5"
-                android:background="@drawable/border_line_v1"/>
-            <!-- Item4 -->
-
-            <!-- Warning Area[Start] -->
-            <TextView
-                style="@style/required_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnSpan="1"
-                android:layout_rowSpan="4"
-                android:layout_gravity="end|center"
-                android:text="@string/info_CN_mes" />
-            <!-- Warning Area[End] -->
+                android:text="@string/note_insert_time" />
 
             <TextView
-                android:id="@+id/note_type_group"
-                style="@style/text_style"
+                android:id="@+id/v_id_note_sub_insert_time_editext"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="4"
-                android:layout_columnSpan="2"
-                android:layout_gravity="end|center"
-                android:text="@string/note_master_type" />
-
-            <RadioGroup
-                android:id="@+id/v_id_note_type_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="4"
-                android:layout_columnSpan="5">
-
-                <RadioButton
-                    android:id="@+id/v_id_note_type_travel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/note_type_travel" />
-
-                <RadioButton
-                    android:id="@+id/v_id_note_type_food"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/note_type_food" />
-
-                <RadioButton
-                    android:id="@+id/v_id_note_type_working"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/note_type_working" />
-
-                <RadioButton
-                    android:id="@+id/v_id_note_type_else"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/note_type_else" />
-            </RadioGroup>
-            <!-- Item [Start] -->
-
-            <TextView
-                android:id="@+id/note_city"
-                style="@style/text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="3"
-                android:layout_columnSpan="4"
-                android:paddingTop="25dp"
-                android:layout_gravity="end|bottom"
-                android:text="@string/note_master_city" />
-
-            <EditText
-                android:id="@+id/v_id_note_sub_city_editext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="3"
-                android:layout_columnSpan="8"
                 android:layout_gravity="bottom"
-                android:width="90dp"
-                android:ems="10"
-                android:imeOptions="actionDone"
-                android:labelFor="@+id/note_city"
-                android:paddingTop="25dp"
-                android:maxLength="5"
-                android:inputType="text"
-                android:background="@drawable/border_line_v2"></EditText>
-            <!-- Item [End] -->
-            <!-- Item [Start] -->
-
-            <TextView
-                android:id="@+id/note_master_spend_time"
-                style="@style/text_style"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="4"
-                android:layout_gravity="top|bottom"
-                android:text="@string/note_master_spend_time" />
+                android:ems="10"/>
+            <!-- Item 3 -->
 
-            <EditText
-                android:id="@+id/v_id_note_master_spend_time_hour_editext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="2"
-                android:width="30dp"
-                android:ems="10"
-                android:imeOptions="actionDone"
-                android:labelFor="@+id/note_master_spend_time"
-                android:maxLength="2"
-                android:inputType="number"
-                android:layout_gravity="top"
-                android:background="@drawable/border_line_v2"></EditText>
-
-            <TextView
-                style="@style/text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="1"
-                android:layout_gravity="top"
-                android:text="@string/hour_CN_mes" />
-
-            <EditText
-                android:id="@+id/v_id_note_master_spend_time_minute_editext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="2"
-                android:width="30dp"
-                android:ems="30"
-                android:imeOptions="actionDone"
-                android:layout_gravity="top"
-                android:inputType="number"
-                android:maxLength="2"
-                android:background="@drawable/border_line_v2"></EditText>
-
-            <TextView
-                style="@style/text_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="1"
-                android:layout_gravity="top"
-                android:text="@string/minute_CN_mes" />
-            <!-- Item [End  ] -->
-            <!-- TODO 缺少一行TR -->
-            <!-- Item 5 -->
         </GridLayout>
     </ScrollView>
 

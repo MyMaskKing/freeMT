@@ -7,12 +7,15 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import free.android.R;
+
 /**
  *  组件帮助类
  * @author Administrator
  *
  */
-public class ComponentUtil {
+public class ComponentUtil{
 
 	public static TextView textView;
 	public static ImageView imageView;
@@ -24,6 +27,7 @@ public class ComponentUtil {
 		editext.setEnabled(false);
 		editext.setFocusable(false);
 		editext.setFocusableInTouchMode(false);
+		editext.setTextColor(R.style.text_disabled_style);
 	}
 
 	public static void setEditextEnable(EditText editext) {
