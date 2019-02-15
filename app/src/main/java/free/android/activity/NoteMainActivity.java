@@ -46,7 +46,8 @@ public class NoteMainActivity extends ActivityCommon {
 	private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
 
 	private List<NoteEntity> noteMainBodyData = new ArrayList<NoteEntity>();
-    private List<NoteEntity> noteMainBodyDataBackUp = new ArrayList<NoteEntity>();
+	// 虚拟工作表:便签数据
+    private List<NoteEntity> noteMainBodyDataWork = new ArrayList<NoteEntity>();
     private List<String> noteMainHeaderData = new ArrayList<String>();
     private List<String> noteMainHeaderHiddenData = new ArrayList<String>();
     // 便签画面Body部
@@ -133,10 +134,10 @@ public class NoteMainActivity extends ActivityCommon {
         // 获取便签文件内容
         getNoteFileContent();
         againSetNoteBodyData(noteMainBodyData);
+        matchingResult(matchingCondition);
         /** 便签:Body部 */
         // 便签Body部List
-        printNoteMainBodyPage();
-        matchingResult(matchingCondition);
+        printNoteMainBodyPage(null);
         /** 便签:Header部 */
         // 通过便签文件内容获取便签Header部数据
         setNoteMainHeaderData();
@@ -438,6 +439,7 @@ public class NoteMainActivity extends ActivityCommon {
             matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
             initNotePage(matchingCondition);
             setCurrentPageLevel(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+            enablePreviousOnClickListener(false);
             return true;
         case R.id.menu_note_master_index:
             commonReturnIndex();
@@ -477,12 +479,12 @@ public class NoteMainActivity extends ActivityCommon {
 
 		@Override
 		public int getCount() {
-			return noteMainBodyData.size();
+			return noteMainBodyDataWork.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return noteMainBodyData.get(position);
+			return noteMainBodyDataWork.get(position);
 		}
 
 		@Override
@@ -506,31 +508,31 @@ public class NoteMainActivity extends ActivityCommon {
 			} else {
                 holder = (NoteMainBodyHolder) convertView.getTag();
 			}
-            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteId()));
-            holder.subIdTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteSubId()));
-            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteContent()));
+            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteId()));
+            holder.subIdTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteSubId()));
+            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteContent()));
             ComponentUtil.setMarquee(holder.contentTv);
             /**
              * 便签:标签无内容时不显示
              */
-            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteTag())) {
-                holder.tagTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteTag()));
+            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteTag())) {
+                holder.tagTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteTag()));
                 ComponentUtil.setMarquee(holder.tagTv);
             }else {
                 holder.tagTitleTv.setText(StringUtil.EMPTY);
             }
-            holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyData.get(position).getNoteNo()));
+            holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteNo()));
             /**
              * 便签:每隔一行变换颜色,当前数据有子数据时更换其他颜色
              */
             if((position + 1) % 2 == 0
-                    && StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())) {
+                    && StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())) {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v1));
             } else if ((position + 1) % 2 == 0 &&
-                    !StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())){
+                    !StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v1));
             } else if ((position + 1) % 2 != 0 &&
-                    !StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(position).getNoteSubId())){
+                    !StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v2));
             }else {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
@@ -627,30 +629,14 @@ public class NoteMainActivity extends ActivityCommon {
                     @Override
                     public void onClick(View view) {
                         List<String> matchingCondition = new ArrayList<>();
-                        boolean checkedFlag = false;
                         for(CheckBox val : checkBoxList) {
                             if(val.isChecked()) {
-                                checkedFlag = true;
                                 matchingCondition.add(StringUtil.isEmptyReturnString(val.getText()));
                             }
                         }
 
-                        if (noteMainBodyDataBackUp.size() == 0) {
-                            noteMainBodyDataBackUp = noteMainBodyData;
-                        } else if (noteMainBodyDataBackUp.size() > noteMainBodyData.size()) {
-                            noteMainBodyData = noteMainBodyDataBackUp;
-                        }
                         List<NoteEntity> matchingResult = matchingResult(matchingCondition);
-                        noteMainBodyData = matchingResult;
-                        // 初始化便签No使用
-                        Iterator<NoteEntity> entityIterator = noteMainBodyData.iterator();
-                        int noCount = 1;
-                        while (entityIterator.hasNext()) {
-                            NoteEntity entity = entityIterator.next();
-                            entity.setNoteNo(String.valueOf(noCount));
-                            noCount++;
-                        }
-                        printNoteMainBodyPage();
+                        printNoteMainBodyPage(matchingResult);
                     }
                 });
                 checkBoxList.add(checkBoxs[position]);
@@ -668,7 +654,22 @@ public class NoteMainActivity extends ActivityCommon {
         }
     }
 
-    private void printNoteMainBodyPage() {
+    private void printNoteMainBodyPage(List<NoteEntity> data) {
+        if(data == null || data.isEmpty()) {
+            noteMainBodyDataWork = noteMainBodyData;
+        }else {
+            noteMainBodyDataWork = data;
+        }
+
+        // 初始化便签No使用
+        Iterator<NoteEntity> entityIterator = noteMainBodyDataWork.iterator();
+        int noCount = 1;
+        while (entityIterator.hasNext()) {
+            NoteEntity entity = entityIterator.next();
+            entity.setNoteNo(String.valueOf(noCount));
+            noCount++;
+        }
+
         // 便签Body部List
         noteBodyListView = (ListView) findViewById(R.id.v_id_note_body_list);
         // 便签Header部List
