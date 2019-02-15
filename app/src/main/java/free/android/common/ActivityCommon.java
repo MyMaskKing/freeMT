@@ -458,6 +458,14 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         //设置点击其它地方不让消失弹窗
         dialogV1_1.setCancelable(true);
 
+        /** 设置按钮事件:查看 */
+        TextView lookUpByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_look_up);
+        lookUpByCommonDialogV2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lookUpClickByCommonDialogV2();
+            }
+        });
         /** 设置按钮事件:添加 */
         TextView addByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_add);
         addByCommonDialogV2.setOnClickListener(new View.OnClickListener() {
@@ -484,6 +492,17 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         });
     }
 
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:查看
+     */
+    protected void lookUpClickByCommonDialogV2() {
+    }
 
     /**
      * <PRE>

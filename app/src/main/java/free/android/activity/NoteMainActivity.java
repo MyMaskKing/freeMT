@@ -1,6 +1,7 @@
 package free.android.activity;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +31,7 @@ import java.util.Set;
 import free.android.R;
 import free.android.common.ActivityCommon;
 import free.android.entity.NoteEntity;
+import free.android.enums.PageInfoEnum;
 import free.android.holder.NoteMainBodyHolder;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.ComponentUtil;
@@ -43,18 +46,19 @@ public class NoteMainActivity extends ActivityCommon {
 	private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
 
 	private List<NoteEntity> noteMainBodyData = new ArrayList<NoteEntity>();
+    private List<NoteEntity> noteMainBodyDataBackUp = new ArrayList<NoteEntity>();
     private List<String> noteMainHeaderData = new ArrayList<String>();
     private List<String> noteMainHeaderHiddenData = new ArrayList<String>();
     // 便签画面Body部
     private ListView noteBodyListView;
-    private Set<String> cityList = new HashSet<String>();
-    private Set<String> typeList = new HashSet<String>();
+    private Set<String> cityList = new HashSet<String>(); // 未使用
+    private Set<String> typeList = new HashSet<String>(); // 未使用
     // 便签:标签集合
     private Set<String> tagDataSet = new HashSet<String>();
     private Set<String> idOfDeleteData = new HashSet<String>();
     private Set<String> idOfUpdateData = new HashSet<String>();
     private List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
-    private List<String> checkBoxHidden = new ArrayList<String>();
+    private List<String> checkBoxHidden = new ArrayList<String>(); // 未使用
     private NoteEntity commonNoteEntity;
     /**
      * 初始化方法
@@ -69,15 +73,25 @@ public class NoteMainActivity extends ActivityCommon {
 
 		// 获取从其他画面的数据[Start]
 		Intent noteIntent = getIntent();
-		String extra = noteIntent.getStringExtra(Constants.LOG_MES_TRANSITION_FLAG);
-		LogUtil.i(Constants.LOG_MES_TRANSITION_DATA, String.valueOf(extra));
-		// 获取从其他画面的数据[End]
+        String actionFlag = noteIntent.getStringExtra(Constants.ACTION_FALG);
+        /** From 便签子画面[Condition:非(副)便签迁移|当前页面级别不为1|便签ID不为空] */
+        if (StringUtil.equaleReturnBoolean(PageInfoEnum.NOTE_SUB_PAGE.getKey(), actionFlag)
+                && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))) {
+            LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE_FROM, PageInfoEnum.NOTE_SUB_PAGE.getVal());
+            Map<String, String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL));
+            initNotePage(matchingCondition);
+            setCurrentPageLevel(noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL));
+        }else{
+            Map<String, String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+            initNotePage(matchingCondition);
+            setCurrentPageLevel(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+        }
+        // 获取从其他画面的数据[End]
 
-        Map<String, String> matchingCondition = new HashMap<>();
-        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
-		initNotePage(matchingCondition);
-
-		// 自定义Menu
+        enablePreviousOnClickListener(true);
+        // 自定义Menu
         TextView menuTv = (TextView) findViewById(R.id.v_id_note_main_menu_tv);
         registerForContextMenu(menuTv);
         menuTv.setOnCreateContextMenuListener(this);//给组件注册Context菜单
@@ -87,7 +101,15 @@ public class NoteMainActivity extends ActivityCommon {
                 v.showContextMenu();//单击直接显示Context菜单
             }
         });
+    }
 
+    /**
+     * 设置导航栏部:当前页面级别
+     * @param currentPageLevel
+     */
+    private void setCurrentPageLevel(String currentPageLevel){
+        TextView currentPageLevelTv = (TextView) findViewById(R.id.v_id_note_main_current_page_level_tv);
+        currentPageLevelTv.setText(currentPageLevel);
     }
 
     /**
@@ -303,9 +325,6 @@ public class NoteMainActivity extends ActivityCommon {
                         /** 便签画面信息:标签内容 */
 					}else if (Constants.NOTE_TAG.equals(entityAttribueName)) {
 						entity.setNoteTag(entityAttribueData);
-                        // 便签画面信息:Header检索部生成标签集合使用[Start]
-                        tagDataSet.add(entityAttribueData);
-                        // 便签画面信息:Header检索部生成标签集合使用[End]
                         /** 便签画面信息:录入时间 */
 					}else if (Constants.NOTE_INSERT_TIME.equals(entityAttribueName)) {
 						entity.setNoteInsertTime(entityAttribueData);
@@ -359,7 +378,10 @@ public class NoteMainActivity extends ActivityCommon {
 		switch (item.getItemId()) {
 		case R.id.menu_note_master_add:
 			LogUtil.i(FILE_ACTIVITY_NAME, "迁移至便签按钮的添加便签画面");
-			Intent noteSubIntent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
+            TextView currentPageLevelTv = (TextView)findViewById(R.id.v_id_note_main_current_page_level_tv);
+            String currentPageLevelStr = currentPageLevelTv.getText().toString();
+            Intent noteSubIntent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
+            noteSubIntent.putExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, currentPageLevelStr);
 			startActivity(noteSubIntent);
 			return true;
 		case R.id.menu_note_master_download:
@@ -411,8 +433,11 @@ public class NoteMainActivity extends ActivityCommon {
                 ToastUtil.shortShow(this, "下载失败");
             }
             return true;
-        case R.id.menu_note_master_previous:
-            commonReturnIndex();
+        case R.id.menu_note_master_return:
+            Map<String, String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+            initNotePage(matchingCondition);
+            setCurrentPageLevel(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
             return true;
         case R.id.menu_note_master_index:
             commonReturnIndex();
@@ -511,8 +536,6 @@ public class NoteMainActivity extends ActivityCommon {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
             }
 
-
-			LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE, "便签主画面");
 			return convertView;
 		}
 	}
@@ -539,9 +562,41 @@ public class NoteMainActivity extends ActivityCommon {
     }
 
     /**
+     * 点击事件:查看当前便签
+     */
+    protected void lookUpClickByCommonDialogV2() {
+        Intent intent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
+        intent.putExtra(Constants.ACTION_FALG, "clickItem");
+        intent.putExtra("noteEntity", commonNoteEntity);
+        intent.putExtra(Constants.ACTION_MODE, Constants.STR_LOOK_UP);
+        startActivity(intent);
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:修改
+     */
+    protected void modifyClickByCommonDialogV2() {
+        Intent intent = new Intent(NoteMainActivity.this, NoteSubActivity.class);
+        intent.putExtra(Constants.ACTION_FALG, "clickItem");
+        intent.putExtra("noteEntity", commonNoteEntity);
+        intent.putExtra(Constants.ACTION_MODE, Constants.STR_MODIFY);
+        startActivity(intent);
+    }
+
+    /**
      * 获取数据By便签Header部
      */
     private void setNoteMainHeaderData(){
+        // (使用中集合)数据情况
+        noteMainHeaderData.clear();
+        noteMainHeaderHiddenData.clear();
+        checkBoxList.clear();
         // 便签Header集合
         Iterator<String> tagDataIterator = tagDataSet.iterator();
         while (tagDataIterator.hasNext()) {
@@ -551,6 +606,8 @@ public class NoteMainActivity extends ActivityCommon {
         }
         // 获取页面Header线性布局
 		LinearLayout noteHeaderLinearLayout = (LinearLayout)findViewById(R.id.v_id_note_header_list);
+        // 清空所有子布局
+        noteHeaderLinearLayout.removeAllViews();
 		// Header部子布局(线性、Java构成)
 		LinearLayout noteHeaderSubLineLayout = new LinearLayout(this);
 		// Header部子线性布局控件属性(线性、Java构成)
@@ -569,36 +626,31 @@ public class NoteMainActivity extends ActivityCommon {
                 checkBoxs[position].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        List<NoteEntity> matchingData = new ArrayList<NoteEntity>();
-                        boolean matchingFlg = false;
-                        int checkBoxPosition = 0;
+                        List<String> matchingCondition = new ArrayList<>();
+                        boolean checkedFlag = false;
                         for(CheckBox val : checkBoxList) {
                             if(val.isChecked()) {
-                                matchingFlg = true;
-                                matchingResult(noteMainHeaderHiddenData.get(checkBoxPosition), val.getText().toString(), matchingData);
+                                checkedFlag = true;
+                                matchingCondition.add(StringUtil.isEmptyReturnString(val.getText()));
                             }
-                            checkBoxPosition++;
                         }
-                        if (matchingFlg) {
-                            noteMainBodyData = matchingData;
-                            printNoteMainBodyPage();
-                        } else {
-                            int noCheckedBoxPosition = 0;
-                            boolean noCheckedFlag = true;
-                            for(CheckBox val : checkBoxList) {
-                                if (!StringUtil.isEmptyReturnBoolean(val.getText().toString())) {
-                                    noCheckedFlag = false;
-                                    matchingResult(noteMainHeaderHiddenData.get(noCheckedBoxPosition), val.getText().toString(), matchingData);
-                                }
-                                noCheckedBoxPosition++;
-                            }
-                            if (!noCheckedFlag) {
-                                matchingResult(Constants.STR_ALL, StringUtil.EMPTY, matchingData);
-                            } else {
-                                noteMainBodyData = matchingData;
-                            }
-                            printNoteMainBodyPage();
+
+                        if (noteMainBodyDataBackUp.size() == 0) {
+                            noteMainBodyDataBackUp = noteMainBodyData;
+                        } else if (noteMainBodyDataBackUp.size() > noteMainBodyData.size()) {
+                            noteMainBodyData = noteMainBodyDataBackUp;
                         }
+                        List<NoteEntity> matchingResult = matchingResult(matchingCondition);
+                        noteMainBodyData = matchingResult;
+                        // 初始化便签No使用
+                        Iterator<NoteEntity> entityIterator = noteMainBodyData.iterator();
+                        int noCount = 1;
+                        while (entityIterator.hasNext()) {
+                            NoteEntity entity = entityIterator.next();
+                            entity.setNoteNo(String.valueOf(noCount));
+                            noCount++;
+                        }
+                        printNoteMainBodyPage();
                     }
                 });
                 checkBoxList.add(checkBoxs[position]);
@@ -638,32 +690,89 @@ public class NoteMainActivity extends ActivityCommon {
             return;
         }
         Map<String, String> matchingCondition = new HashMap<>();
-        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID, commonNoteEntity.getNoteId());
+        /** (主)便签Id为父类ID */
+        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, commonNoteEntity.getNoteId());
         initNotePage(matchingCondition);
-
+        setCurrentPageLevel(StringUtil.isEmptyReturnBigDecimal(commonNoteEntity.getNoteCurrentPageLevel()).add(new BigDecimal(1)).toString());
+        enablePreviousOnClickListener(true);
     }
 
 
 
     /**
      * 筛选数据
-     * @param mark
-     * @param followVal
+     * @param matchingConditionList
      */
-    private void matchingResult(String mark, String followVal, List<NoteEntity> matchingData) {
-        // 获取最新数据
-        getNoteFileContent();
-        againSetNoteBodyData(noteMainBodyData);
-        if (!StringUtil.equaleReturnBoolean(Constants.STR_ALL, mark)) {
-            Iterator<NoteEntity> valIterator = noteMainBodyData.iterator();
-            while (valIterator.hasNext()) {
-                NoteEntity val = valIterator.next();
-                if (StringUtil.equaleReturnBoolean(mark, Constants.STR_NONE)
-                        && StringUtil.equaleReturnBoolean(val.getNoteTag(), followVal)) {
-                    val.setNoteNo(String.valueOf(matchingData.size() + 1));
-                    matchingData.add(val);
+    private List<NoteEntity> matchingResult(List<String> matchingConditionList) {
+        List<NoteEntity> matchingNoteMainBodyData = new ArrayList<NoteEntity>();
+        if (matchingConditionList == null || matchingConditionList.isEmpty()) {
+            return noteMainBodyData;
+        }
+        Iterator<String> matchingConditionIterator = matchingConditionList.iterator();
+        while (matchingConditionIterator.hasNext()) {
+            String matchingConditionStr = matchingConditionIterator.next();
+            Iterator<String> headerDataIterator = noteMainHeaderData.iterator();
+            int position = 0;
+            while (headerDataIterator.hasNext()) {
+                String headerDataStr = headerDataIterator.next();
+                if(StringUtil.equaleReturnBoolean(matchingConditionStr, headerDataStr)) {
+                    break;
+                }
+                position++;
+            }
+            String headerHidden = noteMainHeaderHiddenData.get(position);
+            if (StringUtil.equaleReturnBoolean(Constants.STR_NONE, headerHidden)) {
+                Iterator<NoteEntity> entityIterator = noteMainBodyData.iterator();
+                while (entityIterator.hasNext()) {
+                    NoteEntity entity = entityIterator.next();
+                    if (StringUtil.equaleReturnBoolean(matchingConditionStr, entity.getNoteTag())) {
+                        matchingNoteMainBodyData.add(entity);
+                    }
                 }
             }
+        }
+        return matchingNoteMainBodyData;
+    }
+
+    /**
+     * 返回上一级功能是否启用
+     * @param enableFlag
+     */
+    private void enablePreviousOnClickListener(boolean enableFlag){
+        TextView currentPageLevelTv = (TextView) findViewById(R.id.v_id_note_main_current_page_level_tv);
+        final String currentPageLevelStr = currentPageLevelTv.getText().toString();
+        TextView previousTitleTv = (TextView)findViewById(R.id.v_id_note_main_previous_title_tv);
+        TextView previousTv = (TextView)findViewById(R.id.v_id_note_main_previous_tv);
+        if(enableFlag
+                && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), currentPageLevelStr)) {
+            previousTitleTv.setVisibility(View.VISIBLE);
+            previousTv.setVisibility(View.VISIBLE);
+            // 添加下划线
+            previousTitleTv.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
+            // 计算返回的当前页面级别
+            BigDecimal oldCurrentPageLevelBigDecimal = StringUtil.isEmptyReturnBigDecimal(currentPageLevelStr);
+            BigDecimal newCurrentPageLevelBigDecimal = oldCurrentPageLevelBigDecimal.subtract(new BigDecimal(1));
+            final String newCurrentPageLevel= newCurrentPageLevelBigDecimal.toString();
+            previousTv.setText(newCurrentPageLevel);
+            if (newCurrentPageLevelBigDecimal.compareTo(new BigDecimal(1)) >= 0) {
+                previousTitleTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Map<String, String> matchingCondition = new HashMap<>();
+                        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, newCurrentPageLevel);
+                        initNotePage(matchingCondition);
+                        setCurrentPageLevel(new BigDecimal(currentPageLevelStr).subtract(new BigDecimal(1)).toString());
+                        enablePreviousOnClickListener(true);
+                    }
+                });
+            } else {
+                previousTitleTv.setVisibility(View.GONE);
+                previousTv.setVisibility(View.GONE);
+            }
+
+        } else {
+            previousTitleTv.setVisibility(View.GONE);
+            previousTv.setVisibility(View.GONE);
         }
     }
 
@@ -679,7 +788,12 @@ public class NoteMainActivity extends ActivityCommon {
             NoteEntity entity = noteMainBodyIterator.next();
             entity.setNoteNo(String.valueOf(noCount));
             if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID))
-                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID), entity.getNoteParentId())) {
+                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID), entity.getNoteId())) {
+                newNoteMainBodyData.add(entity);
+                noCount++;
+            }
+            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID))
+                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID), entity.getNoteParentId())) {
                 newNoteMainBodyData.add(entity);
                 noCount++;
             }
@@ -688,8 +802,19 @@ public class NoteMainActivity extends ActivityCommon {
                 newNoteMainBodyData.add(entity);
                 noCount++;
             }
+
         }
         noteMainBodyData = newNoteMainBodyData;
+        Iterator<NoteEntity> iterator = newNoteMainBodyData.iterator();
+        tagDataSet.clear();
+        while (iterator.hasNext()) {
+            NoteEntity val = iterator.next();
+            // 便签画面信息:Header检索部生成标签集合使用[Start]
+            if (!StringUtil.isEmptyReturnBoolean(val.getNoteTag())) {
+                tagDataSet.add(val.getNoteTag());
+            }
+            // 便签画面信息:Header检索部生成标签集合使用[End]
+        }
 
     }
 }

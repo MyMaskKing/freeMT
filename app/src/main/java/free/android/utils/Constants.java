@@ -48,6 +48,7 @@ public class Constants {
 	public static final String STR_NONE = "NONE";
 	public static final String STR_DEL = "删除";
 	public static final String STR_ADD = "添加";
+	public static final String STR_LOOK_UP = "查看";
 	public static final String STR_MODIFY = "修改";
 
 	/**
@@ -58,7 +59,8 @@ public class Constants {
 	/**
 	 * 打印Log使用
 	 */
-	public static final String LOG_MES_TRANSITION_PAGE = "迁移画面";
+	public static final String LOG_MES_TRANSITION_PAGE_FROM = "(始)迁移画面";
+	public static final String LOG_MES_TRANSITION_PAGE_TO = "(终)迁移画面";
 	public static final String LOG_MES_TRANSITION_DATA = "迁移数据";
 	public static final String LOG_MES_TRANSITION_FLAG = "transitionFlag";
 	public static final String LOG_MES_READY_FILE_ERROR_REASON = "读取文件失败||错误信息:";
@@ -72,6 +74,7 @@ public class Constants {
 	/** 便签文件字段个数(重要) */
 	public static  final int NOTE_FILE_DATA_COUNT = 12;
 	public static  final int NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE = 1;
+    public static  final String NOTE_MATCH_CONDITION_PARENT_ID = "NOTE_MATCH_CONDITION_PARENT_ID";
 	public static  final String NOTE_MATCH_CONDITION_ID = "NOTE_ID";
 	public static  final String NOTE_MATCH_CONDITION_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
 	public static final String NOTE_ID = "NOTE_ID";

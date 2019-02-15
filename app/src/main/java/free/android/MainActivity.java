@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import free.android.activity.NoteMainActivity;
 import free.android.common.ActivityCommon;
+import free.android.enums.PageInfoEnum;
 import free.android.utils.Constants;
 import free.android.utils.LogUtil;
 import free.android.utils.ToastUtil;
@@ -64,11 +65,11 @@ public class MainActivity extends ActivityCommon {
      * @param view
      */
     public void transitionNote(View view) {
-        LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE, "便签功能");
+        LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE_TO, PageInfoEnum.NOTE_PAGE.getVal());
         ToastUtil.longShow(MainActivity.this, "正在进入便签功能,请稍等~");
         Intent noteIntent = new Intent(MainActivity.this, NoteMainActivity.class);
         // 传送数据 --> 迁移画面
-        noteIntent.putExtra(Constants.LOG_MES_TRANSITION_FLAG, "note");
+        noteIntent.putExtra(Constants.ACTION_FALG, PageInfoEnum.INDEX_PAGE.getKey());
         // 返回结果 Yes No(startActivity(intent))
         startActivityForResult(noteIntent, 1);
         // setContentView(R.layout.note_main);

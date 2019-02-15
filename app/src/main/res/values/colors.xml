@@ -16,5 +16,5 @@
     <color name="buttonBackground6">#e48dad</color>
     <color name="buttonFont6">#03edd6</color>
     <color name="info_defalut_v1">#af242525</color>
-
+    <color name="hint_text_v1">#00389f</color>
 </resources>

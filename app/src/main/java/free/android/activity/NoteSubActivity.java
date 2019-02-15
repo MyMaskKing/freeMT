@@ -21,6 +21,7 @@ import free.android.R;
 import free.android.common.ActivityCommon;
 import free.android.entity.NoteEntity;
 import free.android.enums.FormatEnum;
+import free.android.enums.PageInfoEnum;
 import free.android.utils.ComponentUtil;
 import free.android.utils.Constants;
 import free.android.utils.FileUtil;
@@ -58,11 +59,12 @@ public class NoteSubActivity extends ActivityCommon{
 			TextView contentByNoteMainTv = (TextView)findViewById(R.id.v_id_note_sub_content_by_main);
 			contentByNoteMainTv.setText(noteEntity.getNoteContent());
 			ComponentUtil.setMarquee(contentByNoteMainTv);
-			/** [2](From主)便签:数据ID */
-			TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
-			idHidden.setText(noteEntity.getNoteId());
-			// 便签修改/副便签新规场合使用
-			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)) {
+			/** [2](From主)便签:当前页面级别(Hidden) */
+			TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+			currentPageLevelHidden.setText(noteEntity.getNoteCurrentPageLevel());
+			// 便签修改/便签查询
+			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)
+					|| StringUtil.equaleReturnBoolean(Constants.STR_LOOK_UP, currentMode)) {
 				/** [3](From主)便签:数据子ID(Hidden) */
 				TextView idSubHidden = (TextView)findViewById(R.id.v_id_note_sub_sub_id);
 				idSubHidden.setText(noteEntity.getNoteSubId());
@@ -83,12 +85,19 @@ public class NoteSubActivity extends ActivityCommon{
 				/** [8](From主)便签:更新次数(Hidden) */
 				TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
 				updateCountHidden.setText(noteEntity.getNoteUpdateCount());
-				/** [9](From主)便签:当前页面级别(Hidden) */
-				TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
-				currentPageLevelHidden.setText(noteEntity.getNoteCurrentPageLevel());
+				/** [9](From主)便签:数据ID */
+				TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+				idHidden.setText(noteEntity.getNoteId());
 				/** [10](From主)便签:更新次数(Hidden) */
 				TextView subNoteInsertTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_subnote_insert_time);
 				subNoteInsertTimeHidden.setText(noteEntity.getSubNoteInsertTime());
+				Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
+				addBtn.setVisibility(View.GONE);
+				LinearLayout currentNotell = (LinearLayout)findViewById(R.id.v_id_note_sub_current_note_ll);
+				currentNotell.setVisibility(View.GONE);
+				if(StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)) {
+					modifyMode();
+				}
 			}else{
 				/** 便签标题:便签内容 */
 				TextView noteSubContentTv = (TextView)findViewById(R.id.v_id_note_sub_content);
@@ -96,17 +105,27 @@ public class NoteSubActivity extends ActivityCommon{
 				/** 便签标题:标签内容 */
 				TextView noteSubTagTv = (TextView)findViewById(R.id.v_id_note_sub_tag);
 				noteSubTagTv.setText("(副)"  + getResources().getString(R.string.note_tag));
-				/** 便签标题:录入时间 */
+				/** 便签标题:录入时间(Hidden) */
 				TextView insertTimeTv = (TextView)findViewById(R.id.v_id_note_sub_insert_time);
 				insertTimeTv.setVisibility(View.GONE);
 			}
 		}else {
-			LinearLayout idLL = (LinearLayout)findViewById(R.id.v_id_note_sub_current_id_ll);
+			Intent intent = getIntent();
+			// 不同功能判断标识
+			String currentPageLevel = intent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL);
+			TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+			currentPageLevelHidden.setText(currentPageLevel);
+			LinearLayout idLL = (LinearLayout)findViewById(R.id.v_id_note_sub_current_note_ll);
 			idLL.setVisibility(View.GONE);
+			TextView currentModeTitleTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_title_tv);
+			currentModeTitleTv.setVisibility(View.GONE);
+			/** 便签标题:录入时间(Hidden) */
+			TextView insertTimeTv = (TextView)findViewById(R.id.v_id_note_sub_insert_time);
+			insertTimeTv.setVisibility(View.GONE);
 		}
 		/** 便签:当前模式 */
-		TextView currentModl = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
-		currentModl.setText(StringUtil.isEmptyReturnString(currentMode));
+		TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+		currentModeTv.setText(StringUtil.isEmptyReturnString(currentMode));
 		Button menuBtn= (Button) findViewById(R.id.v_id__note_sub_menu);
 		registerForContextMenu(menuBtn);
 		menuBtn.setOnCreateContextMenuListener(this);//给组件注册Context菜单
@@ -180,17 +199,11 @@ public class NoteSubActivity extends ActivityCommon{
 				return false;
 			// 便签子画面的修改按钮
 			case R.id.menu_note_sub_modify:
-				/** 便签:便签内容部 */
-				EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
-				ComponentUtil.setEditextEnable(contentEditext);
-				/** 便签:标签部 */
-				EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
-				ComponentUtil.setEditextEnable(tagEditext);
+				modifyMode();
 				return true;
 			// 便签子画面的返回上一级
 			case R.id.menu_note_sub_previous:
-				Intent intent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
-				startActivity(intent);
+				returnNoteMainActivity();
 				return true;
 			// 便签子画面的返回首页
 			case R.id.menu_note_sub_return_index:
@@ -199,6 +212,32 @@ public class NoteSubActivity extends ActivityCommon{
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void modifyMode() {
+		/** 便签:便签内容部 */
+		EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+		ComponentUtil.setEditextEnable(contentEditext);
+		/** 便签:标签部 */
+		EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+		ComponentUtil.setEditextEnable(tagEditext);
+		Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
+		addBtn.setVisibility(View.VISIBLE);
+		addBtn.setText(getResources().getString(R.string.modify_CN_mes));
+		TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+		currentModeTv.setText(Constants.STR_MODIFY);
+	}
+
+	/**
+	 * 返回(主)便签画面
+	 */
+	private void returnNoteMainActivity() {
+		Intent intent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
+		TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+		String currentPageLevelStr = currentPageLevelHidden.getText().toString();
+		intent.putExtra(Constants.ACTION_FALG, PageInfoEnum.NOTE_SUB_PAGE.getKey());
+		intent.putExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL,currentPageLevelStr);
+		startActivity(intent);
 	}
 
 	/**
@@ -308,8 +347,7 @@ public class NoteSubActivity extends ActivityCommon{
 				}
 				String externalFilesPath = getFilePathByApp();
 				FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, listWriteData, null);
-				Intent noteSubIntent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
-				startActivity(noteSubIntent);
+				returnNoteMainActivity();
 			// 执行修改操作
 			} else {
 				TextView updateCountStr = (TextView) findViewById(R.id.v_id_note_sub_update_count);
@@ -383,8 +421,7 @@ public class NoteSubActivity extends ActivityCommon{
     private void commonTransitionPage(Map<String, Object> addContent) {
         String externalFilesPath = getFilePathByApp();
         FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, null, addContent);
-        Intent noteSubIntent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
-        startActivity(noteSubIntent);
+		returnNoteMainActivity();
     }
 
 }

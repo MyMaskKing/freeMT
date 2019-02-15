@@ -14,12 +14,47 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="end"
-        android:background="@drawable/background_all_v4">
+        android:background="@drawable/navigation_v2">
         <TextView
-            android:paddingEnd="10dp"
+            android:paddingEnd="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Menu"/>
+            android:text="@string/note_current_page_level"
+            android:textColor="#cfe8fe"
+            android:textStyle="bold"
+            android:textColorHint="#e8ad6a"/>
+
+        <TextView
+            android:id="@+id/v_id_note_main_current_page_level_tv"
+            android:layout_marginEnd="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/round_v1"
+            android:textColor="#ffff"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/v_id_note_main_previous_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:paddingEnd="5dp"
+            android:text="@string/return_CN_mes"
+            android:textColor="#cfe8fe"
+            android:textColorHint="#e8ad6a"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/v_id_note_main_previous_tv"
+            android:layout_marginEnd="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/round_v1"
+            android:textColor="#ffff"
+            android:gravity="center"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/v_id_note_main_menu_tv"
             android:layout_width="50dp"
@@ -66,7 +101,7 @@
             android:layout_marginTop="0dp"
             android:dividerHeight="2px"
             android:fadeScrollbars="true"
-            android:listSelector="#bac9c4"
+            android:listSelector="#f2d6b4"
             android:transcriptMode="alwaysScroll"/>
     </LinearLayout>
 

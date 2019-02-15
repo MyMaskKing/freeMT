@@ -8,10 +8,10 @@
         android:showAsAction="withText"
         android:title="@string/add_CN_mes"/>
     <item
-        android:id="@+id/menu_note_master_previous"
+        android:id="@+id/menu_note_master_return"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/previous_CN_mes"/>
+        android:title="@string/note_previous_page_level_one"/>
     
     <item
         android:id="@+id/menu_note_master_download"

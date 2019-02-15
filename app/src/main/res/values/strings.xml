@@ -5,6 +5,7 @@
     <string name="welcom_mes">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="add_CN_mes">添加(+)</string>
+    <string name="look_up_CN_mes">查看</string>
     <string name="modify_CN_mes">修改</string>
     <string name="download_CN_mes">下载</string>
     <string name="download_template_CN_mes">下载模板</string>
@@ -20,6 +21,7 @@
     <string name="warning_CN_mes">◆</string>
     <string name="advice_CN_mes">★</string>
     <string name="previous_CN_mes">返回上一级</string>
+    <string name="return_CN_mes">返回</string>
     <string name="index_CN_mes">首页</string>
     <!-- Common Message CN[End] -->
 
@@ -50,6 +52,8 @@
     <string name="note_current_id">(主)便签ID:</string>
     <string name="note_current_content">(主)便签内容:</string>
     <string name="note_current_mode">当前模式:</string>
+    <string name="note_current_page_level">当前页面级别:</string>
+    <string name="note_previous_page_level_one">返回(1级页面)</string>
     <!-- *** Wait Use *** -->
     <string name="note_master_spend_time">路程时间:</string>
     <string name="note_master_address">打卡目的地:</string>

@@ -33,7 +33,7 @@
 
     <!-- Current Id -->
     <LinearLayout
-        android:id="@+id/v_id_note_sub_current_id_ll"
+        android:id="@+id/v_id_note_sub_current_note_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/v_id__note_sub_init_title"
@@ -68,9 +68,10 @@
         android:layout_marginTop="3dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/v_id_note_sub_current_id_ll"
+        android:layout_below="@+id/v_id_note_sub_current_note_ll"
         android:background="@drawable/background_info_v3">
         <TextView
+            android:id="@+id/v_id_note_sub_current_mode_title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -101,7 +102,8 @@
         android:id="@+id/v_id_note_sub_sub_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/v_id_note_sub_update_time"
         android:layout_width="match_parent"
