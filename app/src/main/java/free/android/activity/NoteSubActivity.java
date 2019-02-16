@@ -61,15 +61,15 @@ public class NoteSubActivity extends ActivityCommon{
 			/** [2](From主)便签:当前页面级别(Hidden) */
 			TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
 			currentPageLevelHidden.setText(noteEntity.getNoteCurrentPageLevel());
+			/** [3](From主)便签:数据父类ID(Hidden) */
+			TextView idParentHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+			idParentHidden.setText(noteEntity.getNoteParentId());
 			// 便签修改/便签查询
 			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)
 					|| StringUtil.equaleReturnBoolean(Constants.STR_LOOK_UP, currentMode)) {
-				/** [3](From主)便签:副便签数据数量(Hidden) */
+				/** [4](From主)便签:副便签数据数量(Hidden) */
 				TextView childrenCountHidden = (TextView)findViewById(R.id.v_id_note_sub_children_count);
 				childrenCountHidden.setText(noteEntity.getNoteChildrenCount());
-				/** [4](From主)便签:数据父类ID(Hidden) */
-				TextView idParentHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
-				idParentHidden.setText(noteEntity.getNoteParentId());
 				/** [5](From主)便签:便签内容 */
 				EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
 				contentEditext.setText(noteEntity.getNoteContent());
@@ -225,9 +225,12 @@ public class NoteSubActivity extends ActivityCommon{
 	private void returnNoteMainActivity() {
 		Intent intent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
 		TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+		TextView parentIdHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
 		String currentPageLevelStr = currentPageLevelHidden.getText().toString();
+		String parentIdStr = parentIdHidden.getText().toString();
 		intent.putExtra(Constants.ACTION_FALG, PageInfoEnum.NOTE_SUB_PAGE.getKey());
-		intent.putExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL,currentPageLevelStr);
+		intent.putExtra(Constants.NOTE_PARENT_ID, parentIdStr);
+		intent.putExtra(Constants.NOTE_CURRENT_PAGE_LEVEL, currentPageLevelStr);
 		startActivity(intent);
 	}
 
@@ -316,7 +319,7 @@ public class NoteSubActivity extends ActivityCommon{
 				// ([1]主)便签:便签Id
 				mainNoteData.put(Constants.NOTE_ID, noteEntity.getNoteId());
 				// ([2]主)便签:(副)便签数量
-				mainNoteData.put(Constants.NOTE_CHILDREN_COUNT, StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteContent()).add(new BigDecimal(1)));
+				mainNoteData.put(Constants.NOTE_CHILDREN_COUNT, StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteChildrenCount()).add(new BigDecimal(1)));
 				// ([3]主)便签:便签内容
 				mainNoteData.put(Constants.NOTE_CONTENT, noteEntity.getNoteContent());
 				// ([4]主)便签:标签内容

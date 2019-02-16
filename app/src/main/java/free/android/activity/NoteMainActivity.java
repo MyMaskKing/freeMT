@@ -77,10 +77,10 @@ public class NoteMainActivity extends ActivityCommon {
         String actionFlag = noteIntent.getStringExtra(Constants.ACTION_FALG);
         /** From 便签子画面[Condition:非(副)便签迁移|当前页面级别不为1|便签ID不为空] */
         if (StringUtil.equaleReturnBoolean(PageInfoEnum.NOTE_SUB_PAGE.getKey(), actionFlag)
-                && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))) {
+                && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), noteIntent.getStringExtra(Constants.NOTE_CURRENT_PAGE_LEVEL))) {
             LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE_FROM, PageInfoEnum.NOTE_SUB_PAGE.getVal());
             Map<String, String> matchingCondition = new HashMap<>();
-            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL));
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, noteIntent.getStringExtra(Constants.NOTE_PARENT_ID));
             initNotePage(matchingCondition);
             setCurrentPageLevel(noteIntent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL));
         }else{
@@ -668,6 +668,7 @@ public class NoteMainActivity extends ActivityCommon {
      */
     protected void onClickBtn1V1_1() {
         String externalFilesPath = getFilePathByApp();
+
         List<Map<String, Object>> deleteNoteMainBodyList = new ArrayList<>();
         Iterator<NoteEntity> iterator = deleteNoteMainBodyData.iterator();
         while (iterator.hasNext()) {
@@ -856,10 +857,32 @@ public class NoteMainActivity extends ActivityCommon {
                 previousTitleTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        NoteEntity currentFistBodyData = new NoteEntity();
+                        if (noteMainBodyDataWork.isEmpty()) {
+                            ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
+                            return;
+                        }
+                        currentFistBodyData = noteMainBodyDataWork.get(0);
                         Map<String, String> matchingCondition = new HashMap<>();
-                        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, newCurrentPageLevel);
+                        if (StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), commonNoteEntity.getNoteCurrentPageLevel())) {
+                            matchingCondition.put(Constants.NOTE_CURRENT_PAGE_LEVEL, commonNoteEntity.getNoteCurrentPageLevel());
+                        }else {
+                            matchingCondition.clear();
+                            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID, currentFistBodyData.getNoteParentId());
+                            getNoteFileContent();
+                            againSetNoteBodyData(noteMainBodyData);
+                            matchingResult(matchingCondition);
+                            if (noteMainBodyData.isEmpty()) {
+                                ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
+                                return;
+                            }
+                            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(0).getNoteParentId())) {
+                                matchingCondition.clear();
+                                matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, noteMainBodyData.get(0).getNoteParentId());
+                            }
+                        }
                         initNotePage(matchingCondition);
-                        setCurrentPageLevel(new BigDecimal(currentPageLevelStr).subtract(new BigDecimal(1)).toString());
+                        setCurrentPageLevel(StringUtil.isEmptyReturnBigDecimal(currentFistBodyData.getNoteCurrentPageLevel()).subtract(new BigDecimal(1)).toString());
                         enablePreviousOnClickListener(true);
                     }
                 });
@@ -871,6 +894,9 @@ public class NoteMainActivity extends ActivityCommon {
         } else {
             previousTitleTv.setVisibility(View.GONE);
             previousTv.setVisibility(View.GONE);
+            Map<String, String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_CURRENT_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+            initNotePage(matchingCondition);
         }
     }
 
@@ -885,18 +911,20 @@ public class NoteMainActivity extends ActivityCommon {
         while (noteMainBodyIterator.hasNext()){
             NoteEntity entity = noteMainBodyIterator.next();
             entity.setNoteNo(String.valueOf(noCount));
-            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID))
+           if (StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))
+                    && !StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID))
                     && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID), entity.getNoteId())) {
                 newNoteMainBodyData.add(entity);
                 noCount++;
-            }
-            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID))
+            }else if (StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))
+                    && !StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID))
                     && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID), entity.getNoteParentId())) {
                 newNoteMainBodyData.add(entity);
                 noCount++;
-            }
-            if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))
-                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL), entity.getNoteCurrentPageLevel())) {
+            }else if (!StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL))
+                    && StringUtil.equaleReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL), entity.getNoteCurrentPageLevel())
+                    && StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_PARENT_ID))
+                    && StringUtil.isEmptyReturnBoolean(matchingCondition.get(Constants.NOTE_MATCH_CONDITION_ID))) {
                 newNoteMainBodyData.add(entity);
                 noCount++;
             }
