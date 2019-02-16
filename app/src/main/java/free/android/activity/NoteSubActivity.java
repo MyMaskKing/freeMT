@@ -276,7 +276,12 @@ public class NoteSubActivity extends ActivityCommon{
 			setError();
 			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"错误", "订正", "取消");
 		}else {
-			showDialogV1_1(submitContentList, Constants.CONFIRM_MARK,"请确认添加内容", "确认", "取消");
+			TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+			String currentModeStr = currentModeTv.getText().toString();
+			if (StringUtil.isEmptyReturnBoolean(currentModeStr)) {
+				currentModeStr = Constants.STR_ADD;
+			}
+			showDialogV1_1(submitContentList, Constants.CONFIRM_MARK,currentModeStr + "内容确认", "确认", "取消");
 		}
 	}
 

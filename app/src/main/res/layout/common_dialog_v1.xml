@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/id_common_dialog_v1"
-    android:background="@drawable/background_all_v5">
-
+    android:background="@drawable/dialog_line_v1"
+    android:id="@+id/id_common_dialog_v1">
     <TextView
         android:id="@+id/id_common_dialog_v1_title"
+        android:paddingStart="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="start"
-        android:textSize="20dp"
-        android:textStyle="bold"
+        android:gravity="start|center"
+        style="@style/text_style"
         android:background="@drawable/border_line_v1"/>
 
     <ScrollView
         android:id="@+id/id_common_dialog_v1_content_sv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_height="50dp"
         android:gravity="start"
         android:background="@drawable/border_line_v3">
         <LinearLayout
@@ -36,7 +39,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp">
 
         <TextView
             android:id="@+id/id_common_dialog_v1_btn1"

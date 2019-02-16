@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -397,6 +398,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
         WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
         Window window = dialogV1_1.getWindow();
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         lp.copyFrom(window.getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -572,6 +574,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         LinearLayout subLineLayout = new LinearLayout(this);
         // Header部子线性布局控件属性(线性、Java构成)
         LinearLayout.LayoutParams subLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1f);
+        subLineLayoutAttribute.setMarginStart(5);
         Iterator<String> valIterator = contentList.iterator();
         while (valIterator.hasNext()) {
             subLineLayout.setBackground(getResources().getDrawable(R.drawable.border_line_v3));
