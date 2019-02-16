@@ -112,9 +112,11 @@ public class FileUtil extends ActivityCommon{
                         ?("NOTE" + getSystemTime(FormatEnum.TIME_FORMAT_ID.getVal())) : String.valueOf(singleData.get(Constants.NOTE_ID)))));
 		bw.newLine();
 		// Master 2
-		bw.write("#COMENT#:便签子ID");
+		bw.write("#COMENT#:(副)便签数量");
 		bw.newLine();
-		bw.write(Constants.NOTE_SUB_ID + Constants.EQUAL_SYMBOL + StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_SUB_ID)));
+		bw.write(Constants.NOTE_CHILDREN_COUNT + Constants.EQUAL_SYMBOL +
+                (!StringUtil.isEmptyReturnBoolean(StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_CHILDREN_COUNT)))
+                        ? StringUtil.isEmptyReturnString(singleData.get(Constants.NOTE_CHILDREN_COUNT)) : Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE));
 		bw.newLine();
 		// Master 3
 		bw.write("#COMENT#:便签父ID");

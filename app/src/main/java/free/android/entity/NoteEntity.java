@@ -59,9 +59,9 @@ public class NoteEntity implements Serializable {
     private String noteUpdateCount;
 
     /**
-     * 便签:数据子Id
+     * 便签:(副)数据数量
      */
-    private String noteSubId;
+    private String noteChildrenCount;
 
     /**
      * 便签:父类便签ID
@@ -114,12 +114,12 @@ public class NoteEntity implements Serializable {
         this.noteInsertTime = noteInsertTime;
     }
 
-    public String getNoteSubId() {
-        return noteSubId;
+    public String getNoteChildrenCount() {
+        return noteChildrenCount;
     }
 
-    public void setNoteSubId(String noteSubId) {
-        this.noteSubId = noteSubId;
+    public void setNoteChildrenCount(String noteChildrenCount) {
+        this.noteChildrenCount = noteChildrenCount;
     }
 
     public String getNoteTag() {

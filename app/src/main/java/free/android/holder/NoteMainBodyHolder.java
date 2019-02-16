@@ -4,7 +4,7 @@ import android.widget.TextView;
 
 public final class NoteMainBodyHolder {
     public TextView idTv = null;
-    public TextView subIdTv = null;
+    public TextView childrenCountTv = null;
     public TextView contentTv = null;
     public TextView tagTv = null;
     public TextView tagTitleTv = null;

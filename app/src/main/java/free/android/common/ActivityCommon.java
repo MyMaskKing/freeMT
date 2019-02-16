@@ -44,6 +44,7 @@ import java.util.Map;
 
 import free.android.MainActivity;
 import free.android.R;
+import free.android.entity.NoteEntity;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
 import free.android.utils.StringUtil;
@@ -60,6 +61,9 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     /*** 对话框Template 1.1 **/
     private  Dialog dialogV1_1 = null;
+
+    /*** 对话框Template 2 **/
+    private  Dialog dialogV2 = null;
 
 	/**
 	 * <pre>
@@ -440,25 +444,25 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <PRE/>
      */
     protected void showDialogV2() {
-        dialogV1_1  = new Dialog(this);
+        dialogV2  = new Dialog(this);
         //去除标题栏
-        dialogV1_1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogV2.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //2.填充布局
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView     = inflater.inflate(R.layout.common_dialog_v2, null);
         //将自定义布局设置进去
-        dialogV1_1.setContentView(dialogView);
+        dialogV2.setContentView(dialogView);
         //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
         WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
-        Window window = dialogV1_1.getWindow();
+        Window window = dialogV2.getWindow();
         lp.copyFrom(window.getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         // 显示
-        dialogV1_1.show();
+        dialogV2.show();
         window.setAttributes(lp);
-        //设置点击其它地方不让消失弹窗
-        dialogV1_1.setCancelable(true);
+        //设置点击其它地方消失弹窗
+        dialogV2.setCancelable(true);
 
         /** 设置按钮事件:查看 */
         TextView lookUpByCommonDialogV2 = dialogView.findViewById(R.id.id_common_dialog_v2_look_up);
@@ -492,6 +496,19 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
                 modifyClickByCommonDialogV2();
             }
         });
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:取消Dialog
+     */
+    protected void dismissByCommonDialogV2() {
+        dialogV2.dismiss();
     }
 
     /**
@@ -574,10 +591,10 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         LinearLayout subLineLayout = new LinearLayout(this);
         // Header部子线性布局控件属性(线性、Java构成)
         LinearLayout.LayoutParams subLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1f);
-        subLineLayoutAttribute.setMarginStart(5);
         Iterator<String> valIterator = contentList.iterator();
         while (valIterator.hasNext()) {
             subLineLayout.setBackground(getResources().getDrawable(R.drawable.border_line_v3));
+            subLineLayoutAttribute.setMarginStart(5);
             // 设置Header部子线性布局控件横向属性(线性、Java构成)
             subLineLayout.setOrientation(LinearLayout.HORIZONTAL);
             String val = valIterator.next();
@@ -643,6 +660,51 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      */
     protected boolean isError() {
         return checkErrorFlag;
+    }
+
+    /**
+     * 便签实体类转换Map
+     * @param entity
+     *          实体类
+     * @return
+     */
+    protected Map<String, Object> noteEntityTransferMap(NoteEntity entity) {
+        Map<String, Object> noteEntityMap = new HashMap<>();
+        // Master 1 便签ID
+        noteEntityMap.put(Constants.NOTE_ID, entity.getNoteId());
+        // Master 2 (副)便签数量
+        noteEntityMap.put(Constants.NOTE_CHILDREN_COUNT, entity.getNoteChildrenCount());
+        // Master 3 便签父ID
+        noteEntityMap.put(Constants.NOTE_PARENT_ID, entity.getNoteParentId());
+        // Master 4 便签内容
+        noteEntityMap.put(Constants.NOTE_CONTENT, entity.getNoteContent());
+        // Master 5 便签标签内容
+        noteEntityMap.put(Constants.NOTE_TAG, entity.getNoteTag());
+        // Master 6 便签录入时间
+        noteEntityMap.put(Constants.NOTE_INSERT_TIME, entity.getNoteInsertTime());
+        // Master 7 便签更新时间
+        noteEntityMap.put(Constants.NOTE_UPDATE_TIME, entity.getNoteUpdateTime());
+        // Master 8 便签删除时间
+        noteEntityMap.put(Constants.NOTE_DELETE_TIME, entity.getNoteDeleteTime());
+        // Master 9 ：数据删除标记
+        noteEntityMap.put(Constants.NOTE_DELETE_FLAG, entity.getNoteDeleteFlag());
+        // Master 10 : 数据更新回数标记
+        noteEntityMap.put(Constants.NOTE_UPDATE_COUNT, entity.getNoteUpdateCount());
+        // Master 11 : 便签:当前页面级别
+        noteEntityMap.put(Constants.NOTE_CURRENT_PAGE_LEVEL, entity.getNoteCurrentPageLevel());
+        // Master 12 : 便签:副便签插入时间
+        noteEntityMap.put(Constants.SUB_NOTE_INSERT_TIME, entity.getSubNoteInsertTime());
+        return noteEntityMap;
+    }
+
+
+    /**
+     * 重新系统自带返回键
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();//注释掉这行,back键不退出activity
+
     }
 
 }

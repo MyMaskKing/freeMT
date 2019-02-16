@@ -10,6 +10,9 @@
     <string name="download_CN_mes">下载</string>
     <string name="download_template_CN_mes">下载模板</string>
     <string name="upload_CN_mes">上传</string>
+    <string name="download_admin_CN_mes">下载(开发者)</string>
+    <string name="download_admin_template_CN_mes">下载模板(开发者)</string>
+    <string name="upload_admin_CN_mes">上传(开发者)</string>
     <string name="del_CN_mes">删除(-)</string>
     <string name="function_CN_mes">功能</string>
     <string name="hour_CN_mes">时</string>

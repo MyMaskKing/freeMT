@@ -44,7 +44,7 @@ import free.android.utils.ToastUtil;
 public class NoteMainActivity extends ActivityCommon {
 
 	private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
-
+    private List<NoteEntity> deleteNoteMainBodyData = new ArrayList<NoteEntity>();
 	private List<NoteEntity> noteMainBodyData = new ArrayList<NoteEntity>();
 	// 虚拟工作表:便签数据
     private List<NoteEntity> noteMainBodyDataWork = new ArrayList<NoteEntity>();
@@ -314,9 +314,9 @@ public class NoteMainActivity extends ActivityCommon {
 						 */
 						repeatSet.add(entityAttribueData);
 						idRecod.add(entityAttribueData);
-                        /** 便签画面信息:副便子ID */
-                    }else if (Constants.NOTE_SUB_ID.equals(entityAttribueName)) {
-                        entity.setNoteSubId(entityAttribueData);
+                        /** 便签画面信息:副便签数量 */
+                    }else if (Constants.NOTE_CHILDREN_COUNT.equals(entityAttribueName)) {
+                        entity.setNoteChildrenCount(entityAttribueData);
                         /** 便签画面信息:副父签ID */
                     }else if (Constants.NOTE_PARENT_ID.equals(entityAttribueName)) {
                         entity.setNoteParentId(entityAttribueData);
@@ -405,25 +405,25 @@ public class NoteMainActivity extends ActivityCommon {
             String filePath = getFilePathBySDCard();
             List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
             for (int i = 0; i < 10; i++) {
-                // 放置添加的内容
+                // 1放置添加的内容
                 Map<String, Object> map = new HashMap<String, Object>();
-                // 便签:便签ID
+                // 2便签:便签ID
                 map.put(Constants.NOTE_ID, StringUtil.EMPTY);
-                // 便签:便签子ID
-                map.put(Constants.NOTE_SUB_ID, StringUtil.EMPTY);
-                // 便签:便签内容
+                // 3便签:副便便签数量
+                map.put(Constants.NOTE_CHILDREN_COUNT, Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE);
+                // 4便签:便签内容
                 map.put(Constants.NOTE_CONTENT, StringUtil.EMPTY);
-                // 便签:便签标签
+                // 5便签:便签标签
                 map.put(Constants.NOTE_TAG, StringUtil.EMPTY);
-                // 便签:录入时间
+                // 6便签:录入时间
                 map.put(Constants.NOTE_INSERT_TIME, StringUtil.EMPTY);
-                // 便签:更新时间
+                // 7便签:更新时间
                 map.put(Constants.NOTE_UPDATE_TIME, StringUtil.EMPTY);
-                // 便签:删除时间
+                // 8便签:删除时间
                 map.put(Constants.NOTE_DELETE_TIME, StringUtil.EMPTY);
-                // 便签:更新次数
+                // 9便签:更新次数
                 map.put(Constants.NOTE_UPDATE_COUNT, Constants.UPDATE_DEFAULT_COUNT);
-                // 便签:删除标记
+                // 10便签:删除标记
                 map.put(Constants.NOTE_DELETE_FLAG, Constants.DELETE_OFF);
                 listMap.add(map);
             }
@@ -500,7 +500,7 @@ public class NoteMainActivity extends ActivityCommon {
 				convertView = getLayoutInflater().inflate(R.layout.note_main_body_item, null);
                 holder.noTv = (TextView) convertView.findViewById(R.id.v_id_note_main_no);
                 holder.idTv = (TextView) convertView.findViewById(R.id.v_id_note_main_id);
-                holder.subIdTv = (TextView) convertView.findViewById(R.id.v_id_note_main_sub_id);
+                holder.childrenCountTv = (TextView) convertView.findViewById(R.id.v_id_note_main_children_count);
                 holder.contentTv = (TextView) convertView.findViewById(R.id.v_id_note_main_content);
                 holder.tagTv = (TextView) convertView.findViewById(R.id.v_id_note_main_tag);
                 holder.tagTitleTv = (TextView) convertView.findViewById(R.id.v_id_note_main_tag_title);
@@ -509,7 +509,7 @@ public class NoteMainActivity extends ActivityCommon {
                 holder = (NoteMainBodyHolder) convertView.getTag();
 			}
             holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteId()));
-            holder.subIdTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteSubId()));
+            holder.childrenCountTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteChildrenCount()));
             holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteContent()));
             ComponentUtil.setMarquee(holder.contentTv);
             /**
@@ -526,13 +526,13 @@ public class NoteMainActivity extends ActivityCommon {
              * 便签:每隔一行变换颜色,当前数据有子数据时更换其他颜色
              */
             if((position + 1) % 2 == 0
-                    && StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())) {
+                    && StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())) {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v1));
             } else if ((position + 1) % 2 == 0 &&
-                    !StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())){
+                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v1));
             } else if ((position + 1) % 2 != 0 &&
-                    !StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteSubId())){
+                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v2));
             }else {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
@@ -590,6 +590,103 @@ public class NoteMainActivity extends ActivityCommon {
         intent.putExtra(Constants.ACTION_MODE, Constants.STR_MODIFY);
         startActivity(intent);
     }
+
+    /**
+     * <PRE>
+     * 对话框Template 2
+     * <BR/>
+     * 使用页面(common_dialog_v2.xml)
+     * <PRE/>
+     *  <BR/>
+     * 监听事件类型:删除
+     */
+    protected void delClickByCommonDialogV2() {
+        dismissByCommonDialogV2();
+        deleteNoteMainBodyData.clear();
+        List<String> dialogContentList = new ArrayList<>();
+        dialogContentList.add(Constants.NM_NOTE_CONTENT + Constants.COLON_SYMBOL + commonNoteEntity.getNoteContent());
+        if (!StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteTag())) {
+            dialogContentList.add(Constants.NM_NOTE_TAG + Constants.COLON_SYMBOL + commonNoteEntity.getNoteTag());
+        }
+        if (!StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, commonNoteEntity.getNoteChildrenCount())) {
+            Map<String,String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID,commonNoteEntity.getNoteId());
+            // 获取便签文件内容
+            getNoteFileContent();
+            againSetNoteBodyData(noteMainBodyData);
+            matchingResult(matchingCondition);
+            Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
+            int count = 1;
+            while (noteEntityIterator.hasNext()) {
+                NoteEntity noteEntity = noteEntityIterator.next();
+                noteEntity.setNoteDeleteFlag(Constants.DELETE_ON);
+                if (noteMainBodyData.size() > 1) {
+                    dialogContentList.add("(副)" + Constants.NM_NOTE_CONTENT + "[" + count + "]" + Constants.COLON_SYMBOL + noteEntity.getNoteContent());
+                }else {
+                    dialogContentList.add("(副)" + Constants.NM_NOTE_CONTENT + Constants.COLON_SYMBOL + noteEntity.getNoteContent());
+                }
+                if (!StringUtil.isEmptyReturnBoolean(noteEntity.getNoteTag())) {
+                    if (noteMainBodyData.size() > 1) {
+                        dialogContentList.add("(副)" + Constants.NM_NOTE_TAG + "[" + count + "]" + Constants.COLON_SYMBOL + noteEntity.getNoteTag());
+                    } else {
+                        dialogContentList.add("(副)" + Constants.NM_NOTE_TAG + Constants.COLON_SYMBOL + noteEntity.getNoteTag());
+                    }
+                }
+                count++;
+            }
+            deleteNoteMainBodyData.addAll(noteMainBodyData);
+        }
+
+        if (!StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteParentId())) {
+            Map<String,String> matchingCondition = new HashMap<>();
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID,commonNoteEntity.getNoteParentId());
+            // 获取便签文件内容
+            getNoteFileContent();
+            againSetNoteBodyData(noteMainBodyData);
+            matchingResult(matchingCondition);
+            Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
+            while (noteEntityIterator.hasNext()) {
+                NoteEntity noteEntity = noteEntityIterator.next();
+                String newUpdateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount()).add(new BigDecimal(1)).toString();;
+                noteEntity.setNoteUpdateCount(newUpdateCount);
+                String newChildrenCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteChildrenCount()).subtract(new BigDecimal(1)).toString();;
+                noteEntity.setNoteChildrenCount(newChildrenCount);
+            }
+            deleteNoteMainBodyData.addAll(noteMainBodyData);
+        }
+        commonNoteEntity.setNoteDeleteFlag(Constants.DELETE_ON);
+        deleteNoteMainBodyData.add(commonNoteEntity);
+        showDialogV1_1(dialogContentList, Constants.CONFIRM_MARK, Constants.STR_DEL + "内容确认", "确认", "取消");
+
+    }
+
+    /**
+     * <PRE>
+     * 对话框Template 1.1(按钮Btn1的点击事件)
+     * 使用页面(common_dialog_v1.xml)
+     * <PRE/>
+     */
+    protected void onClickBtn1V1_1() {
+        String externalFilesPath = getFilePathByApp();
+        List<Map<String, Object>> deleteNoteMainBodyList = new ArrayList<>();
+        Iterator<NoteEntity> iterator = deleteNoteMainBodyData.iterator();
+        while (iterator.hasNext()) {
+            NoteEntity val = iterator.next();
+            deleteNoteMainBodyList.add(noteEntityTransferMap(val));
+        }
+
+        FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, deleteNoteMainBodyList, null);
+
+        Map<String, String> matchingCondition = new HashMap<>();
+        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, commonNoteEntity.getNoteCurrentPageLevel());
+        initNotePage(matchingCondition);
+        setCurrentPageLevel(commonNoteEntity.getNoteCurrentPageLevel());
+        enablePreviousOnClickListener(true);
+        onClickBtn1V1_2();
+    }
+
+
+
 
     /**
      * 获取数据By便签Header部
@@ -687,7 +784,7 @@ public class NoteMainActivity extends ActivityCommon {
 
     protected void onItemDoubleClick(AdapterView<?> parent, View view, int position, long id) {
         commonNoteEntity = (NoteEntity)noteBodyListView.getItemAtPosition(position);
-        if (StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteSubId())) {
+        if (StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, commonNoteEntity.getNoteChildrenCount())) {
             return;
         }
         Map<String, String> matchingCondition = new HashMap<>();
@@ -818,4 +915,13 @@ public class NoteMainActivity extends ActivityCommon {
         }
 
     }
+
+    /**
+     * 重新系统自带返回键
+     */
+    @Override
+    public void onBackPressed() {
+        commonReturnIndex();
+    }
+
 }

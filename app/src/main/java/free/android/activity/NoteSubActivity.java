@@ -25,7 +25,6 @@ import free.android.enums.PageInfoEnum;
 import free.android.utils.ComponentUtil;
 import free.android.utils.Constants;
 import free.android.utils.FileUtil;
-import free.android.utils.LogUtil;
 import free.android.utils.StringUtil;
 
 /**
@@ -65,9 +64,9 @@ public class NoteSubActivity extends ActivityCommon{
 			// 便签修改/便签查询
 			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)
 					|| StringUtil.equaleReturnBoolean(Constants.STR_LOOK_UP, currentMode)) {
-				/** [3](From主)便签:数据子ID(Hidden) */
-				TextView idSubHidden = (TextView)findViewById(R.id.v_id_note_sub_sub_id);
-				idSubHidden.setText(noteEntity.getNoteSubId());
+				/** [3](From主)便签:副便签数据数量(Hidden) */
+				TextView childrenCountHidden = (TextView)findViewById(R.id.v_id_note_sub_children_count);
+				childrenCountHidden.setText(noteEntity.getNoteChildrenCount());
 				/** [4](From主)便签:数据父类ID(Hidden) */
 				TextView idParentHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
 				idParentHidden.setText(noteEntity.getNoteParentId());
@@ -178,7 +177,6 @@ public class NoteSubActivity extends ActivityCommon{
 		if (!fromNoteMainActivityFlag()) {
 			// 新规场合禁止修改删除
 			menu.findItem(R.id.menu_note_sub_modify).setVisible(false);
-			menu.findItem(R.id.menu_note_sub_del).setVisible(false);
 		}
 	}
 
@@ -190,13 +188,6 @@ public class NoteSubActivity extends ActivityCommon{
 	public boolean onContextItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			// 便签子画面的删除按钮
-			case R.id.menu_note_sub_del:
-				LogUtil.i(FILE_ACTIVITY_NAME, "执行删除动作开始");
-				showDialogV1("删除", "确认要删除吗?", "是", "否");
-				LogUtil.i(FILE_ACTIVITY_NAME, "执行删除动作结束");
-				// 返回结果(Dialog使用)
-				return false;
 			// 便签子画面的修改按钮
 			case R.id.menu_note_sub_modify:
 				modifyMode();
@@ -320,36 +311,35 @@ public class NoteSubActivity extends ActivityCommon{
 				BigDecimal subCurrentPageLevel = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteCurrentPageLevel()).add(new BigDecimal(1));
 				addContent.put(Constants.NOTE_CURRENT_PAGE_LEVEL, subCurrentPageLevel.toString());
 				listWriteData.add(addContent);
-				if(StringUtil.isEmptyReturnBoolean(noteEntity.getNoteSubId())) {
-					Map<String, Object> mainNoteData = commonSetWriteContent();
-					// ([1]主)便签:便签Id
-					mainNoteData.put(Constants.NOTE_ID, noteEntity.getNoteId());
-					// ([2]主)便签:便签子Id
-					mainNoteData.put(Constants.NOTE_SUB_ID, subId);
-					// ([3]主)便签:便签内容
-					mainNoteData.put(Constants.NOTE_CONTENT, noteEntity.getNoteContent());
-					// ([4]主)便签:标签内容
-					mainNoteData.put(Constants.NOTE_TAG, noteEntity.getNoteTag());
-					// ([5]主)便签:录入时间
-					mainNoteData.put(Constants.NOTE_INSERT_TIME, noteEntity.getNoteInsertTime());
-					// ([6]主)便签:副便签录入时间
-					mainNoteData.put(Constants.SUB_NOTE_INSERT_TIME, getSystemTime(FormatEnum.TIME_FORMAT_V1.getVal()));
-					// ([7]主)便签:更新时间
-					mainNoteData.put(Constants.NOTE_UPDATE_TIME, noteEntity.getNoteUpdateTime());
-					// ([8]主)便签:删除时间
-					mainNoteData.put(Constants.NOTE_DELETE_TIME, noteEntity.getNoteDeleteTime());
-					// ([9]主)便签:更新次数
-					BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount());
-					updateCount = updateCount.add(new BigDecimal(1));
-					mainNoteData.put(Constants.NOTE_UPDATE_COUNT, updateCount.toString());
-					// ([10]主)便签:删除Flag
-					mainNoteData.put(Constants.NOTE_DELETE_FLAG, noteEntity.getNoteDeleteFlag());
-					// ([11]主)便签:当前页面级别
-					mainNoteData.put(Constants.NOTE_CURRENT_PAGE_LEVEL, noteEntity.getNoteCurrentPageLevel());
-					// ([12]主)便签:父类便签ID
-					mainNoteData.put(Constants.NOTE_PARENT_ID, noteEntity.getNoteParentId());
-					listWriteData.add(mainNoteData);
-				}
+				/** ---- (主)便签 ---- */
+				Map<String, Object> mainNoteData = commonSetWriteContent();
+				// ([1]主)便签:便签Id
+				mainNoteData.put(Constants.NOTE_ID, noteEntity.getNoteId());
+				// ([2]主)便签:(副)便签数量
+				mainNoteData.put(Constants.NOTE_CHILDREN_COUNT, StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteContent()).add(new BigDecimal(1)));
+				// ([3]主)便签:便签内容
+				mainNoteData.put(Constants.NOTE_CONTENT, noteEntity.getNoteContent());
+				// ([4]主)便签:标签内容
+				mainNoteData.put(Constants.NOTE_TAG, noteEntity.getNoteTag());
+				// ([5]主)便签:录入时间
+				mainNoteData.put(Constants.NOTE_INSERT_TIME, noteEntity.getNoteInsertTime());
+				// ([6]主)便签:副便签录入时间
+				mainNoteData.put(Constants.SUB_NOTE_INSERT_TIME, getSystemTime(FormatEnum.TIME_FORMAT_V1.getVal()));
+				// ([7]主)便签:更新时间
+				mainNoteData.put(Constants.NOTE_UPDATE_TIME, noteEntity.getNoteUpdateTime());
+				// ([8]主)便签:删除时间
+				mainNoteData.put(Constants.NOTE_DELETE_TIME, noteEntity.getNoteDeleteTime());
+				// ([9]主)便签:更新次数
+				BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount());
+				updateCount = updateCount.add(new BigDecimal(1));
+				mainNoteData.put(Constants.NOTE_UPDATE_COUNT, updateCount.toString());
+				// ([10]主)便签:删除Flag
+				mainNoteData.put(Constants.NOTE_DELETE_FLAG, noteEntity.getNoteDeleteFlag());
+				// ([11]主)便签:当前页面级别
+				mainNoteData.put(Constants.NOTE_CURRENT_PAGE_LEVEL, noteEntity.getNoteCurrentPageLevel());
+				// ([12]主)便签:父类便签ID
+				mainNoteData.put(Constants.NOTE_PARENT_ID, noteEntity.getNoteParentId());
+				listWriteData.add(mainNoteData);
 				String externalFilesPath = getFilePathByApp();
 				FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, listWriteData, null);
 				returnNoteMainActivity();
@@ -378,10 +368,10 @@ public class NoteSubActivity extends ActivityCommon{
 		TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
 		String id = idHidden.getText().toString();
 		addContent.put(Constants.NOTE_ID, id);
-		// [2]便签:便签子Id
-		TextView idSubHidden = (TextView)findViewById(R.id.v_id_note_sub_sub_id);
-		String subId = idSubHidden.getText().toString();
-		addContent.put(Constants.NOTE_SUB_ID, subId);
+		// [2]便签:(副)便签数量
+		TextView childrenCountHidden = (TextView)findViewById(R.id.v_id_note_sub_children_count);
+		String childrenId = childrenCountHidden.getText().toString();
+		addContent.put(Constants.NOTE_CHILDREN_COUNT, childrenId);
 		// [3]便签:便签内容
         EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
         String contentStr = contentEditext.getText().toString();
@@ -428,5 +418,13 @@ public class NoteSubActivity extends ActivityCommon{
         FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, null, addContent);
 		returnNoteMainActivity();
     }
+
+	/**
+	 * 重新系统自带返回键
+	 */
+	@Override
+	public void onBackPressed() {
+		returnNoteMainActivity();
+	}
 
 }

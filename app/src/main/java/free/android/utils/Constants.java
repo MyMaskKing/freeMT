@@ -74,26 +74,28 @@ public class Constants {
 	/** 便签文件字段个数(重要) */
 	public static  final int NOTE_FILE_DATA_COUNT = 12;
 	public static  final int NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE = 1;
+	public static final  String NOTE_CHILDREN_COUNT_DEFAULT_VALUE = "0";
     public static  final String NOTE_MATCH_CONDITION_PARENT_ID = "NOTE_MATCH_CONDITION_PARENT_ID";
 	public static  final String NOTE_MATCH_CONDITION_ID = "NOTE_ID";
 	public static  final String NOTE_MATCH_CONDITION_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
 	public static final String NOTE_ID = "NOTE_ID";
 	public static final String NOTE_PARENT_ID = "NOTE_PARENT_ID";
-	public static final String NOTE_SUB_ID = "NOTE_SUB_ID";
+	public static final String NOTE_CHILDREN_COUNT = "NOTE_CHILDREN_COUNT";
 	public static final String NOTE_CONTENT = "NOTE_CONTENT";
 	public static final String NM_NOTE_CONTENT = "便签内容";
 	public static final String NOTE_TAG = "NOTE_TAG";
 	public static final String NM_NOTE_TAG = "标签";
 	public static final String NOTE_INSERT_TIME = "NOTE_INSERT_TIME";
-    public static final String SUB_NOTE_INSERT_TIME = "SUB_NOTE_INSERT_TIME";
+	public static final String SUB_NOTE_INSERT_TIME = "SUB_NOTE_INSERT_TIME";
 	public static final String NOTE_UPDATE_TIME = "NOTE_UPDATE_TIME";
 	public static final String NOTE_DELETE_TIME = "NOTE_DELETE_TIME";
 	public static final String NOTE_UPDATE_COUNT = "NOTE_UPDATE_COUNT";
 	public static final String NOTE_DELETE_FLAG = "NOTE_DELETE_FLAG";
-    public static final String NOTE_CURRENT_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
+	public static final String NOTE_CURRENT_PAGE_LEVEL = "NOTE_CURRENT_PAGE_LEVEL";
 
 	/** Wait Use [Start] */
 	public static final String NOTE_MASTER_SPEND_TIME = "NOTE_MASTER_SPEND_TIME";
+	public static final String NOTE_SUB_ID = "NOTE_SUB_ID";
 	public static final String NOTE_MASTER_ADDRESS = "NOTE_MASTER_ADDRESS";
 	public static final String NM_NOTE_MASTER_TITLE = "打卡";
 	public static final String NM_NOTE_MASTER_SPEND_TIME = "路程时间";
