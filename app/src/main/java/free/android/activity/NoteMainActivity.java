@@ -45,9 +45,12 @@ public class NoteMainActivity extends ActivityCommon {
 
 	private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
     private List<NoteEntity> deleteNoteMainBodyData = new ArrayList<NoteEntity>();
+    // 真实工作表:便签数据(基础数据)
 	private List<NoteEntity> noteMainBodyData = new ArrayList<NoteEntity>();
-	// 虚拟工作表:便签数据
+	// 虚拟工作表:便签数据(临时变量用)
     private List<NoteEntity> noteMainBodyDataWork = new ArrayList<NoteEntity>();
+    // 显示工作表:便签数据(显示用)
+    private List<NoteEntity> noteMainBodyDataShow = new ArrayList<NoteEntity>();
     private List<String> noteMainHeaderData = new ArrayList<String>();
     private List<String> noteMainHeaderHiddenData = new ArrayList<String>();
     // 便签画面Body部
@@ -61,6 +64,8 @@ public class NoteMainActivity extends ActivityCommon {
     private List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
     private List<String> checkBoxHidden = new ArrayList<String>(); // 未使用
     private NoteEntity commonNoteEntity;
+    /** 启用添加按钮 */
+    private boolean enableAddBtnByContentMenuFlag = true;
     /**
      * 初始化方法
      */
@@ -72,9 +77,14 @@ public class NoteMainActivity extends ActivityCommon {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_main);
 
+        // 获取便签文件内容
+        getNoteFileContent();
+        againSetNoteBodyData(noteMainBodyData);
+
 		// 获取从其他画面的数据[Start]
 		Intent noteIntent = getIntent();
         String actionFlag = noteIntent.getStringExtra(Constants.ACTION_FALG);
+
         /** From 便签子画面[Condition:非(副)便签迁移|当前页面级别不为1|便签ID不为空] */
         if (StringUtil.equaleReturnBoolean(PageInfoEnum.NOTE_SUB_PAGE.getKey(), actionFlag)
                 && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), noteIntent.getStringExtra(Constants.NOTE_CURRENT_PAGE_LEVEL))) {
@@ -123,6 +133,9 @@ public class NoteMainActivity extends ActivityCommon {
         // 选择菜单 一样 进行打气使用
         getMenuInflater().inflate(R.menu.note_main_menu, menu);
         super.onCreateContextMenu(menu, v, menuInfo);
+        if (!enableAddBtnByContentMenuFlag) {
+            menu.findItem(R.id.menu_note_master_add).setVisible(false);
+        }
     }
 
     /**
@@ -131,9 +144,7 @@ public class NoteMainActivity extends ActivityCommon {
      *              筛选条件
      */
     private void initNotePage(Map<String, String> matchingCondition) {
-        // 获取便签文件内容
-        getNoteFileContent();
-        againSetNoteBodyData(noteMainBodyData);
+
         matchingResult(matchingCondition);
         /** 便签:Body部 */
         // 便签Body部List
@@ -479,12 +490,12 @@ public class NoteMainActivity extends ActivityCommon {
 
 		@Override
 		public int getCount() {
-			return noteMainBodyDataWork.size();
+			return noteMainBodyDataShow.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return noteMainBodyDataWork.get(position);
+			return noteMainBodyDataShow.get(position);
 		}
 
 		@Override
@@ -508,31 +519,31 @@ public class NoteMainActivity extends ActivityCommon {
 			} else {
                 holder = (NoteMainBodyHolder) convertView.getTag();
 			}
-            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteId()));
-            holder.childrenCountTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteChildrenCount()));
-            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteContent()));
+            holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteId()));
+            holder.childrenCountTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteChildrenCount()));
+            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteContent()));
             ComponentUtil.setMarquee(holder.contentTv);
             /**
              * 便签:标签无内容时不显示
              */
-            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(position).getNoteTag())) {
-                holder.tagTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteTag()));
+            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyDataShow.get(position).getNoteTag())) {
+                holder.tagTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteTag()));
                 ComponentUtil.setMarquee(holder.tagTv);
             }else {
                 holder.tagTitleTv.setText(StringUtil.EMPTY);
             }
-            holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataWork.get(position).getNoteNo()));
+            holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteNo()));
             /**
              * 便签:每隔一行变换颜色,当前数据有子数据时更换其他颜色
              */
             if((position + 1) % 2 == 0
-                    && StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())) {
+                    && StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataShow.get(position).getNoteChildrenCount())) {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v1));
             } else if ((position + 1) % 2 == 0 &&
-                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())){
+                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataShow.get(position).getNoteChildrenCount())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v1));
             } else if ((position + 1) % 2 != 0 &&
-                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataWork.get(position).getNoteChildrenCount())){
+                    !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataShow.get(position).getNoteChildrenCount())){
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v2));
             }else {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
@@ -609,55 +620,71 @@ public class NoteMainActivity extends ActivityCommon {
             dialogContentList.add(Constants.NM_NOTE_TAG + Constants.COLON_SYMBOL + commonNoteEntity.getNoteTag());
         }
         if (!StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, commonNoteEntity.getNoteChildrenCount())) {
-            Map<String,String> matchingCondition = new HashMap<>();
-            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID,commonNoteEntity.getNoteId());
-            // 获取便签文件内容
-            getNoteFileContent();
-            againSetNoteBodyData(noteMainBodyData);
-            matchingResult(matchingCondition);
-            Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
-            int count = 1;
-            while (noteEntityIterator.hasNext()) {
-                NoteEntity noteEntity = noteEntityIterator.next();
-                noteEntity.setNoteDeleteFlag(Constants.DELETE_ON);
-                if (noteMainBodyData.size() > 1) {
-                    dialogContentList.add("(副)" + Constants.NM_NOTE_CONTENT + "[" + count + "]" + Constants.COLON_SYMBOL + noteEntity.getNoteContent());
-                }else {
-                    dialogContentList.add("(副)" + Constants.NM_NOTE_CONTENT + Constants.COLON_SYMBOL + noteEntity.getNoteContent());
-                }
-                if (!StringUtil.isEmptyReturnBoolean(noteEntity.getNoteTag())) {
-                    if (noteMainBodyData.size() > 1) {
-                        dialogContentList.add("(副)" + Constants.NM_NOTE_TAG + "[" + count + "]" + Constants.COLON_SYMBOL + noteEntity.getNoteTag());
-                    } else {
-                        dialogContentList.add("(副)" + Constants.NM_NOTE_TAG + Constants.COLON_SYMBOL + noteEntity.getNoteTag());
-                    }
-                }
-                count++;
-            }
-            deleteNoteMainBodyData.addAll(noteMainBodyData);
+            getAllChildrenNoteByCurrentNote(commonNoteEntity.getNoteId() ,dialogContentList);
         }
-
-        if (!StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteParentId())) {
-            Map<String,String> matchingCondition = new HashMap<>();
-            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID,commonNoteEntity.getNoteParentId());
-            // 获取便签文件内容
-            getNoteFileContent();
-            againSetNoteBodyData(noteMainBodyData);
-            matchingResult(matchingCondition);
-            Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
-            while (noteEntityIterator.hasNext()) {
-                NoteEntity noteEntity = noteEntityIterator.next();
-                String newUpdateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount()).add(new BigDecimal(1)).toString();;
-                noteEntity.setNoteUpdateCount(newUpdateCount);
-                String newChildrenCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteChildrenCount()).subtract(new BigDecimal(1)).toString();;
-                noteEntity.setNoteChildrenCount(newChildrenCount);
-            }
-            deleteNoteMainBodyData.addAll(noteMainBodyData);
-        }
+        // 当前逻辑:当前便签删除Flag设置删除属性
         commonNoteEntity.setNoteDeleteFlag(Constants.DELETE_ON);
         deleteNoteMainBodyData.add(commonNoteEntity);
         showDialogV1_1(dialogContentList, Constants.CONFIRM_MARK, Constants.STR_DEL + "内容确认", "确认", "取消");
 
+    }
+
+    /**
+     * 获取所有的删除数据信息
+     * @param currentNoteId
+     *          当前便签Id
+     * @param allChildrenNoteInfoList
+     *          删除数据信息集合
+     */
+    private void getAllChildrenNoteByCurrentNote(String currentNoteId, List<String> allChildrenNoteInfoList) {
+        cycleNoteBodyData(currentNoteId, allChildrenNoteInfoList, null);
+    }
+
+    /**
+     * 遍历便签数据(获取删除数据用)
+     * @param noteId
+     * @param allChildrenNoteInfoList
+     * @param titleMap
+     */
+    private void cycleNoteBodyData(String noteId, List<String> allChildrenNoteInfoList, Map<String, String> titleMap) {
+        boolean flag = false;
+        NoteEntity flagEntity = null;
+        Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
+        int count = 1;
+        while (noteEntityIterator.hasNext()) {
+            NoteEntity noteEntity = noteEntityIterator.next();
+            if (StringUtil.equaleReturnBoolean(noteId, noteEntity.getNoteParentId())) {
+                String noteContentTitle = StringUtil.EMPTY;
+                String noteTagTitle = StringUtil.EMPTY;
+                if (titleMap == null
+                        || !StringUtil.equaleReturnBoolean(commonNoteEntity.getNoteChildrenCount(), Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE)) {
+                    titleMap = new HashMap<>();
+                    noteContentTitle = "(副)" + Constants.NM_NOTE_CONTENT + "[来自";
+                    noteTagTitle = "(副)" + Constants.NM_NOTE_TAG + "[来自";
+                }else if (StringUtil.equaleReturnBoolean(commonNoteEntity.getNoteChildrenCount(), Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE)) {
+                    noteContentTitle = "(副)" + Constants.NM_NOTE_CONTENT;
+                    noteTagTitle = "(副)" + Constants.NM_NOTE_TAG;
+                }
+                titleMap.put(Constants.NOTE_CONTENT_TITLE, noteContentTitle);
+                titleMap.put(Constants.NOTE_TAG_TITLE, noteTagTitle);
+                allChildrenNoteInfoList.add(titleMap.get(Constants.NOTE_CONTENT_TITLE) + noteEntity.getNoteCurrentPageLevel() + "级页面]" + Constants.COLON_SYMBOL + noteEntity.getNoteContent());
+                if (!StringUtil.isEmptyReturnBoolean(noteEntity.getNoteTag())) {
+                    allChildrenNoteInfoList.add(titleMap.get(Constants.NOTE_TAG_TITLE) + noteEntity.getNoteCurrentPageLevel() + "级页面]]" + Constants.COLON_SYMBOL + noteEntity.getNoteTag());
+                }
+                noteEntity.setNoteDeleteFlag(Constants.DELETE_ON);
+                deleteNoteMainBodyData.add(noteEntity);
+                if(!StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteEntity.getNoteChildrenCount())) {
+                    flagEntity = noteEntity;
+                    flag = true;
+                }
+                count++;
+            }
+        }
+        if (flag) {
+            cycleNoteBodyData(flagEntity.getNoteId(), allChildrenNoteInfoList, titleMap);
+        }else {
+            return;
+        }
     }
 
     /**
@@ -667,8 +694,22 @@ public class NoteMainActivity extends ActivityCommon {
      * <PRE/>
      */
     protected void onClickBtn1V1_1() {
+        // 当前逻辑:更新当前便签的父便签(更新次数+1,副便签数量-1)
+        if (!StringUtil.isEmptyReturnBoolean(commonNoteEntity.getNoteParentId())) {
+            Iterator<NoteEntity> noteEntityIterator = noteMainBodyData.iterator();
+            while (noteEntityIterator.hasNext()) {
+                NoteEntity noteEntity = new NoteEntity();
+                noteEntity = noteEntityIterator.next();
+                if (StringUtil.equaleReturnBoolean(noteEntity.getNoteId(), commonNoteEntity.getNoteParentId())) {
+                    String newUpdateCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteUpdateCount()).add(new BigDecimal(1)).toString();;
+                    noteEntity.setNoteUpdateCount(newUpdateCount);
+                    String newChildrenCount = StringUtil.isEmptyReturnBigDecimal(noteEntity.getNoteChildrenCount()).subtract(new BigDecimal(1)).toString();;
+                    noteEntity.setNoteChildrenCount(newChildrenCount);
+                    deleteNoteMainBodyData.add(noteEntity);
+                }
+            }
+        }
         String externalFilesPath = getFilePathByApp();
-
         List<Map<String, Object>> deleteNoteMainBodyList = new ArrayList<>();
         Iterator<NoteEntity> iterator = deleteNoteMainBodyData.iterator();
         while (iterator.hasNext()) {
@@ -679,7 +720,10 @@ public class NoteMainActivity extends ActivityCommon {
         FileUtil.write(externalFilesPath, Constants.NOTE_FILE_NAME, deleteNoteMainBodyList, null);
 
         Map<String, String> matchingCondition = new HashMap<>();
-        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, commonNoteEntity.getNoteCurrentPageLevel());
+        matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, commonNoteEntity.getNoteParentId());
+        // 获取便签文件内容
+        getNoteFileContent();
+        againSetNoteBodyData(noteMainBodyData);
         initNotePage(matchingCondition);
         setCurrentPageLevel(commonNoteEntity.getNoteCurrentPageLevel());
         enablePreviousOnClickListener(true);
@@ -754,13 +798,13 @@ public class NoteMainActivity extends ActivityCommon {
 
     private void printNoteMainBodyPage(List<NoteEntity> data) {
         if(data == null || data.isEmpty()) {
-            noteMainBodyDataWork = noteMainBodyData;
+            noteMainBodyDataShow = noteMainBodyDataWork;
         }else {
-            noteMainBodyDataWork = data;
+            noteMainBodyDataShow = data;
         }
 
         // 初始化便签No使用
-        Iterator<NoteEntity> entityIterator = noteMainBodyDataWork.iterator();
+        Iterator<NoteEntity> entityIterator = noteMainBodyDataShow.iterator();
         int noCount = 1;
         while (entityIterator.hasNext()) {
             NoteEntity entity = entityIterator.next();
@@ -789,6 +833,7 @@ public class NoteMainActivity extends ActivityCommon {
             return;
         }
         Map<String, String> matchingCondition = new HashMap<>();
+        enableAddBtnByContentMenuFlag = false;
         /** (主)便签Id为父类ID */
         matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, commonNoteEntity.getNoteId());
         initNotePage(matchingCondition);
@@ -804,10 +849,12 @@ public class NoteMainActivity extends ActivityCommon {
      */
     private List<NoteEntity> matchingResult(List<String> matchingConditionList) {
         List<NoteEntity> matchingNoteMainBodyData = new ArrayList<NoteEntity>();
+        // 当前逻辑: 如果条件集合为空,将[展示表数据返回(noteMainBodyDataShow)]
         if (matchingConditionList == null || matchingConditionList.isEmpty()) {
-            return noteMainBodyData;
+            return noteMainBodyDataWork;
         }
         Iterator<String> matchingConditionIterator = matchingConditionList.iterator();
+        // 当前逻辑: 根据传入的条件,获取当前条件在noteMainHeaderData中的位置(*判断当前条件类型使用*)
         while (matchingConditionIterator.hasNext()) {
             String matchingConditionStr = matchingConditionIterator.next();
             Iterator<String> headerDataIterator = noteMainHeaderData.iterator();
@@ -819,9 +866,10 @@ public class NoteMainActivity extends ActivityCommon {
                 }
                 position++;
             }
+            // headerHidden作用解释:当前条件类型
             String headerHidden = noteMainHeaderHiddenData.get(position);
             if (StringUtil.equaleReturnBoolean(Constants.STR_NONE, headerHidden)) {
-                Iterator<NoteEntity> entityIterator = noteMainBodyData.iterator();
+                Iterator<NoteEntity> entityIterator = noteMainBodyDataWork.iterator();
                 while (entityIterator.hasNext()) {
                     NoteEntity entity = entityIterator.next();
                     if (StringUtil.equaleReturnBoolean(matchingConditionStr, entity.getNoteTag())) {
@@ -858,27 +906,26 @@ public class NoteMainActivity extends ActivityCommon {
                     @Override
                     public void onClick(View view) {
                         NoteEntity currentFistBodyData = new NoteEntity();
-                        if (noteMainBodyDataWork.isEmpty()) {
+                        if (noteMainBodyDataShow.isEmpty()) {
                             ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
                             return;
                         }
-                        currentFistBodyData = noteMainBodyDataWork.get(0);
+                        currentFistBodyData = noteMainBodyDataShow.get(0);
                         Map<String, String> matchingCondition = new HashMap<>();
                         if (StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), commonNoteEntity.getNoteCurrentPageLevel())) {
                             matchingCondition.put(Constants.NOTE_CURRENT_PAGE_LEVEL, commonNoteEntity.getNoteCurrentPageLevel());
+                            enableAddBtnByContentMenuFlag = true;
                         }else {
                             matchingCondition.clear();
                             matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID, currentFistBodyData.getNoteParentId());
-                            getNoteFileContent();
-                            againSetNoteBodyData(noteMainBodyData);
                             matchingResult(matchingCondition);
-                            if (noteMainBodyData.isEmpty()) {
+                            if (noteMainBodyDataWork.isEmpty()) {
                                 ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
                                 return;
                             }
-                            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyData.get(0).getNoteParentId())) {
+                            if (!StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(0).getNoteParentId())) {
                                 matchingCondition.clear();
-                                matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, noteMainBodyData.get(0).getNoteParentId());
+                                matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, noteMainBodyDataWork.get(0).getNoteParentId());
                             }
                         }
                         initNotePage(matchingCondition);
@@ -889,6 +936,7 @@ public class NoteMainActivity extends ActivityCommon {
             } else {
                 previousTitleTv.setVisibility(View.GONE);
                 previousTv.setVisibility(View.GONE);
+                enableAddBtnByContentMenuFlag = true;
             }
 
         } else {
@@ -897,6 +945,7 @@ public class NoteMainActivity extends ActivityCommon {
             Map<String, String> matchingCondition = new HashMap<>();
             matchingCondition.put(Constants.NOTE_CURRENT_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
             initNotePage(matchingCondition);
+            enableAddBtnByContentMenuFlag = true;
         }
     }
 
@@ -930,8 +979,8 @@ public class NoteMainActivity extends ActivityCommon {
             }
 
         }
-        noteMainBodyData = newNoteMainBodyData;
-        Iterator<NoteEntity> iterator = newNoteMainBodyData.iterator();
+        noteMainBodyDataWork = newNoteMainBodyData;
+        Iterator<NoteEntity> iterator = noteMainBodyDataWork.iterator();
         tagDataSet.clear();
         while (iterator.hasNext()) {
             NoteEntity val = iterator.next();

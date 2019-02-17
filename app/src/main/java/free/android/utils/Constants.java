@@ -82,8 +82,10 @@ public class Constants {
 	public static final String NOTE_PARENT_ID = "NOTE_PARENT_ID";
 	public static final String NOTE_CHILDREN_COUNT = "NOTE_CHILDREN_COUNT";
 	public static final String NOTE_CONTENT = "NOTE_CONTENT";
+	public static final String NOTE_CONTENT_TITLE = "NOTE_CONTENT_TITLE";
 	public static final String NM_NOTE_CONTENT = "便签内容";
 	public static final String NOTE_TAG = "NOTE_TAG";
+	public static final String NOTE_TAG_TITLE = "NOTE_TAG_TITLE";
 	public static final String NM_NOTE_TAG = "标签";
 	public static final String NOTE_INSERT_TIME = "NOTE_INSERT_TIME";
 	public static final String SUB_NOTE_INSERT_TIME = "SUB_NOTE_INSERT_TIME";
