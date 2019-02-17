@@ -31,6 +31,7 @@ import java.util.Set;
 import free.android.R;
 import free.android.common.ActivityCommon;
 import free.android.entity.NoteEntity;
+import free.android.enums.MessageEnum;
 import free.android.enums.PageInfoEnum;
 import free.android.holder.NoteMainBodyHolder;
 import free.android.utils.CollectionsUtil;
@@ -724,9 +725,9 @@ public class NoteMainActivity extends ActivityCommon {
         // 获取便签文件内容
         getNoteFileContent();
         againSetNoteBodyData(noteMainBodyData);
-        initNotePage(matchingCondition);
         setCurrentPageLevel(commonNoteEntity.getNoteCurrentPageLevel());
         enablePreviousOnClickListener(true);
+        initNotePage(matchingCondition);
         onClickBtn1V1_2();
     }
 
@@ -801,6 +802,10 @@ public class NoteMainActivity extends ActivityCommon {
             noteMainBodyDataShow = noteMainBodyDataWork;
         }else {
             noteMainBodyDataShow = data;
+        }
+
+        if (noteMainBodyDataShow.isEmpty()) {
+            isNoMatchingData(noteMainBodyDataShow);
         }
 
         // 初始化便签No使用
@@ -906,8 +911,7 @@ public class NoteMainActivity extends ActivityCommon {
                     @Override
                     public void onClick(View view) {
                         NoteEntity currentFistBodyData = new NoteEntity();
-                        if (noteMainBodyDataShow.isEmpty()) {
-                            ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
+                        if (isNoMatchingData(noteMainBodyDataShow)) {
                             return;
                         }
                         currentFistBodyData = noteMainBodyDataShow.get(0);
@@ -919,8 +923,7 @@ public class NoteMainActivity extends ActivityCommon {
                             matchingCondition.clear();
                             matchingCondition.put(Constants.NOTE_MATCH_CONDITION_ID, currentFistBodyData.getNoteParentId());
                             matchingResult(matchingCondition);
-                            if (noteMainBodyDataWork.isEmpty()) {
-                                ToastUtil.longShow(NoteMainActivity.this, "检索出错,请重新尝试.");
+                            if (isNoMatchingData(noteMainBodyDataWork)) {
                                 return;
                             }
                             if (!StringUtil.isEmptyReturnBoolean(noteMainBodyDataWork.get(0).getNoteParentId())) {
@@ -932,6 +935,7 @@ public class NoteMainActivity extends ActivityCommon {
                         setCurrentPageLevel(StringUtil.isEmptyReturnBigDecimal(currentFistBodyData.getNoteCurrentPageLevel()).subtract(new BigDecimal(1)).toString());
                         enablePreviousOnClickListener(true);
                     }
+
                 });
             } else {
                 previousTitleTv.setVisibility(View.GONE);
@@ -948,6 +952,43 @@ public class NoteMainActivity extends ActivityCommon {
             enableAddBtnByContentMenuFlag = true;
         }
     }
+
+    /**
+     *
+     * @param data
+     */
+    private boolean isNoMatchingData(List<NoteEntity> data) {
+        if (noteMainBodyData.isEmpty()) {
+            ToastUtil.longShow(NoteMainActivity.this, MessageEnum.WARN_W1.getMessage());
+            return false;
+        }
+        if (data != null && !data.isEmpty()) {
+            return false;
+        }
+        NoteEntity parentEntity = null;
+        ToastUtil.longShow(NoteMainActivity.this, MessageEnum.ERROR_S1.getMessage());
+        Iterator<NoteEntity> valIterator = noteMainBodyData.iterator();
+        while (valIterator.hasNext()) {
+            NoteEntity val = valIterator.next();
+            if (StringUtil.equaleReturnBoolean(val.getNoteId(), commonNoteEntity.getNoteParentId())
+                    && !StringUtil.equaleReturnBoolean(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE), val.getNoteCurrentPageLevel())) {
+                parentEntity = val;
+                break;
+            }
+        }
+        Map<String, String> matchingCondition = new HashMap<>();
+        if (parentEntity != null) {
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PARENT_ID, parentEntity.getNoteParentId());
+            setCurrentPageLevel(parentEntity.getNoteCurrentPageLevel());
+        }else {
+            matchingCondition.put(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL, String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+            setCurrentPageLevel(String.valueOf(Constants.NOTE_CURRENT_PAGE_LEVEL_DEFAULT_VALUE));
+        }
+        initNotePage(matchingCondition);
+        enablePreviousOnClickListener(true);
+        return true;
+    }
+
 
     /**
      * 匹配数据(页面初始化时使用)
