@@ -64,7 +64,7 @@ public class NoteMainActivity extends ActivityCommon {
     private Set<String> idOfUpdateData = new HashSet<String>();
     private List<CheckBox> checkBoxList = new ArrayList<CheckBox>();
     private List<String> checkBoxHidden = new ArrayList<String>(); // 未使用
-    private NoteEntity commonNoteEntity;
+    private NoteEntity commonNoteEntity = new NoteEntity();
     /** 启用添加按钮 */
     private boolean enableAddBtnByContentMenuFlag = true;
     /**
