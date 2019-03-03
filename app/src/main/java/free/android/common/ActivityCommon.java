@@ -52,6 +52,8 @@ import free.android.utils.StringUtil;
 ;
 
 public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
+
+
     /** 双击时间使用 */
     private static final long DOUBLE_TIME = 1000;
     private static long lastClickTime = 0;
@@ -64,7 +66,6 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     /*** 对话框Template 2 **/
     private  Dialog dialogV2 = null;
-
 	/**
 	 * <pre>
 	 * 获取App专属文件路径
@@ -703,8 +704,10 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      */
     @Override
     public void onBackPressed() {
-        super.onBackPressed();//注释掉这行,back键不退出activity
-
+        // super.onBackPressed();//注释掉这行,back键不退出activity
+        System.exit(0);
     }
+
+
 
 }

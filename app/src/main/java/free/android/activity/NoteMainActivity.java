@@ -522,8 +522,6 @@ public class NoteMainActivity extends ActivityCommon {
 			}
             holder.idTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteId()));
             holder.childrenCountTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteChildrenCount()));
-            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteContent()));
-            ComponentUtil.setMarquee(holder.contentTv);
             /**
              * 便签:标签无内容时不显示
              */
@@ -534,6 +532,7 @@ public class NoteMainActivity extends ActivityCommon {
                 holder.tagTitleTv.setText(StringUtil.EMPTY);
             }
             holder.noTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteNo()));
+            holder.contentTv.setText(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteContent()));
             /**
              * 便签:每隔一行变换颜色,当前数据有子数据时更换其他颜色
              */
@@ -542,13 +541,16 @@ public class NoteMainActivity extends ActivityCommon {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v1));
             } else if ((position + 1) % 2 == 0 &&
                     !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataShow.get(position).getNoteChildrenCount())){
+                holder.contentTv.setText(ComponentUtil.setFontStyle(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteContent())));
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v1));
             } else if ((position + 1) % 2 != 0 &&
                     !StringUtil.equaleReturnBoolean(Constants.NOTE_CHILDREN_COUNT_DEFAULT_VALUE, noteMainBodyDataShow.get(position).getNoteChildrenCount())){
+                holder.contentTv.setText(ComponentUtil.setFontStyle(StringUtil.isEmptyReturnString(noteMainBodyDataShow.get(position).getNoteContent())));
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_info_v2));
             }else {
                 convertView.setBackground(getResources().getDrawable(R.drawable.background_normal_v2));
             }
+            ComponentUtil.setMarquee(holder.contentTv);
 
 			return convertView;
 		}

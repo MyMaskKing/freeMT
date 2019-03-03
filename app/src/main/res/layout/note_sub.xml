@@ -183,6 +183,8 @@
                 android:hint="请输入计划内容"
                 android:inputType="textMultiLine"
                 android:background="@drawable/border_line_v2"/>
+
+
             <!-- Item 2 -->
 
             <!-- Warning Area[Start] -->
@@ -212,6 +214,7 @@
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
                 android:background="@drawable/border_line_v2"/>
+
             <!-- Item 3 -->
 
 

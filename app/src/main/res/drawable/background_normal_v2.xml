@@ -3,7 +3,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle"
     android:useLevel="true">
-    <!-- 背景实色 -->
     <!-- 边框线背景及边框线(虚线控制:dashGap虚线间距/dashWidth宽度) -->
     <stroke
         android:width="1dp"
