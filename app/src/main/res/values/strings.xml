@@ -72,4 +72,9 @@
     <!-- *** Wait Use *** -->
 
     <!-- 便签功能[End] -->
+
+    <!-- 炫酷页面展示[Start] -->
+    <string name="note_page_main_btn">Show Cool</string>
+    <string name="show_page_main_welcome">这里将会为您展示一个非常“Cool”的视觉盛宴！</string>
+    <!-- 炫酷页面展示[End] -->
 </resources>

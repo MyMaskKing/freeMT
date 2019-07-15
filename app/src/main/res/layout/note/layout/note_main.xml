@@ -4,7 +4,7 @@
     android:id="@+id/v_id_note_line"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.android.activity.NoteMainActivity"
+    tools:context="free.android.activity.note.NoteMainActivity"
     android:background="@drawable/img_background_all_v3">
     <!-- 便签Header部 -->
     <!-- 便签Header部:导航栏[Start] -->

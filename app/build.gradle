@@ -16,6 +16,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/layout/show_page',
+                            'src/main/res/layout/note',
+                            'src/main/res/layout/main',
+                            'src/main/res/layout/common',
+                            'src/main/res/layout',
+                            'src/main/res'
+                    ]
+        }
+    }
 }
 
 dependencies {
@@ -25,4 +39,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.liulishuo.filedownloader:library:1.7.4'
+    // MatchView 电影级别的View
+    implementation 'com.roger.match.library:library:1.0.1'
 }

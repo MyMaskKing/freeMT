@@ -30,12 +30,9 @@ public class StringUtil {
 	}
 
 	public static boolean isEmptyReturnBoolean(String str) {
-		if (str == null || EMPTY.equals(str.trim()) || Constants.STR_NULL.toUpperCase().equals(str.trim().toUpperCase())) {
-			return true;
-		}
-		return false;
+        return str == null || EMPTY.equals(str.trim()) || Constants.STR_NULL.toUpperCase().equals(str.trim().toUpperCase());
 
-	}
+    }
 
 	public static Integer isEmptyReturnInteger(String str) {
 		Integer result = new Integer(0);
@@ -66,12 +63,9 @@ public class StringUtil {
 		if (str1 == null || str2 == null) {
 			return false;
 		}
-		if (str1.equals(str2)) {
-			return true;
-		}
-		return false;
+        return str1.equals(str2);
 
-	}
+    }
 
 	public static String split(int getValIndex, String targetVal, String... splitVal) {
 		String val = isEmptyReturnString(targetVal);

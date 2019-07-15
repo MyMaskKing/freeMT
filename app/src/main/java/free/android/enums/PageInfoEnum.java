@@ -9,6 +9,7 @@ public enum PageInfoEnum {
     INDEX_PAGE("index", "首页"),
     NOTE_PAGE("notePage", "便签画面"),
     NOTE_SUB_PAGE("noteSubPage", "(副)便签画面"),
+    SHOW_PAGE("showPageMain", "展示画面"),
     ;
 
     PageInfoEnum() {

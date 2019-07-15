@@ -1,4 +1,4 @@
-package free.android.activity;
+package free.android.activity.note;
 
 import android.content.Intent;
 import android.graphics.Paint;

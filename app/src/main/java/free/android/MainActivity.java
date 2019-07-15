@@ -15,7 +15,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import free.android.activity.NoteMainActivity;
+import free.android.activity.note.NoteMainActivity;
+import free.android.activity.show_page.ShowPageMainActivity;
 import free.android.common.ActivityCommon;
 import free.android.enums.PageInfoEnum;
 import free.android.utils.Constants;
@@ -31,7 +32,7 @@ public class MainActivity extends ActivityCommon {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 设置欢迎致辞
-        TextView welcomeTV = (TextView)findViewById(R.id.id_activity_main_welcom_tx);
+        TextView welcomeTV = findViewById(R.id.id_activity_main_welcom_tx);
         SpannableStringBuilder msp = new SpannableStringBuilder (Constants.WELCOME_WORD);
         //设置字体样式正常，粗体，斜体，粗斜体
         msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 4, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
@@ -59,6 +60,7 @@ public class MainActivity extends ActivityCommon {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * 迁移到便签功能界面
      *
@@ -73,6 +75,17 @@ public class MainActivity extends ActivityCommon {
         // 返回结果 Yes No(startActivity(intent))
         startActivityForResult(noteIntent, 1);
         // setContentView(R.layout.note_main);
+    }
+
+    /**
+     * 迁移画面【Second】
+     * To[show_page_main.xml]
+     * @param view
+     */
+    public void transitionShowPageMain(View view) {
+        LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE_TO, PageInfoEnum.SHOW_PAGE.getVal());
+        Intent intent = new Intent(MainActivity.this, ShowPageMainActivity.class);
+        startActivity(intent);
     }
 
     /**

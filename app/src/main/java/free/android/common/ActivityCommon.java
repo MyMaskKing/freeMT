@@ -49,8 +49,6 @@ import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
 import free.android.utils.StringUtil;
 
-;
-
 public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
 
 
@@ -208,7 +206,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         String res = null;
         String[] proj = { MediaStore.Images.Media.DATA };
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if(null!=cursor&&cursor.moveToFirst()){;
+        if(null!=cursor&&cursor.moveToFirst()){
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);
             cursor.close();
@@ -587,7 +585,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <PRE/>
      */
     private void initDilogContentV1_1(List<String> contentList, View dialogView, String dialogType) {
-        LinearLayout contentLayout = (LinearLayout)dialogView.findViewById(R.id.id_common_dialog_v1_content);
+        LinearLayout contentLayout = dialogView.findViewById(R.id.id_common_dialog_v1_content);
         // Line子布局(线性、Java构成)
         LinearLayout subLineLayout = new LinearLayout(this);
         // Header部子线性布局控件属性(线性、Java构成)

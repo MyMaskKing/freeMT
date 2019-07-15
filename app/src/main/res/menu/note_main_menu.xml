@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="free.android.activity.NoteMainActivity" >
+    tools:context="free.android.activity.note.NoteMainActivity" >
 
     <item
         android:id="@+id/menu_note_master_add"

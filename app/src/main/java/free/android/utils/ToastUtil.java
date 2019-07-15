@@ -30,7 +30,7 @@ public class ToastUtil {
 		LinearLayout layout = (LinearLayout) toast.getView();
 		layout.setBackgroundColor(Color.parseColor("#F5F5F5"));
 		// toast显示的文本内容
-		TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+		TextView v = toast.getView().findViewById(android.R.id.message);
 		v.setTextColor(Color.parseColor("#3366CC")); // 设置toast的字体颜色
 		v.setTextSize(20);
 		// 显示弹框

@@ -24,7 +24,7 @@
         </activity>
         <!-- 添加新的Activity[Start] -->
         <activity
-            android:name=".activity.NoteMainActivity"
+            android:name=".activity.note.NoteMainActivity"
             android:label="@string/note_title">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteMainActivity" />
@@ -33,9 +33,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.NoteSubActivity">
+            android:name=".activity.note.NoteSubActivity">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteSubActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.show_page.ShowPageMainActivity">
+            <intent-filter>
+                <action android:name="freepj.android.activity.show_page.ShowPageMainActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

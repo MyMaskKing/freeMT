@@ -1,4 +1,4 @@
-package free.android.activity;
+package free.android.activity.note;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,77 +55,77 @@ public class NoteSubActivity extends ActivityCommon{
 			NoteEntity noteEntity = (NoteEntity)getIntent().getSerializableExtra("noteEntity");
 
 			/** [1](From主)便签:便签内容 */
-			TextView contentByNoteMainTv = (TextView)findViewById(R.id.v_id_note_sub_content_by_main);
+			TextView contentByNoteMainTv = findViewById(R.id.v_id_note_sub_content_by_main);
 			contentByNoteMainTv.setText(noteEntity.getNoteContent());
 			ComponentUtil.setMarquee(contentByNoteMainTv);
 			/** [2](From主)便签:当前页面级别(Hidden) */
-			TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+			TextView currentPageLevelHidden = findViewById(R.id.v_id_note_sub_current_page_level);
 			currentPageLevelHidden.setText(noteEntity.getNoteCurrentPageLevel());
 			/** [3](From主)便签:数据父类ID(Hidden) */
-			TextView idParentHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+			TextView idParentHidden = findViewById(R.id.v_id_note_sub_parent_id);
 			idParentHidden.setText(noteEntity.getNoteParentId());
 			// 便签修改/便签查询
 			if (StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)
 					|| StringUtil.equaleReturnBoolean(Constants.STR_LOOK_UP, currentMode)) {
 				/** [4](From主)便签:副便签数据数量(Hidden) */
-				TextView childrenCountHidden = (TextView)findViewById(R.id.v_id_note_sub_children_count);
+				TextView childrenCountHidden = findViewById(R.id.v_id_note_sub_children_count);
 				childrenCountHidden.setText(noteEntity.getNoteChildrenCount());
 				/** [5](From主)便签:便签内容 */
-				EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+				EditText contentEditext = findViewById(R.id.v_id_note_sub_content_editext);
 				contentEditext.setText(noteEntity.getNoteContent());
 				ComponentUtil.setEditextDisable(contentEditext);
 				/** [6](From主)便签:标签内容 */
-				EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+				EditText tagEditext = findViewById(R.id.v_id_note_sub_tag_editext);
 				tagEditext.setText(noteEntity.getNoteTag());
 				ComponentUtil.setEditextDisable(tagEditext);
 				/** [7](From主)便签:录入时间 */
-				TextView itemEditext = (TextView)findViewById(R.id.v_id_note_sub_insert_time_editext);
+				TextView itemEditext = findViewById(R.id.v_id_note_sub_insert_time_editext);
 				itemEditext.setText(!StringUtil.isEmptyReturnBoolean(noteEntity.getNoteUpdateTime()) ? noteEntity.getNoteUpdateTime() : noteEntity.getNoteInsertTime());
 				/** [8](From主)便签:更新次数(Hidden) */
-				TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
+				TextView updateCountHidden = findViewById(R.id.v_id_note_sub_update_count);
 				updateCountHidden.setText(noteEntity.getNoteUpdateCount());
 				/** [9](From主)便签:数据ID */
-				TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+				TextView idHidden = findViewById(R.id.v_id_note_sub_id);
 				idHidden.setText(noteEntity.getNoteId());
 				/** [10](From主)便签:更新次数(Hidden) */
-				TextView subNoteInsertTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_subnote_insert_time);
+				TextView subNoteInsertTimeHidden = findViewById(R.id.v_id_note_sub_subnote_insert_time);
 				subNoteInsertTimeHidden.setText(noteEntity.getSubNoteInsertTime());
-				Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
+				Button addBtn = findViewById(R.id.v_id__note_sub_add_button);
 				addBtn.setVisibility(View.GONE);
-				LinearLayout currentNotell = (LinearLayout)findViewById(R.id.v_id_note_sub_current_note_ll);
+				LinearLayout currentNotell = findViewById(R.id.v_id_note_sub_current_note_ll);
 				currentNotell.setVisibility(View.GONE);
 				if(StringUtil.equaleReturnBoolean(Constants.STR_MODIFY, currentMode)) {
 					modifyMode();
 				}
 			}else{
 				/** 便签标题:便签内容 */
-				TextView noteSubContentTv = (TextView)findViewById(R.id.v_id_note_sub_content);
+				TextView noteSubContentTv = findViewById(R.id.v_id_note_sub_content);
 				noteSubContentTv.setText("(副)" + getResources().getString(R.string.note_content));
 				/** 便签标题:标签内容 */
-				TextView noteSubTagTv = (TextView)findViewById(R.id.v_id_note_sub_tag);
+				TextView noteSubTagTv = findViewById(R.id.v_id_note_sub_tag);
 				noteSubTagTv.setText("(副)"  + getResources().getString(R.string.note_tag));
 				/** 便签标题:录入时间(Hidden) */
-				TextView insertTimeTv = (TextView)findViewById(R.id.v_id_note_sub_insert_time);
+				TextView insertTimeTv = findViewById(R.id.v_id_note_sub_insert_time);
 				insertTimeTv.setVisibility(View.GONE);
 			}
 		}else {
 			Intent intent = getIntent();
 			// 不同功能判断标识
 			String currentPageLevel = intent.getStringExtra(Constants.NOTE_MATCH_CONDITION_PAGE_LEVEL);
-			TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+			TextView currentPageLevelHidden = findViewById(R.id.v_id_note_sub_current_page_level);
 			currentPageLevelHidden.setText(currentPageLevel);
-			LinearLayout idLL = (LinearLayout)findViewById(R.id.v_id_note_sub_current_note_ll);
+			LinearLayout idLL = findViewById(R.id.v_id_note_sub_current_note_ll);
 			idLL.setVisibility(View.GONE);
-			TextView currentModeTitleTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_title_tv);
+			TextView currentModeTitleTv = findViewById(R.id.v_id_note_sub_current_mode_title_tv);
 			currentModeTitleTv.setVisibility(View.GONE);
 			/** 便签标题:录入时间(Hidden) */
-			TextView insertTimeTv = (TextView)findViewById(R.id.v_id_note_sub_insert_time);
+			TextView insertTimeTv = findViewById(R.id.v_id_note_sub_insert_time);
 			insertTimeTv.setVisibility(View.GONE);
 		}
 		/** 便签:当前模式 */
-		TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+		TextView currentModeTv = findViewById(R.id.v_id_note_sub_current_mode_tv);
 		currentModeTv.setText(StringUtil.isEmptyReturnString(currentMode));
-		Button menuBtn= (Button) findViewById(R.id.v_id__note_sub_menu);
+		Button menuBtn= findViewById(R.id.v_id__note_sub_menu);
 		registerForContextMenu(menuBtn);
 		menuBtn.setOnCreateContextMenuListener(this);//给组件注册Context菜单
 		menuBtn.setOnClickListener(new View.OnClickListener() {
@@ -207,15 +207,15 @@ public class NoteSubActivity extends ActivityCommon{
 
 	private void modifyMode() {
 		/** 便签:便签内容部 */
-		EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+		EditText contentEditext = findViewById(R.id.v_id_note_sub_content_editext);
 		ComponentUtil.setEditextEnable(contentEditext);
 		/** 便签:标签部 */
-		EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+		EditText tagEditext = findViewById(R.id.v_id_note_sub_tag_editext);
 		ComponentUtil.setEditextEnable(tagEditext);
-		Button addBtn = (Button)findViewById(R.id.v_id__note_sub_add_button);
+		Button addBtn = findViewById(R.id.v_id__note_sub_add_button);
 		addBtn.setVisibility(View.VISIBLE);
 		addBtn.setText(getResources().getString(R.string.modify_CN_mes));
-		TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+		TextView currentModeTv = findViewById(R.id.v_id_note_sub_current_mode_tv);
 		currentModeTv.setText(Constants.STR_MODIFY);
 	}
 
@@ -224,8 +224,8 @@ public class NoteSubActivity extends ActivityCommon{
 	 */
 	private void returnNoteMainActivity() {
 		Intent intent = new Intent(NoteSubActivity.this, NoteMainActivity.class);
-		TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
-		TextView parentIdHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+		TextView currentPageLevelHidden = findViewById(R.id.v_id_note_sub_current_page_level);
+		TextView parentIdHidden = findViewById(R.id.v_id_note_sub_parent_id);
 		String currentPageLevelStr = currentPageLevelHidden.getText().toString();
 		String parentIdStr = parentIdHidden.getText().toString();
 		intent.putExtra(Constants.ACTION_FALG, PageInfoEnum.NOTE_SUB_PAGE.getKey());
@@ -241,7 +241,7 @@ public class NoteSubActivity extends ActivityCommon{
 	protected void clickConfirmBthByDialog(){
         Map<String, Object> addContent = commonSetWriteContent();
 		// 获取删除Id
-        TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+        TextView idHidden = findViewById(R.id.v_id_note_sub_id);
 		String id = idHidden.getText().toString();
 		addContent.put(Constants.NOTE_ID, id);
         // 删除标记ON
@@ -270,7 +270,7 @@ public class NoteSubActivity extends ActivityCommon{
 			setError();
 			showDialogV1_1(checkErrorList, Constants.ERROR_MARK,"错误", "订正", "取消");
 		}else {
-			TextView currentModeTv = (TextView)findViewById(R.id.v_id_note_sub_current_mode_tv);
+			TextView currentModeTv = findViewById(R.id.v_id_note_sub_current_mode_tv);
 			String currentModeStr = currentModeTv.getText().toString();
 			if (StringUtil.isEmptyReturnBoolean(currentModeStr)) {
 				currentModeStr = Constants.STR_ADD;
@@ -348,7 +348,7 @@ public class NoteSubActivity extends ActivityCommon{
 				returnNoteMainActivity();
 			// 执行修改操作
 			} else {
-				TextView updateCountStr = (TextView) findViewById(R.id.v_id_note_sub_update_count);
+				TextView updateCountStr = findViewById(R.id.v_id_note_sub_update_count);
 				BigDecimal updateCount = StringUtil.isEmptyReturnBigDecimal(String.valueOf(updateCountStr.getText()));
 				updateCount = updateCount.add(new BigDecimal(1));
 				// 更新标记
@@ -368,43 +368,43 @@ public class NoteSubActivity extends ActivityCommon{
         // 放置添加的内容
         Map<String, Object> addContent = new HashMap<String, Object>();
 		// [1]便签:便签Id
-		TextView idHidden = (TextView)findViewById(R.id.v_id_note_sub_id);
+		TextView idHidden = findViewById(R.id.v_id_note_sub_id);
 		String id = idHidden.getText().toString();
 		addContent.put(Constants.NOTE_ID, id);
 		// [2]便签:(副)便签数量
-		TextView childrenCountHidden = (TextView)findViewById(R.id.v_id_note_sub_children_count);
+		TextView childrenCountHidden = findViewById(R.id.v_id_note_sub_children_count);
 		String childrenId = childrenCountHidden.getText().toString();
 		addContent.put(Constants.NOTE_CHILDREN_COUNT, childrenId);
 		// [3]便签:便签内容
-        EditText contentEditext = (EditText)findViewById(R.id.v_id_note_sub_content_editext);
+        EditText contentEditext = findViewById(R.id.v_id_note_sub_content_editext);
         String contentStr = contentEditext.getText().toString();
         addContent.put(Constants.NOTE_CONTENT, contentStr);
 		// [4]便签:标签内容
-		EditText tagEditext = (EditText)findViewById(R.id.v_id_note_sub_tag_editext);
+		EditText tagEditext = findViewById(R.id.v_id_note_sub_tag_editext);
 		String tagStr = tagEditext.getText().toString();
 		addContent.put(Constants.NOTE_TAG, tagStr);
 		// [5]便签:更新时间
-		TextView updateTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_update_time);
+		TextView updateTimeHidden = findViewById(R.id.v_id_note_sub_update_time);
 		String updateTime = updateTimeHidden.getText().toString();
 		addContent.put(Constants.NOTE_UPDATE_TIME, updateTime);
 		// [6]便签:更新次数
-		TextView updateCountHidden = (TextView)findViewById(R.id.v_id_note_sub_update_count);
+		TextView updateCountHidden = findViewById(R.id.v_id_note_sub_update_count);
 		String updateCount = updateCountHidden.getText().toString();
 		addContent.put(Constants.NOTE_UPDATE_COUNT, updateCount);
         // [7]删除标记
         addContent.put(Constants.NOTE_DELETE_FLAG, Constants.DELETE_OFF);
 		// [8]便签:当前页面级别
-		TextView currentPageLevelHidden = (TextView)findViewById(R.id.v_id_note_sub_current_page_level);
+		TextView currentPageLevelHidden = findViewById(R.id.v_id_note_sub_current_page_level);
 		String currentPageLevelSrt = currentPageLevelHidden.getText().toString();
 		addContent.put(Constants.NOTE_CURRENT_PAGE_LEVEL, currentPageLevelSrt);
 		// [9]便签:副便签插入时间
-		TextView subNoteInsertTimeHidden = (TextView)findViewById(R.id.v_id_note_sub_subnote_insert_time);
+		TextView subNoteInsertTimeHidden = findViewById(R.id.v_id_note_sub_subnote_insert_time);
 		String subNoteInsertTimeSrt = subNoteInsertTimeHidden.getText().toString();
 		addContent.put(Constants.SUB_NOTE_INSERT_TIME, subNoteInsertTimeSrt);
 		// [10]删除时间
 		addContent.put(Constants.NOTE_DELETE_TIME, StringUtil.EMPTY);
 		// [11]便签:父类便签ID
-		TextView noteParentIdHidden = (TextView)findViewById(R.id.v_id_note_sub_parent_id);
+		TextView noteParentIdHidden = findViewById(R.id.v_id_note_sub_parent_id);
 		String noteParentIdStr = noteParentIdHidden.getText().toString();
 		addContent.put(Constants.NOTE_PARENT_ID, noteParentIdStr);
 
