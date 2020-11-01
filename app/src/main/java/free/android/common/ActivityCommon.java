@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -42,7 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import free.android.MainActivity;
+import free.android.activity.MainActivity;
 import free.android.R;
 import free.android.entity.NoteEntity;
 import free.android.utils.CollectionsUtil;
@@ -52,7 +53,9 @@ import free.android.utils.StringUtil;
 public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
 
 
-    /** 双击时间使用 */
+    /**
+     * 双击时间使用
+     */
     private static final long DOUBLE_TIME = 1000;
     private static long lastClickTime = 0;
 
@@ -60,52 +63,76 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
     private boolean checkErrorFlag = false;
 
     /*** 对话框Template 1.1 **/
-    private  Dialog dialogV1_1 = null;
+    private Dialog dialogV1_1 = null;
 
     /*** 对话框Template 2 **/
-    private  Dialog dialogV2 = null;
-	/**
-	 * <pre>
-	 * 获取App专属文件路径
-	 * </pre>
-	 *
-	 * 特性:随着app删除而一起删除(不可见)
-	 *
-	 * @return
-	 */
-	protected String getFilePathByApp() {
-		/**
-		 * Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) //
-		 * 判断是否已装入SD卡
-		 *
-		 * App独立文件:不依赖自己App的文件，例如图片、视频等(可见) 两种获取路径方式： A: File sdCard =
-		 * Environment.getExternalStorageDirectory(); // SD卡根路径 File directory_pictures
-		 * = new File(sdCard, "Pictures"); //定访问的文件夹名 B: File directory_pictures =
-		 * Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-		 * // 访问公共目录的方法
-		 */
-		// App专属文件:随着app删除而一起删除(不可见)
-		// external storage就是通常所说的SD卡
-		// internal storage就是手机自带的一块存储区域
-		File externalFilesDir = getExternalFilesDir("Caches");
-		return externalFilesDir.getParent();
-	}
+    private Dialog dialogV2 = null;
+
+    private Class previousClz = null;
+
+    private String currentClzName = StringUtil.EMPTY;
+
+    /**
+     * <pre>
+     * 获取App专属文件路径
+     * </pre>
+     * <p>
+     * 特性:随着app删除而一起删除(不可见)
+     *
+     * @return
+     */
+    protected String getFilePathByApp() {
+        /**
+         * Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) //
+         * 判断是否已装入SD卡
+         *
+         * App独立文件:不依赖自己App的文件，例如图片、视频等(可见) 两种获取路径方式： A: File sdCard =
+         * Environment.getExternalStorageDirectory(); // SD卡根路径 File directory_pictures
+         * = new File(sdCard, "Pictures"); //定访问的文件夹名 B: File directory_pictures =
+         * Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+         * // 访问公共目录的方法
+         */
+        // App专属文件:随着app删除而一起删除(不可见)
+        // external storage就是通常所说的SD卡
+        // internal
+        // storage就是手机自带的一块存储区域
+        File externalFilesDir = getExternalFilesDir("Caches");
+        return externalFilesDir.getParent();
+    }
+
+    /**
+     * 重写每个画面初始化 (记录用)
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Class clz = this.getClass();
+        String clzName = this.getClass().getSimpleName();
+        if(!StringUtil.equaleReturnBoolean(currentClzName, clzName)){
+            currentClzName = clzName;
+            previousClz = clz;
+        }
+    }
+
+    public Class getPreviousClz(){
+        return this.previousClz;
+    }
 
     /**
      * 获取SD卡路径
+     *
      * @return
      */
-	protected  String getFilePathBySDCard() {
+    protected String getFilePathBySDCard() {
         return Environment.getExternalStorageDirectory().toString() + "/freeMT/Data";
-	}
+    }
 
     /**
      * 获取当前时间
      *
-     * @param timeFormat
-     *  <BR>
-     *          自定义时间格式
-     *
+     * @param timeFormat <BR>
+     *                   自定义时间格式
      * @return
      */
     protected static String getSystemTime(String timeFormat) {
@@ -114,30 +141,31 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         return StrCurrentTime;
     }
 
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         long currentTimeMillis = System.currentTimeMillis();
         if (currentTimeMillis - lastClickTime < DOUBLE_TIME) {
             onItemDoubleClick(parent, view, position, id);
         }
         lastClickTime = currentTimeMillis;
 
-	}
+    }
 
     /**
      * 双击事件(ListView:item)
+     *
      * @param parent
      * @param view
      * @param position
@@ -146,13 +174,15 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
     protected void onItemDoubleClick(AdapterView<?> parent, View view, int position, long id) {
     }
 
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
     /**
      * 获取储存权限
+     *
      * @param activity
      * @return
      */
@@ -184,15 +214,15 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
             path = uri.getPath();
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) { // 4.4以后
             path = getPath(this, uri);
-        } else{ // //4.4以下下系统调用方法
+        } else { // //4.4以下下系统调用方法
             path = getRealPathFromURI(uri);
         }
 
         String[] filePathSplit = path.split("/");
-        if(filePathSplit.length > 0){
+        if (filePathSplit.length > 0) {
             String fileName = filePathSplit[filePathSplit.length - 1];
             pathMap.put(Constants.UPLOAD_FILE_NAME, fileName);
-            for(int i = 0; i < filePathSplit.length-1; i++){
+            for (int i = 0; i < filePathSplit.length - 1; i++) {
                 filePath.append(filePathSplit[i]);
                 filePath.append("/");
             }
@@ -204,9 +234,9 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     public String getRealPathFromURI(Uri contentUri) {
         String res = null;
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        if(null!=cursor&&cursor.moveToFirst()){
+        if (null != cursor && cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);
             cursor.close();
@@ -331,11 +361,12 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     /**
      * 对话框Template 1.0
+     *
      * @param params <BR/>
-     *          1.标题(Title)<BR/>
-     *          2.内容(Content)<BR/>
-     *          3.按钮(Yes)<BR/>
-     *          3.按钮(No)<BR/>
+     *               1.标题(Title)<BR/>
+     *               2.内容(Content)<BR/>
+     *               3.按钮(Yes)<BR/>
+     *               3.按钮(No)<BR/>
      */
     protected void showDialogV1(String... params) {
         /* @setIcon 设置对话框图标
@@ -347,16 +378,16 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
                 new AlertDialog.Builder(ActivityCommon.this);
         // 设置Dialog的图标
         normalDialog.setIcon(R.drawable.img_background_delete_v1);
-        normalDialog.setTitle(CollectionsUtil.isEmptyByStrArray(params,1));
-        normalDialog.setMessage(CollectionsUtil.isEmptyByStrArray(params,2));
-        normalDialog.setPositiveButton(CollectionsUtil.isEmptyByStrArray(params,3),
+        normalDialog.setTitle(CollectionsUtil.isEmptyByStrArray(params, 1));
+        normalDialog.setMessage(CollectionsUtil.isEmptyByStrArray(params, 2));
+        normalDialog.setPositiveButton(CollectionsUtil.isEmptyByStrArray(params, 3),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       clickConfirmBthByDialog();
+                        clickConfirmBthByDialog();
                     }
                 });
-        normalDialog.setNegativeButton(CollectionsUtil.isEmptyByStrArray(params,4),
+        normalDialog.setNegativeButton(CollectionsUtil.isEmptyByStrArray(params, 4),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -372,16 +403,17 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * 对话框Template 1.1
      * 使用页面(common_dialog_v1.xml)
      * <PRE/>
+     *
      * @param contentList <BR/>
-     *          Dialog显示内容集合<BR/>
-     * @param params <BR/>
-     *          1.Dialog类型
-     *          2.标题(Title)<BR/>
-     *          3.Dialog类型(Content)<BR/>
-     *          4.按钮(Yes)<BR/>
-     *          5.按钮(No)<BR/>
+     *                    Dialog显示内容集合<BR/>
+     * @param params      <BR/>
+     *                    1.Dialog类型
+     *                    2.标题(Title)<BR/>
+     *                    3.Dialog类型(Content)<BR/>
+     *                    4.按钮(Yes)<BR/>
+     *                    5.按钮(No)<BR/>
      */
-    protected void showDialogV1_1(List<String> contentList,  String... params) {
+    protected void showDialogV1_1(List<String> contentList, String... params) {
         /* @setIcon 设置对话框图标
          * @setTitle 设置对话框标题
          * @setMessage 设置对话框消息提示
@@ -390,16 +422,16 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         if (contentList.isEmpty()) {
             return;
         }
-        dialogV1_1  = new Dialog(this);
+        dialogV1_1 = new Dialog(this);
         //去除标题栏
         dialogV1_1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //2.填充布局
         LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView     = inflater.inflate(R.layout.common_dialog_v1, null);
+        View dialogView = inflater.inflate(R.layout.common_dialog_v1, null);
         //将自定义布局设置进去
         dialogV1_1.setContentView(dialogView);
         //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
-        WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Window window = dialogV1_1.getWindow();
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         lp.copyFrom(window.getAttributes());
@@ -433,7 +465,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         });
         // 判断Dialog类型
         initDilogContentV1_1(contentList, dialogView, CollectionsUtil.isEmptyByStrArray(params, 1));
-        
+
     }
 
     /**
@@ -443,16 +475,16 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <PRE/>
      */
     protected void showDialogV2() {
-        dialogV2  = new Dialog(this);
+        dialogV2 = new Dialog(this);
         //去除标题栏
         dialogV2.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //2.填充布局
         LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView     = inflater.inflate(R.layout.common_dialog_v2, null);
+        View dialogView = inflater.inflate(R.layout.common_dialog_v2, null);
         //将自定义布局设置进去
         dialogV2.setContentView(dialogView);
         //3.设置指定的宽高,如果不设置的话，弹出的对话框可能不会显示全整个布局，当然在布局中写死宽高也可以
-        WindowManager.LayoutParams lp     = new WindowManager.LayoutParams();
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Window window = dialogV2.getWindow();
         lp.copyFrom(window.getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -503,7 +535,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <BR/>
      * 使用页面(common_dialog_v2.xml)
      * <PRE/>
-     *  <BR/>
+     * <BR/>
      * 监听事件类型:取消Dialog
      */
     protected void dismissByCommonDialogV2() {
@@ -516,7 +548,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <BR/>
      * 使用页面(common_dialog_v2.xml)
      * <PRE/>
-     *  <BR/>
+     * <BR/>
      * 监听事件类型:查看
      */
     protected void lookUpClickByCommonDialogV2() {
@@ -528,7 +560,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <BR/>
      * 使用页面(common_dialog_v2.xml)
      * <PRE/>
-     *  <BR/>
+     * <BR/>
      * 监听事件类型:添加
      */
     protected void addClickByCommonDialogV2() {
@@ -540,7 +572,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <BR/>
      * 使用页面(common_dialog_v2.xml)
      * <PRE/>
-     *  <BR/>
+     * <BR/>
      * 监听事件类型:删除
      */
     protected void delClickByCommonDialogV2() {
@@ -552,7 +584,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * <BR/>
      * 使用页面(common_dialog_v2.xml)
      * <PRE/>
-     *  <BR/>
+     * <BR/>
      * 监听事件类型:修改
      */
     protected void modifyClickByCommonDialogV2() {
@@ -589,7 +621,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         // Line子布局(线性、Java构成)
         LinearLayout subLineLayout = new LinearLayout(this);
         // Header部子线性布局控件属性(线性、Java构成)
-        LinearLayout.LayoutParams subLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT,1f);
+        LinearLayout.LayoutParams subLineLayoutAttribute = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
         Iterator<String> valIterator = contentList.iterator();
         while (valIterator.hasNext()) {
             subLineLayout.setBackground(getResources().getDrawable(R.drawable.border_line_v3));
@@ -598,19 +630,19 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
             subLineLayout.setOrientation(LinearLayout.HORIZONTAL);
             String val = valIterator.next();
             TextView textView = new TextView(this);
-            SpannableStringBuilder msp = new SpannableStringBuilder (val);
+            SpannableStringBuilder msp = new SpannableStringBuilder(val);
             if (StringUtil.equaleReturnBoolean(Constants.ERROR_MARK, dialogType)) {
                 //设置字体样式正常，粗体，斜体，粗斜体
-                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
-                msp.setSpan(new ForegroundColorSpan(Color.RED),val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
+                msp.setSpan(new ForegroundColorSpan(Color.RED), val.split(Constants.COLON_SYMBOL)[0].length() + 1, val.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 //设置上下标
                 //msp.setSpan(new SubscriptSpan(), val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //下标
                 //设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍
                 //msp.setSpan(new ScaleXSpan(2.0f), 0, val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE); //2.0f表示默认字体宽度的两倍，即X轴方向放大为默认字体的两倍，而高度不变
-            }else {
+            } else {
                 //设置字体样式正常，粗体，斜体，粗斜体
-                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
-                msp.setSpan(new ForegroundColorSpan(Color.BLUE),0,val.split(Constants.COLON_SYMBOL)[0].length()+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, val.split(Constants.COLON_SYMBOL)[0].length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
+                msp.setSpan(new ForegroundColorSpan(Color.BLUE), 0, val.split(Constants.COLON_SYMBOL)[0].length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 //设置上下标
                 //msp.setSpan(new SuperscriptSpan(), val.split(Constants.COLON_SYMBOL)[0].length()+1,val.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //上标
                 //设置字体大小（相对值,单位：像素） 参数表示为默认字体宽度的多少倍
@@ -626,21 +658,22 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     /**
      * 对话框Template 1.0的确认按钮执行内容
+     *
      * @return
      */
-    protected void clickConfirmBthByDialog(){
+    protected void clickConfirmBthByDialog() {
     }
 
     /**
      * 对话框Template 1.0的取消按钮执行内容
+     *
      * @return
      */
-    protected void clickCloseBthByDialog(){
+    protected void clickCloseBthByDialog() {
     }
 
 
     /**
-     *
      * 共通:返回首页
      */
     protected void commonReturnIndex() {
@@ -654,6 +687,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
     protected void setError() {
         checkErrorFlag = true;
     }
+
     /**
      * 返回CheckError标记
      */
@@ -663,8 +697,8 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
 
     /**
      * 便签实体类转换Map
-     * @param entity
-     *          实体类
+     *
+     * @param entity 实体类
      * @return
      */
     protected Map<String, Object> noteEntityTransferMap(NoteEntity entity) {
@@ -705,7 +739,6 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
         // super.onBackPressed();//注释掉这行,back键不退出activity
         System.exit(0);
     }
-
 
 
 }

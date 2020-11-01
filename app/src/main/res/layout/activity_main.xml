@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.android.MainActivity"
+    tools:context="free.android.activity.MainActivity"
     android:background="@drawable/img_background_all_v2">
 
     <TextView
-        android:id="@+id/id_activity_main_welcom_tx"
+        android:id="@+id/id_activity_main_welcome_tx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
@@ -20,13 +20,36 @@
         android:id="@+id/note_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/id_activity_main_welcom_tx"
-        android:layout_below="@+id/id_activity_main_welcom_tx"
+        android:layout_alignLeft="@+id/id_activity_main_welcome_tx"
+        android:layout_below="@+id/id_activity_main_welcome_tx"
         android:layout_marginTop="14dp"
         android:background="@drawable/button_rounded"
         android:textColor="#efe1a42a"
         android:textStyle="bold"
         android:text="@string/note_btn_name"
-        android:onClick="transitionNote"/>
+        android:onClick="transitionNote" />
 
+    <Button
+        android:id="@+id/show_main_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/note_btn"
+        android:layout_below="@+id/note_btn"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button_rounded"
+        android:textColor="#efe1a42a"
+        android:textStyle="bold"
+        android:text="@string/text_main_btn"
+        android:onClick="transitionShowMain" />
+    <Button
+        android:id="@+id/test_db_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/show_main_btn"
+        android:layout_below="@+id/show_main_btn"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button_rounded"
+        android:textColor="#efe1a42a"
+        android:textStyle="bold"
+        android:text="DBTEST"/>
 </RelativeLayout>

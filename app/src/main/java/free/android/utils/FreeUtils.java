@@ -10,11 +10,11 @@ import free.android.enums.FormatEnum;
  */
 public class FreeUtils {
 
-    public static String getSysDate(String... format){
+    public static String getSysDate(String... format) {
         if (format == null || format.length == 0) {
             format = new String[]{FormatEnum.TIME_FORMAT_V1.getVal()};
         }
-        Date date =new Date();
+        Date date = new Date();
         SimpleDateFormat formatRule = new SimpleDateFormat(format[0]);
         String strSysDate = formatRule.format(date);
         return strSysDate;

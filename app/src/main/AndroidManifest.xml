@@ -6,16 +6,17 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取文件的权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- NetWork权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/app"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/app"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:label="@string/app_name">
-        <activity
-            android:name=".MainActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,23 +33,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.note.NoteSubActivity">
+        <activity android:name=".activity.note.NoteSubActivity">
             <intent-filter>
                 <action android:name="freepj.android.activity.NoteSubActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.show_page.ShowPageMainActivity">
+        <activity android:name=".activity.show_page.ShowMainActivity">
             <intent-filter>
-                <action android:name="freepj.android.activity.show_page.ShowPageMainActivity" />
+                <action android:name="freepj.android.activity.show_page.ShowMainActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <!-- 添加新的Activity[End] -->
+
     </application>
 
 </manifest>

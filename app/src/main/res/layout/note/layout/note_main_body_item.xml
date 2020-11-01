@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TableRow >
+    <TableRow>
 
         <!-- Id Hidden -->
 
@@ -29,7 +29,7 @@
                 android:background="@drawable/button_all_v1"
                 android:textColor="#ffffff"
                 android:gravity="center"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
             <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/note_content"
                 style="@style/text_style"
-                android:fontFamily="monospace"/>
+                android:fontFamily="monospace" />
 
             <TextView
                 android:paddingLeft="5dp"
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                style="@style/text_content_style"/>
+                style="@style/text_content_style" />
         </LinearLayout>
 
     </TableRow>
@@ -58,16 +58,18 @@
             android:layout_marginLeft="10dp"
             android:layout_gravity="end|bottom"
             android:background="@drawable/background_disabled_v1">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/note_id"
-                style="@style/text_disabled_style"/>
+                style="@style/text_disabled_style" />
+
             <TextView
                 android:id="@+id/v_id_note_main_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/text_disabled_style"/>
+                style="@style/text_disabled_style" />
 
         </LinearLayout>
 
@@ -82,7 +84,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end|bottom"
                 android:text="@string/note_tag"
-                style="@style/text_style"/>
+                style="@style/text_style" />
 
             <TextView
                 android:paddingLeft="5dp"

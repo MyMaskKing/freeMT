@@ -5,8 +5,7 @@ import free.android.utils.Constants;
 public enum FormatEnum {
     TIME_FORMAT_V1("yyyy/MM/dd  HH:mm:ss"),
     TIME_FORMAT_ID("yyyyMMddHHmmssSSS"),
-    BTN_2(2, "#2"),
-    ;
+    BTN_2(2, "#2"),;
 
     FormatEnum() {
     }
@@ -22,6 +21,7 @@ public enum FormatEnum {
     FormatEnum(String value) {
         this.value = value;
     }
+
     public String getVal() {
         return value;
     }

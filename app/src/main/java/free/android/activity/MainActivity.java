@@ -1,8 +1,9 @@
-package free.android;
+package free.android.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -15,30 +16,35 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
+import free.android.R;
 import free.android.activity.note.NoteMainActivity;
-import free.android.activity.show_page.ShowPageMainActivity;
+import free.android.activity.show_page.ShowMainActivity;
 import free.android.common.ActivityCommon;
+import free.android.db.dao.TestDao;
 import free.android.enums.PageInfoEnum;
 import free.android.utils.Constants;
 import free.android.utils.LogUtil;
 import free.android.utils.ToastUtil;
 
 public class MainActivity extends ActivityCommon {
-
+    private TestDao td = new TestDao();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // DBUtils.getInfoByName();
         // 无标题栏(系统自带不删除)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // 设置欢迎致辞
-        TextView welcomeTV = findViewById(R.id.id_activity_main_welcom_tx);
-        SpannableStringBuilder msp = new SpannableStringBuilder (Constants.WELCOME_WORD);
+        TextView welcomeTV = findViewById(R.id.id_activity_main_welcome_tx);
+        SpannableStringBuilder msp = new SpannableStringBuilder(Constants.WELCOME_WORD);
         //设置字体样式正常，粗体，斜体，粗斜体
         msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 4, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //粗体
-        msp.setSpan(new ForegroundColorSpan(Color.RED),4, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        msp.setSpan(new SuperscriptSpan(), 10,32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //下标
+        msp.setSpan(new ForegroundColorSpan(Color.RED), 4, 32, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new SuperscriptSpan(), 10, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);     //下标
         welcomeTV.setText(msp);
+
+
     }
 
     @Override
@@ -76,15 +82,20 @@ public class MainActivity extends ActivityCommon {
         startActivityForResult(noteIntent, 1);
         // setContentView(R.layout.note_main);
     }
-
+    public boolean isMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
+    }
     /**
      * 迁移画面【Second】
      * To[show_page_main.xml]
+     *
      * @param view
      */
-    public void transitionShowPageMain(View view) {
+    public void transitionShowMain(View view) {
+        boolean mainThread = isMainThread();
+
         LogUtil.i(Constants.LOG_MES_TRANSITION_PAGE_TO, PageInfoEnum.SHOW_PAGE.getVal());
-        Intent intent = new Intent(MainActivity.this, ShowPageMainActivity.class);
+        Intent intent = new Intent(MainActivity.this, ShowMainActivity.class);
         startActivity(intent);
     }
 

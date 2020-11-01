@@ -3,18 +3,19 @@
     xmlns:match="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="free.android.activity.show_page.ShowPageMainActivity"
-    android:background="@drawable/img_background_all_v1">
+    tools:context="free.android.activity.show_page.ShowMainActivity"
+    android:background="@drawable/background_all_black">
 
     <com.roger.match.library.MatchTextView
-        match:text="MATCH VIEW"
+        android:id="@+id/id_show_main_welcome"
         match:textSize="30sp"
         match:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <com.roger.match.library.MatchButton
-        match:text="Yes"
+        android:id="@+id/id_show_main_button"
+        android:layout_below="@+id/id_show_main_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

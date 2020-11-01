@@ -5,10 +5,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
+import com.roger.match.library.MatchTextView;
+
 import free.android.R;
 import free.android.common.ActivityCommon;
 
-public class ShowPageMainActivity extends ActivityCommon {
+public class ShowMainActivity extends ActivityCommon {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +18,10 @@ public class ShowPageMainActivity extends ActivityCommon {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_page_main);
+
+        MatchTextView mMatchTextView = (MatchTextView)findViewById(R.id.id_show_main_welcome);
+        String showMainWelcome = getResources().getString(R.string.text_show_main_welcome);
+        mMatchTextView.setText(showMainWelcome);
 
     }
 
@@ -37,7 +43,6 @@ public class ShowPageMainActivity extends ActivityCommon {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }

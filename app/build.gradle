@@ -2,10 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "free.android"
-        minSdkVersion 22
-        targetSdkVersion 27
+        minSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,6 +26,9 @@ android {
         main {
             res.srcDirs =
                     [
+                            // テスト使用ので
+                            'src/main/res/layout/test',
+                            // 下記は機能の区分よりフォルダーを作成する
                             'src/main/res/layout/show_page',
                             'src/main/res/layout/note',
                             'src/main/res/layout/main',
@@ -35,10 +43,12 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.liulishuo.filedownloader:library:1.7.4'
     // MatchView 电影级别的View
     implementation 'com.roger.match.library:library:1.0.1'
+    implementation files('src/main/libs/mysql-connector-java-5.1.42.jar')
 }

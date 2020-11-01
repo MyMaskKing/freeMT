@@ -27,8 +27,7 @@
         android:background="@drawable/text_half_fillet"
         android:focusedByDefault="true"
         android:gravity="center"
-        android:text="@string/menu_US_mes">
-    </Button>
+        android:text="@string/menu_US_mes"></Button>
     <!-- Menu Button -->
 
     <!-- Current Id -->
@@ -38,13 +37,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/v_id__note_sub_init_title"
         android:background="@drawable/background_disabled_v1">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="@string/note_current_content"
             android:layout_gravity="bottom|end"
-            style="@style/text_disabled_style"/>
+            style="@style/text_disabled_style" />
 
         <TextView
             android:paddingLeft="5dp"
@@ -57,9 +57,7 @@
             android:focusable="true"
             android:singleLine="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:focusableInTouchMode="true"
-            />
-
+            android:focusableInTouchMode="true" />
 
 
     </LinearLayout>
@@ -70,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/v_id_note_sub_current_note_ll"
         android:background="@drawable/background_info_v3">
+
         <TextView
             android:id="@+id/v_id_note_sub_current_mode_title_tv"
             android:layout_width="wrap_content"
@@ -77,7 +76,7 @@
             android:layout_alignParentStart="true"
             android:text="@string/note_current_mode"
             android:layout_gravity="bottom|end"
-            style="@style/text_disabled_style"/>
+            style="@style/text_disabled_style" />
 
         <TextView
             android:id="@+id/v_id_note_sub_current_mode_tv"
@@ -85,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:textColor="#f9ba1d"
-            style="@style/text_disabled_style"/>
+            style="@style/text_disabled_style" />
 
     </LinearLayout>
 
@@ -96,20 +95,22 @@
         android:id="@+id/v_id_note_sub_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/v_id_note_sub_children_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/v_id_note_sub_update_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:visibility="gone" />
+
     <TextView
         android:id="@+id/v_id_note_sub_update_count"
         android:layout_width="match_parent"
@@ -182,7 +183,7 @@
                 android:imeOptions="actionDone"
                 android:hint="请输入计划内容"
                 android:inputType="textMultiLine"
-                android:background="@drawable/border_line_v2"/>
+                android:background="@drawable/border_line_v2" />
 
 
             <!-- Item 2 -->
@@ -213,7 +214,7 @@
                 android:ems="10"
                 android:inputType="textMultiLine"
                 android:imeOptions="actionDone"
-                android:background="@drawable/border_line_v2"/>
+                android:background="@drawable/border_line_v2" />
 
             <!-- Item 3 -->
 
@@ -232,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_height="wrap_content"
-                android:ems="10"/>
+                android:ems="10" />
             <!-- Item 3 -->
 
         </GridLayout>

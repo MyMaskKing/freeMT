@@ -15,6 +15,7 @@
         android:orientation="horizontal"
         android:gravity="end"
         android:background="@drawable/navigation_v2">
+
         <TextView
             android:paddingEnd="5dp"
             android:layout_width="wrap_content"
@@ -22,7 +23,7 @@
             android:text="@string/note_current_page_level"
             android:textColor="#cfe8fe"
             android:textStyle="bold"
-            android:textColorHint="#e8ad6a"/>
+            android:textColorHint="#e8ad6a" />
 
         <TextView
             android:id="@+id/v_id_note_main_current_page_level_tv"
@@ -31,7 +32,7 @@
             android:layout_height="30dp"
             android:background="@drawable/round_v1"
             android:textColor="#ffff"
-            android:gravity="center"/>
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/v_id_note_main_previous_title_tv"
@@ -43,7 +44,7 @@
             android:textColor="#cfe8fe"
             android:textColorHint="#e8ad6a"
             android:textStyle="bold"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/v_id_note_main_previous_tv"
@@ -53,7 +54,7 @@
             android:background="@drawable/round_v1"
             android:textColor="#ffff"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/v_id_note_main_menu_tv"
@@ -62,7 +63,7 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/text_half_fillet"
             android:text="@string/menu_CN_mes"
-            android:gravity="center"/>
+            android:gravity="center" />
     </LinearLayout>
     <!-- 便签Header部:导航栏[Start] -->
     <ScrollView
@@ -72,6 +73,7 @@
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:fadingEdge="vertical">
+
         <LinearLayout
             android:id="@+id/v_id_note_header_list"
             android:layout_width="match_parent"
@@ -102,7 +104,7 @@
             android:dividerHeight="2px"
             android:fadeScrollbars="true"
             android:listSelector="#f2d6b4"
-            android:transcriptMode="alwaysScroll"/>
+            android:transcriptMode="alwaysScroll" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">自由领域</string>
+    <string name="app_name">My Free</string>
     <string name="index_name">首页</string>
     <!-- Common Message CN[Start] -->
     <string name="welcom_mes">Hello world!</string>
@@ -74,7 +74,7 @@
     <!-- 便签功能[End] -->
 
     <!-- 炫酷页面展示[Start] -->
-    <string name="note_page_main_btn">Show Cool</string>
-    <string name="show_page_main_welcome">这里将会为您展示一个非常“Cool”的视觉盛宴！</string>
+    <string name="text_main_btn">“酷”展示</string>
+    <string name="text_show_main_welcome">Welcome Cool</string>
     <!-- 炫酷页面展示[End] -->
 </resources>

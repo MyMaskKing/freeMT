@@ -4,8 +4,7 @@ import free.android.utils.Constants;
 
 public enum ColorEnum {
     BTN_1(1, "#1"),
-    BTN_2(2, "#2"),
-    ;
+    BTN_2(2, "#2"),;
 
     ColorEnum() {
     }
