@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import free.android.R;
-import free.android.common.ActivityCommon;
+import free.android.common.BasicActivity;
 import free.android.entity.NoteEntity;
 import free.android.enums.FormatEnum;
 import free.android.enums.PageInfoEnum;
@@ -32,7 +32,7 @@ import free.android.utils.StringUtil;
  *
  * @author dapao
  */
-public class NoteSubActivity extends ActivityCommon {
+public class NoteSubActivity extends BasicActivity {
     private final String FILE_ACTIVITY_NAME = "便签子画面(NoteSubActivity)";
 
     /**

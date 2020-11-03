@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.show_page.MyExperienceActivity">
+
+    <Button
+        android:id="@+id/my_experience_select_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SELECT"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="25dp"
+        android:onClick="selectBtn"/>
+
+    <EditText
+        android:id="@+id/my_experience_select_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="これは検索内容を表示する。"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="102dp" />
+</android.support.constraint.ConstraintLayout>

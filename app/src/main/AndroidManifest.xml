@@ -47,8 +47,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- 添加新的Activity[End] -->
+        <activity android:name=".activity.show_page.MyExperienceActivity">
+            <intent-filter>
+                <action android:name="freepj.android.activity.show_page.MyExperienceActivity" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 添加新的Activity[End] -->
     </application>
 
 </manifest>

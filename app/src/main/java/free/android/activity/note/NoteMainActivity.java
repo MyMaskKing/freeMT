@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import free.android.R;
-import free.android.common.ActivityCommon;
+import free.android.common.BasicActivity;
 import free.android.entity.NoteEntity;
 import free.android.enums.MessageEnum;
 import free.android.enums.PageInfoEnum;
@@ -42,7 +42,7 @@ import free.android.utils.LogUtil;
 import free.android.utils.StringUtil;
 import free.android.utils.ToastUtil;
 
-public class NoteMainActivity extends ActivityCommon {
+public class NoteMainActivity extends BasicActivity {
 
     private final String FILE_ACTIVITY_NAME = "Location:便签功能(NoteMainActivity.class)";
     private List<NoteEntity> deleteNoteMainBodyData = new ArrayList<NoteEntity>();

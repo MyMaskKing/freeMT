@@ -43,15 +43,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import free.android.activity.MainActivity;
 import free.android.R;
+import free.android.activity.MainActivity;
 import free.android.entity.NoteEntity;
 import free.android.utils.CollectionsUtil;
 import free.android.utils.Constants;
 import free.android.utils.StringUtil;
 
-public class ActivityCommon extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
+public class BasicActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnScrollListener {
 
+    /**
+     * Springを利用する。
+     */
+    public BasicActivity(){
+
+        /***
+         * ApplicationContext applicationContext =new ClassPathXmlApplicationContext("classpath:spring-db.xml");
+         *         DaoCommon bean = (DaoCommon)applicationContext.getBean("daoAspect");
+         *         System.out.println(bean);
+         */
+    }
 
     /**
      * 双击时间使用
@@ -375,7 +386,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
          * setXXX方法返回Dialog对象，因此可以链式设置属性
          */
         final AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(ActivityCommon.this);
+                new AlertDialog.Builder(BasicActivity.this);
         // 设置Dialog的图标
         normalDialog.setIcon(R.drawable.img_background_delete_v1);
         normalDialog.setTitle(CollectionsUtil.isEmptyByStrArray(params, 1));
@@ -677,7 +688,7 @@ public class ActivityCommon extends Activity implements OnItemClickListener, OnI
      * 共通:返回首页
      */
     protected void commonReturnIndex() {
-        Intent intent = new Intent(ActivityCommon.this, MainActivity.class);
+        Intent intent = new Intent(BasicActivity.this, MainActivity.class);
         startActivity(intent);
     }
 

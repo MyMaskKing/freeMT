@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import free.android.common.ActivityCommon;
+import free.android.common.BasicActivity;
 import free.android.enums.FormatEnum;
 
 /**
@@ -19,7 +19,7 @@ import free.android.enums.FormatEnum;
  *
  * @author Administrator
  */
-public class FileUtil extends ActivityCommon {
+public class FileUtil extends BasicActivity {
 
     private final String LOG_FILE_NO_EXECUET = "文件不能执行";
     private final String LOG_FILE_NO_WRIRE = "文件不能写入";

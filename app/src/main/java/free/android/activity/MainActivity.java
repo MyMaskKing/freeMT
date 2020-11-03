@@ -19,18 +19,18 @@ import android.widget.TextView;
 import free.android.R;
 import free.android.activity.note.NoteMainActivity;
 import free.android.activity.show_page.ShowMainActivity;
-import free.android.common.ActivityCommon;
+import free.android.common.BasicActivity;
 import free.android.db.dao.TestDao;
 import free.android.enums.PageInfoEnum;
 import free.android.utils.Constants;
 import free.android.utils.LogUtil;
 import free.android.utils.ToastUtil;
 
-public class MainActivity extends ActivityCommon {
+public class MainActivity extends BasicActivity {
     private TestDao td = new TestDao();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // DBUtils.getInfoByName();
+        //DBUtils.getInfoByName();
         // 无标题栏(系统自带不删除)
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);

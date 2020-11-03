@@ -7,6 +7,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        exclude 'META-INF/spring.tooling'
+        exclude 'META-INF/spring.handlers'
+        exclude 'META-INF/spring.schemas'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
+
     defaultConfig {
         applicationId "free.android"
         minSdkVersion 21
@@ -14,6 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -28,6 +37,7 @@ android {
                     [
                             // テスト使用ので
                             'src/main/res/layout/test',
+                            'src/main/res/java/config',
                             // 下記は機能の区分よりフォルダーを作成する
                             'src/main/res/layout/show_page',
                             'src/main/res/layout/note',
@@ -41,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:multidex:1.0.1'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -50,5 +61,22 @@ dependencies {
     implementation 'com.liulishuo.filedownloader:library:1.7.4'
     // MatchView 电影级别的View
     implementation 'com.roger.match.library:library:1.0.1'
-    implementation files('src/main/libs/mysql-connector-java-5.1.42.jar')
+    implementation files('src/main/libs/mysql-connector-java-8.0.21.jar')
+    implementation files('src/main/libs/aspectjweaver-1.8.9.jar')
+    implementation files('src/main/libs/commons-dbcp-1.4.jar')
+    implementation files('src/main/libs/commons-lang3-3.1.jar')
+    implementation files('src/main/libs/commons-pool-1.6.jar')
+    implementation files('src/main/libs/log4j-1.2.12.jar')
+    implementation files('src/main/libs/mybatis-3.4.6.jar')
+    implementation files('src/main/libs/mybatis-spring-1.2.0.jar')
+    implementation files('src/main/libs/slf4j-api-1.6.6.jar')
+    implementation files('src/main/libs/slf4j-log4j12-1.6.6.jar')
+    implementation files('src/main/libs/spring-aop-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-beans-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-context-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-context-support-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-core-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-expression-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-jdbc-4.3.8.RELEASE.jar')
+    implementation files('src/main/libs/spring-tx-4.3.8.RELEASE.jar')
 }

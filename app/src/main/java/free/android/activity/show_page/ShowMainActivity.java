@@ -8,9 +8,9 @@ import android.view.Window;
 import com.roger.match.library.MatchTextView;
 
 import free.android.R;
-import free.android.common.ActivityCommon;
+import free.android.common.BasicActivity;
 
-public class ShowMainActivity extends ActivityCommon {
+public class ShowMainActivity extends BasicActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
